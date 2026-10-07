@@ -157,3 +157,65 @@ Files: `schema.json` (part a), `task_definition.md` and `task_checks.json` (b, c
   half. Gate thresholds fitted on gate_fit may therefore transfer imperfectly to validation;
   report this as a limitation rather than reshuffle.
 - The final decision is in section "Split decision" below.
+
+## 3. Benchmark sanity anchors (Stage 3)
+
+`./run.sh anchors` (`scripts/anchors.py`, `src/escal/benchmark.py`) re-implements the logic of
+`Forecast_intra-day.py` and `Postprocess.py` on development data only:
+- inputs: ground features (endo) and ground + satellite features (exo);
+- models: smart persistence, plus OLS, RidgeCV and LassoCV (10-fold) on the 30-min kt
+  target, with predictions clipped to [0, 1] and multiplied by `ghi_clear_h`;
+- forecasts at elevation < 5 degrees removed;
+- skill = 1 - RMSE / RMSE(smart persistence).
+
+The benchmark's own scripts were not run, because they load 2016. Models are fitted on
+models_train (2014) and evaluated on validation (2015-07 to 12); issue times whose targets
+cross a split edge are dropped. Results are in `results/anchors/intra_day.csv` (per horizon)
+and `results/anchors/intra_day_mean_over_horizons.csv`.
+
+**These are development-period numbers. They are not expected to equal the published
+test-period (2016) numbers**: the training years, the evaluation period and its weather all
+differ. The published table could not be retrieved here, so no numeric comparison with it was
+made.
+
+GHI, validation:
+
+| model | 30min | 60min | 90min | 120min | 150min | 180min |
+|---|---|---|---|---|---|---|
+| smart persistence RMSE (W/m2) | 55.1 | 70.0 | 83.4 | 93.8 | 102.8 | 112.9 |
+| lasso_endo RMSE | 54.2 | 66.4 | 77.3 | 84.5 | 90.1 | 95.7 |
+| lasso_exo RMSE | 49.7 | 61.7 | 73.8 | 82.4 | 88.0 | 94.1 |
+| lasso_endo skill | 0.016 | 0.052 | 0.074 | 0.099 | 0.123 | 0.152 |
+| lasso_exo skill | 0.098 | 0.118 | 0.115 | 0.121 | 0.144 | 0.166 |
+
+Mean over horizons (GHI):
+- smart persistence: RMSE 86.3 W/m2, MAE 49.6.
+- best linear model, lasso_exo: RMSE 75.0, skill 0.127.
+- endo models: skill about 0.085.
+
+Evaluated on 2,908 (30min) to 2,190 (180min) daylight issue times. Models are fitted on 5,090
+rows.
+
+**Plausible magnitude?** Yes, as far as can be judged without the published table:
+- Persistence error grows steadily with horizon.
+- Linear skill is positive and grows with horizon, as expected for a model that reverts
+  towards mean conditions.
+- Satellite features help most at the short horizons (30-60 min), where cloud advection
+  matters.
+- Errors are tens of W/m2, a sensible scale for 30-min-average GHI at a sunny site.
+
+**Things that look odd (recorded, not blocking):**
+1. The linear models over-forecast more as the horizon grows. GHI mean bias error (MBE),
+   measured minus forecast, falls from +4.5 / -3.0 W/m2 at 30 min to -25.6 / -28.1 at 180 min
+   (lasso_endo / lasso_exo). Persistence MBE stays within -7.2 W/m2. A likely reason is that
+   forecasts revert to the 2014 mean kt; the cause is unverified.
+2. Only 5,090 of the 2014 rows survive for fitting. The benchmark drops any row with a missing
+   value in the exo columns, even for the endo models, and satellite frames start on 2014-03-13
+   and are missing in 31% of rows. Endo and exo models are therefore fitted and scored on the
+   same reduced rows, the satellite-available subset, exactly as in the benchmark.
+3. DNI: linear models have no skill over persistence (mean skill -0.010 to 0.026). This is
+   recorded for completeness; the study target is GHI.
+4. The benchmark clips predicted kt to [0, 1] although its own targets reach 1.2; the code
+   comment says 1.1. This is reproduced as written (`anchors.kt_clip`).
+
+Conclusion: the anchors look sane, so the work continues to the split decision.
