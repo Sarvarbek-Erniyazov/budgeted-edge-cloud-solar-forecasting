@@ -1,0 +1,47 @@
+{
+  "definition": "frame stamped in [t-lag-60min, t-lag]",
+  "validation_daylight_issue_times": 3857,
+  "lag_15min_primary": {
+    "overall_share_of_daylight_issue_times": 0.9875550946331345,
+    "per_horizon_share_of_daylight_cells": {
+      "30min": 0.9875550946331345,
+      "60min": 0.9869352204681546,
+      "90min": 0.9862503580635921,
+      "120min": 0.9860943168077388,
+      "150min": 0.98624,
+      "180min": 0.986743711760707
+    },
+    "per_horizon_primary_cells": {
+      "30min": 3809,
+      "60min": 3626,
+      "90min": 3443,
+      "120min": 3262,
+      "150min": 3082,
+      "180min": 2903
+    }
+  },
+  "lag_0min_sensitivity": {
+    "overall_share_of_daylight_issue_times": 0.9953331604874255,
+    "per_horizon_share_of_daylight_cells": {
+      "30min": 0.9953331604874255,
+      "60min": 0.995100707675558,
+      "90min": 0.9948438842738471,
+      "120min": 0.9948609431680774,
+      "150min": 0.99488,
+      "180min": 0.9945615227736234
+    },
+    "per_horizon_primary_cells": {
+      "30min": 3839,
+      "60min": 3656,
+      "90min": 3473,
+      "120min": 3291,
+      "150min": 3109,
+      "180min": 2926
+    }
+  },
+  "training_rows": {
+    "train": 7362,
+    "early_stop": 504,
+    "validation": 3955
+  }
+}

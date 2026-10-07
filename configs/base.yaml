@@ -51,3 +51,39 @@ anchors:                     # benchmark persistence and linear models (logic of
   night_elevation: 5.0       # predictions below this solar elevation are excluded
   cv_folds: 10               # RidgeCV and LassoCV, as in the benchmark script
   lasso_max_iter: 10000
+tiers:                       # Stage 5; see docs/PLAN.md section 6
+  daylight_min_elevation: 5.0
+  kt_clip: [0.0, 1.2]
+  early_stop_days: 30        # last days of models_train, used only for early stopping
+  sat_max_age_minutes: 60    # frame "available" if stamped in [t-lag-60min, t-lag]
+  sat_lag_sensitivity: 0     # "benchmark convention (sensitivity)" variant
+  nam_valid_offset_minutes: -15   # NAM valid time = t + h - 15 min (target-window midpoint)
+  nam_interp_max_gap_h: 3    # interpolate between valid times of one run up to this gap
+  nam_min_clear: 10.0        # W/m2; dwsw/clear left missing below this clear-sky value
+  nam_ratio_clip: [0.0, 2.0]
+  device: cuda
+  batch_size: 256
+  lr: 0.001
+  weight_decay: 0.0001
+  max_epochs: 300
+  patience: 20
+  edge:
+    hidden: [64, 64]
+  cloud:
+    hidden: [128, 64]
+    cnn_channels: [16, 32]
+    fusion_hidden: 64
+  base_variant:
+    sat_frames: 1
+    sat_diffs: false
+    sat_lookback_minutes: 60
+    nwp_extra: false
+ladder:
+  step2: {sat_frames: 4, sat_diffs: true, sat_lookback_minutes: 120}
+  step3: {nwp_extra: true}
+  step4:
+    max_iter: 500
+    learning_rate: 0.05
+    max_leaf_nodes: 31
+    # iterations chosen on the same early-stop slice (staged predictions), no random split
+  step5: {min_horizon_gain: 0.05}

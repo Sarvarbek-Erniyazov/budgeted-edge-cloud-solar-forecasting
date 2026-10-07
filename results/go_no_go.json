@@ -1,0 +1,591 @@
+{
+  "criterion": {
+    "statistic": "1 - RMSE_cloud / RMSE_edge; RMSE per horizon averaged over horizons, then over seeds",
+    "min_rmse_gain": 0.05,
+    "judged_on": "validation, primary rows, satellite lag 15 min",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "verdict": "GO via ladder step 4",
+  "primary": {
+    "name": "base",
+    "ladder_step": 0,
+    "satellite_lag_min": 15,
+    "config": {
+      "sat_frames": 1,
+      "sat_diffs": false,
+      "sat_lookback_minutes": 60,
+      "nwp_extra": false
+    },
+    "cloud_params": 61510,
+    "horizons": [
+      "30min",
+      "60min",
+      "90min",
+      "120min",
+      "150min",
+      "180min"
+    ],
+    "edge_rmse_per_horizon": {
+      "30min": 51.88,
+      "60min": 64.049,
+      "90min": 72.887,
+      "120min": 79.264,
+      "150min": 83.351,
+      "180min": 88.264
+    },
+    "cloud_rmse_per_horizon": {
+      "30min": 55.238,
+      "60min": 66.107,
+      "90min": 72.52,
+      "120min": 78.883,
+      "150min": 82.966,
+      "180min": 87.236
+    },
+    "gain_per_horizon": {
+      "30min": -0.0647,
+      "60min": -0.0321,
+      "90min": 0.005,
+      "120min": 0.0048,
+      "150min": 0.0046,
+      "180min": 0.0116
+    },
+    "edge_rmse_avg": 73.28250301347124,
+    "cloud_rmse_avg": 73.82513359458429,
+    "gain_avg": -0.0074046403820744455,
+    "gain_avg_per_seed": [
+      -0.0228,
+      -0.011,
+      -0.046,
+      0.0628,
+      -0.025
+    ],
+    "passed": false
+  },
+  "best_variant": "step4_gbt_plus_net",
+  "satellite_availability": "results/tiers/satellite_availability.json",
+  "sensitivity_benchmark_convention": {
+    "name": "benchmark convention (sensitivity)",
+    "satellite_lag_min": 0,
+    "scored_on": "primary rows of the 15-min rule",
+    "horizons": [
+      "30min",
+      "60min",
+      "90min",
+      "120min",
+      "150min",
+      "180min"
+    ],
+    "edge_rmse_per_horizon": {
+      "30min": 51.88,
+      "60min": 64.049,
+      "90min": 72.887,
+      "120min": 79.264,
+      "150min": 83.351,
+      "180min": 88.264
+    },
+    "cloud_rmse_per_horizon": {
+      "30min": 52.396,
+      "60min": 63.964,
+      "90min": 70.987,
+      "120min": 78.324,
+      "150min": 82.378,
+      "180min": 86.495
+    },
+    "gain_per_horizon": {
+      "30min": -0.0099,
+      "60min": 0.0013,
+      "90min": 0.0261,
+      "120min": 0.0119,
+      "150min": 0.0117,
+      "180min": 0.02
+    },
+    "edge_rmse_avg": 73.28250301347124,
+    "cloud_rmse_avg": 72.42391384087871,
+    "gain_avg": 0.011716155115972238,
+    "gain_avg_per_seed": [
+      0.01,
+      0.0089,
+      0.0107,
+      0.081,
+      -0.0572
+    ]
+  },
+  "anchor_check": [
+    {
+      "variant": "base",
+      "edge_vs_lasso_endo (primary rows)": {
+        "edge_rmse_avg": 73.28250301347124,
+        "lasso_endo_rmse_avg": 78.97733459091486,
+        "edge_beats_anchor": true
+      },
+      "cloud_vs_lasso_exo (primary rows with benchmark satellite feature)": {
+        "rows": 2875,
+        "cloud_rmse_avg": 72.18456609903566,
+        "lasso_exo_rmse_avg": 74.87331728768022,
+        "cloud_beats_anchor": true
+      }
+    },
+    {
+      "variant": "step2",
+      "edge_vs_lasso_endo (primary rows)": {
+        "edge_rmse_avg": 73.28250301347124,
+        "lasso_endo_rmse_avg": 78.97733459091486,
+        "edge_beats_anchor": true
+      },
+      "cloud_vs_lasso_exo (primary rows with benchmark satellite feature)": {
+        "rows": 2875,
+        "cloud_rmse_avg": 75.97415176891093,
+        "lasso_exo_rmse_avg": 74.87331728768022,
+        "cloud_beats_anchor": false
+      }
+    },
+    {
+      "variant": "step3",
+      "edge_vs_lasso_endo (primary rows)": {
+        "edge_rmse_avg": 73.28250301347124,
+        "lasso_endo_rmse_avg": 78.97733459091486,
+        "edge_beats_anchor": true
+      },
+      "cloud_vs_lasso_exo (primary rows with benchmark satellite feature)": {
+        "rows": 2875,
+        "cloud_rmse_avg": 70.93749669023705,
+        "lasso_exo_rmse_avg": 74.87331728768022,
+        "cloud_beats_anchor": true
+      }
+    },
+    {
+      "variant": "step4_gbt",
+      "edge_vs_lasso_endo (primary rows)": {
+        "edge_rmse_avg": 73.28250301347124,
+        "lasso_endo_rmse_avg": 78.97733459091486,
+        "edge_beats_anchor": true
+      },
+      "cloud_vs_lasso_exo (primary rows with benchmark satellite feature)": {
+        "rows": 2875,
+        "cloud_rmse_avg": 67.8566258365387,
+        "lasso_exo_rmse_avg": 74.87331728768022,
+        "cloud_beats_anchor": true
+      }
+    },
+    {
+      "variant": "step4_gbt_plus_net",
+      "edge_vs_lasso_endo (primary rows)": {
+        "edge_rmse_avg": 73.28250301347124,
+        "lasso_endo_rmse_avg": 78.97733459091486,
+        "edge_beats_anchor": true
+      },
+      "cloud_vs_lasso_exo (primary rows with benchmark satellite feature)": {
+        "rows": 2875,
+        "cloud_rmse_avg": 67.05318792388763,
+        "lasso_exo_rmse_avg": 74.87331728768022,
+        "cloud_beats_anchor": true
+      }
+    }
+  ],
+  "ladder": [
+    {
+      "step": 1,
+      "name": "input check",
+      "checks": {
+        "tiles_stamped_after_t_minus_lag": 0,
+        "primary_val_rows_with_tile": 1.0,
+        "tile_std_on_primary_val_rows": 0.12540262937545776,
+        "nam_nodes_in_inputs": [
+          "nam0",
+          "nam1",
+          "nam2",
+          "nam3"
+        ],
+        "nam_alignment": {
+          "30min": {
+            "reftime_plus_lag_le_t": true,
+            "lead_h_min": 26.25,
+            "lead_h_max": 38.75,
+            "share_missing": 0.009147296535304805,
+            "share_interpolated": 0.16866111145918175
+          },
+          "60min": {
+            "reftime_plus_lag_le_t": true,
+            "lead_h_min": 26.25,
+            "lead_h_max": 39.25,
+            "share_missing": 0.0,
+            "share_interpolated": 0.21345780339577722
+          },
+          "90min": {
+            "reftime_plus_lag_le_t": true,
+            "lead_h_min": 26.75,
+            "lead_h_max": 39.75,
+            "share_missing": 0.0,
+            "share_interpolated": 0.25825449533237266
+          },
+          "120min": {
+            "reftime_plus_lag_le_t": true,
+            "lead_h_min": 27.25,
+            "lead_h_max": 40.25,
+            "share_missing": 0.0,
+            "share_interpolated": 0.3030511872689681
+          },
+          "150min": {
+            "reftime_plus_lag_le_t": true,
+            "lead_h_min": 27.75,
+            "lead_h_max": 40.75,
+            "share_missing": 0.0,
+            "share_interpolated": 0.34784787920556354
+          },
+          "180min": {
+            "reftime_plus_lag_le_t": true,
+            "lead_h_min": 28.25,
+            "lead_h_max": 41.25,
+            "share_missing": 0.0,
+            "share_interpolated": 0.392644571142159
+          }
+        },
+        "B30_equals_block_ending_t_share": 1.0,
+        "weather_mean_over_t_minus_30_to_t": true,
+        "target_columns_in_inputs": [],
+        "passed": true
+      },
+      "ablation": {
+        "seed": 0,
+        "rmse_avg_primary": {
+          "full": 74.7200762547801,
+          "tiles_zeroed": 85.82397714360847,
+          "nam_at_train_mean": 173.65629478496945
+        }
+      },
+      "fault_found": false,
+      "gain_avg": -0.0074046403820744455,
+      "passed": false,
+      "note": "inputs verified; model unchanged, so the gap is unchanged"
+    },
+    {
+      "step": 2,
+      "name": "longer satellite window + tile differences",
+      "built_on": "base",
+      "gain_avg": -0.060512603554687905,
+      "gain_per_horizon": {
+        "30min": -0.1033,
+        "60min": -0.0918,
+        "90min": -0.0617,
+        "120min": -0.0409,
+        "150min": -0.0441,
+        "180min": -0.0447
+      },
+      "passed": false
+    },
+    {
+      "step": 3,
+      "name": "richer NWP",
+      "built_on": "base",
+      "gain_avg": 0.009192992318180382,
+      "gain_per_horizon": {
+        "30min": -0.0416,
+        "60min": -0.0134,
+        "90min": -0.0008,
+        "120min": 0.0294,
+        "150min": 0.0196,
+        "180min": 0.0357
+      },
+      "passed": false
+    },
+    {
+      "step": 4,
+      "name": "stronger cloud model (GBT, GBT+network)",
+      "gain_avg": {
+        "step4_gbt": 0.05365479891361902,
+        "step4_gbt_plus_net": 0.06312768725031048
+      },
+      "passed": true
+    }
+  ],
+  "variants": [
+    {
+      "name": "base",
+      "ladder_step": 0,
+      "satellite_lag_min": 15,
+      "config": {
+        "sat_frames": 1,
+        "sat_diffs": false,
+        "sat_lookback_minutes": 60,
+        "nwp_extra": false
+      },
+      "cloud_params": 61510,
+      "horizons": [
+        "30min",
+        "60min",
+        "90min",
+        "120min",
+        "150min",
+        "180min"
+      ],
+      "edge_rmse_per_horizon": {
+        "30min": 51.88,
+        "60min": 64.049,
+        "90min": 72.887,
+        "120min": 79.264,
+        "150min": 83.351,
+        "180min": 88.264
+      },
+      "cloud_rmse_per_horizon": {
+        "30min": 55.238,
+        "60min": 66.107,
+        "90min": 72.52,
+        "120min": 78.883,
+        "150min": 82.966,
+        "180min": 87.236
+      },
+      "gain_per_horizon": {
+        "30min": -0.0647,
+        "60min": -0.0321,
+        "90min": 0.005,
+        "120min": 0.0048,
+        "150min": 0.0046,
+        "180min": 0.0116
+      },
+      "edge_rmse_avg": 73.28250301347124,
+      "cloud_rmse_avg": 73.82513359458429,
+      "gain_avg": -0.0074046403820744455,
+      "gain_avg_per_seed": [
+        -0.0228,
+        -0.011,
+        -0.046,
+        0.0628,
+        -0.025
+      ],
+      "passed": false
+    },
+    {
+      "name": "step2",
+      "ladder_step": 2,
+      "satellite_lag_min": 15,
+      "config": {
+        "sat_frames": 4,
+        "sat_diffs": true,
+        "sat_lookback_minutes": 120,
+        "nwp_extra": false
+      },
+      "built_on": "base",
+      "cloud_params": 63142,
+      "horizons": [
+        "30min",
+        "60min",
+        "90min",
+        "120min",
+        "150min",
+        "180min"
+      ],
+      "edge_rmse_per_horizon": {
+        "30min": 51.88,
+        "60min": 64.049,
+        "90min": 72.887,
+        "120min": 79.264,
+        "150min": 83.351,
+        "180min": 88.264
+      },
+      "cloud_rmse_per_horizon": {
+        "30min": 57.241,
+        "60min": 69.929,
+        "90min": 77.387,
+        "120min": 82.506,
+        "150min": 87.029,
+        "180min": 92.21
+      },
+      "gain_per_horizon": {
+        "30min": -0.1033,
+        "60min": -0.0918,
+        "90min": -0.0617,
+        "120min": -0.0409,
+        "150min": -0.0441,
+        "180min": -0.0447
+      },
+      "edge_rmse_avg": 73.28250301347124,
+      "cloud_rmse_avg": 77.71701806582065,
+      "gain_avg": -0.060512603554687905,
+      "gain_avg_per_seed": [
+        -0.0441,
+        -0.06,
+        -0.071,
+        -0.0217,
+        -0.1089
+      ],
+      "passed": false
+    },
+    {
+      "name": "step3",
+      "ladder_step": 3,
+      "satellite_lag_min": 15,
+      "config": {
+        "sat_frames": 1,
+        "sat_diffs": false,
+        "sat_lookback_minutes": 60,
+        "nwp_extra": true
+      },
+      "built_on": "base",
+      "cloud_params": 75334,
+      "horizons": [
+        "30min",
+        "60min",
+        "90min",
+        "120min",
+        "150min",
+        "180min"
+      ],
+      "edge_rmse_per_horizon": {
+        "30min": 51.88,
+        "60min": 64.049,
+        "90min": 72.887,
+        "120min": 79.264,
+        "150min": 83.351,
+        "180min": 88.264
+      },
+      "cloud_rmse_per_horizon": {
+        "30min": 54.04,
+        "60min": 64.91,
+        "90min": 72.942,
+        "120min": 76.93,
+        "150min": 81.721,
+        "180min": 85.11
+      },
+      "gain_per_horizon": {
+        "30min": -0.0416,
+        "60min": -0.0134,
+        "90min": -0.0008,
+        "120min": 0.0294,
+        "150min": 0.0196,
+        "180min": 0.0357
+      },
+      "edge_rmse_avg": 73.28250301347124,
+      "cloud_rmse_avg": 72.60881752621137,
+      "gain_avg": 0.009192992318180382,
+      "gain_avg_per_seed": [
+        0.0044,
+        -0.0043,
+        0.0188,
+        0.0641,
+        -0.0412
+      ],
+      "passed": false
+    },
+    {
+      "name": "step4_gbt",
+      "ladder_step": 4,
+      "satellite_lag_min": 15,
+      "config": {
+        "sat_frames": 1,
+        "sat_diffs": false,
+        "sat_lookback_minutes": 60,
+        "nwp_extra": true
+      },
+      "built_on": "step3",
+      "horizons": [
+        "30min",
+        "60min",
+        "90min",
+        "120min",
+        "150min",
+        "180min"
+      ],
+      "edge_rmse_per_horizon": {
+        "30min": 51.88,
+        "60min": 64.049,
+        "90min": 72.887,
+        "120min": 79.264,
+        "150min": 83.351,
+        "180min": 88.264
+      },
+      "cloud_rmse_per_horizon": {
+        "30min": 44.836,
+        "60min": 59.869,
+        "90min": 69.279,
+        "120min": 75.341,
+        "150min": 79.729,
+        "180min": 87.049
+      },
+      "gain_per_horizon": {
+        "30min": 0.1358,
+        "60min": 0.0653,
+        "90min": 0.0495,
+        "120min": 0.0495,
+        "150min": 0.0435,
+        "180min": 0.0138
+      },
+      "edge_rmse_avg": 73.28250301347124,
+      "cloud_rmse_avg": 69.35054505039676,
+      "gain_avg": 0.05365479891361902,
+      "gain_avg_per_seed": [
+        0.0507,
+        0.0396,
+        0.038,
+        0.1025,
+        0.0339
+      ],
+      "passed": true
+    },
+    {
+      "name": "step4_gbt_plus_net",
+      "ladder_step": 4,
+      "satellite_lag_min": 15,
+      "config": {
+        "sat_frames": 1,
+        "sat_diffs": false,
+        "sat_lookback_minutes": 60,
+        "nwp_extra": true
+      },
+      "built_on": "step3",
+      "horizons": [
+        "30min",
+        "60min",
+        "90min",
+        "120min",
+        "150min",
+        "180min"
+      ],
+      "edge_rmse_per_horizon": {
+        "30min": 51.88,
+        "60min": 64.049,
+        "90min": 72.887,
+        "120min": 79.264,
+        "150min": 83.351,
+        "180min": 88.264
+      },
+      "cloud_rmse_per_horizon": {
+        "30min": 46.769,
+        "60min": 60.081,
+        "90min": 68.657,
+        "120min": 73.82,
+        "150min": 78.699,
+        "180min": 83.912
+      },
+      "gain_per_horizon": {
+        "30min": 0.0985,
+        "60min": 0.0619,
+        "90min": 0.058,
+        "120min": 0.0687,
+        "150min": 0.0558,
+        "180min": 0.0493
+      },
+      "edge_rmse_avg": 73.28250301347124,
+      "cloud_rmse_avg": 68.6563480823169,
+      "gain_avg": 0.06312768725031048,
+      "gain_avg_per_seed": [
+        0.0593,
+        0.0483,
+        0.0552,
+        0.1136,
+        0.0356
+      ],
+      "passed": true
+    }
+  ],
+  "params": {
+    "edge": 10758,
+    "cloud_base": 61510
+  },
+  "results_file": "results/tiers/validation.csv"
+}

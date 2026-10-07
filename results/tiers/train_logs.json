@@ -1,0 +1,187 @@
+{
+  "base/edge": [
+    {
+      "seed": 0,
+      "epochs": 49,
+      "best_es_loss": 0.0446493960916996,
+      "seconds": 2.0,
+      "device": "cuda"
+    },
+    {
+      "seed": 1,
+      "epochs": 42,
+      "best_es_loss": 0.04496029019355774,
+      "seconds": 1.5,
+      "device": "cuda"
+    },
+    {
+      "seed": 2,
+      "epochs": 49,
+      "best_es_loss": 0.04325046017765999,
+      "seconds": 1.9,
+      "device": "cuda"
+    },
+    {
+      "seed": 3,
+      "epochs": 30,
+      "best_es_loss": 0.044065020978450775,
+      "seconds": 1.2,
+      "device": "cuda"
+    },
+    {
+      "seed": 4,
+      "epochs": 41,
+      "best_es_loss": 0.0432991199195385,
+      "seconds": 1.2,
+      "device": "cuda"
+    }
+  ],
+  "base/cloud": [
+    {
+      "seed": 0,
+      "epochs": 29,
+      "best_es_loss": 0.050796136260032654,
+      "seconds": 1.9,
+      "device": "cuda"
+    },
+    {
+      "seed": 1,
+      "epochs": 28,
+      "best_es_loss": 0.04841509833931923,
+      "seconds": 1.8,
+      "device": "cuda"
+    },
+    {
+      "seed": 2,
+      "epochs": 27,
+      "best_es_loss": 0.04725497215986252,
+      "seconds": 1.4,
+      "device": "cuda"
+    },
+    {
+      "seed": 3,
+      "epochs": 27,
+      "best_es_loss": 0.04631469398736954,
+      "seconds": 1.7,
+      "device": "cuda"
+    },
+    {
+      "seed": 4,
+      "epochs": 28,
+      "best_es_loss": 0.04932913929224014,
+      "seconds": 1.7,
+      "device": "cuda"
+    }
+  ],
+  "sens_lag0/cloud": [
+    {
+      "seed": 0,
+      "epochs": 31,
+      "best_es_loss": 0.04714184254407883,
+      "seconds": 1.9,
+      "device": "cuda"
+    },
+    {
+      "seed": 1,
+      "epochs": 28,
+      "best_es_loss": 0.046076852828264236,
+      "seconds": 1.9,
+      "device": "cuda"
+    },
+    {
+      "seed": 2,
+      "epochs": 28,
+      "best_es_loss": 0.04497964680194855,
+      "seconds": 1.7,
+      "device": "cuda"
+    },
+    {
+      "seed": 3,
+      "epochs": 27,
+      "best_es_loss": 0.04464142397046089,
+      "seconds": 1.6,
+      "device": "cuda"
+    },
+    {
+      "seed": 4,
+      "epochs": 29,
+      "best_es_loss": 0.048669371753931046,
+      "seconds": 1.8,
+      "device": "cuda"
+    }
+  ],
+  "step2/cloud": [
+    {
+      "seed": 0,
+      "epochs": 27,
+      "best_es_loss": 0.0525197759270668,
+      "seconds": 1.6,
+      "device": "cuda"
+    },
+    {
+      "seed": 1,
+      "epochs": 27,
+      "best_es_loss": 0.051005955785512924,
+      "seconds": 1.5,
+      "device": "cuda"
+    },
+    {
+      "seed": 2,
+      "epochs": 27,
+      "best_es_loss": 0.05303729325532913,
+      "seconds": 1.7,
+      "device": "cuda"
+    },
+    {
+      "seed": 3,
+      "epochs": 29,
+      "best_es_loss": 0.052188605070114136,
+      "seconds": 1.7,
+      "device": "cuda"
+    },
+    {
+      "seed": 4,
+      "epochs": 29,
+      "best_es_loss": 0.05398435518145561,
+      "seconds": 1.7,
+      "device": "cuda"
+    }
+  ],
+  "step3/cloud": [
+    {
+      "seed": 0,
+      "epochs": 27,
+      "best_es_loss": 0.0490172803401947,
+      "seconds": 1.8,
+      "device": "cuda"
+    },
+    {
+      "seed": 1,
+      "epochs": 28,
+      "best_es_loss": 0.04835841432213783,
+      "seconds": 1.5,
+      "device": "cuda"
+    },
+    {
+      "seed": 2,
+      "epochs": 28,
+      "best_es_loss": 0.047281380742788315,
+      "seconds": 1.7,
+      "device": "cuda"
+    },
+    {
+      "seed": 3,
+      "epochs": 29,
+      "best_es_loss": 0.04844694212079048,
+      "seconds": 1.6,
+      "device": "cuda"
+    },
+    {
+      "seed": 4,
+      "epochs": 29,
+      "best_es_loss": 0.05432971566915512,
+      "seconds": 1.5,
+      "device": "cuda"
+    }
+  ]
+}

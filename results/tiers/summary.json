@@ -1,0 +1,186 @@
+{
+  "threshold": 0.05,
+  "note": "gain per seed pairs edge seed s with cloud seed s; the verdict uses the seed mean",
+  "variants": {
+    "base": {
+      "gain_avg_seed_mean_rmse": -0.0074046403820744455,
+      "gain_per_seed": [
+        -0.0228,
+        -0.011,
+        -0.046,
+        0.0628,
+        -0.025
+      ],
+      "median_seed_gain": -0.0228,
+      "min_seed_gain": -0.046,
+      "seeds_passing": 1,
+      "n_seeds": 5,
+      "edge_rmse_per_horizon": {
+        "30min": 51.88,
+        "60min": 64.049,
+        "90min": 72.887,
+        "120min": 79.264,
+        "150min": 83.351,
+        "180min": 88.264
+      },
+      "cloud_rmse_per_horizon": {
+        "30min": 55.238,
+        "60min": 66.107,
+        "90min": 72.52,
+        "120min": 78.883,
+        "150min": 82.966,
+        "180min": 87.236
+      }
+    },
+    "step2": {
+      "gain_avg_seed_mean_rmse": -0.060512603554687905,
+      "gain_per_seed": [
+        -0.0441,
+        -0.06,
+        -0.071,
+        -0.0217,
+        -0.1089
+      ],
+      "median_seed_gain": -0.06,
+      "min_seed_gain": -0.1089,
+      "seeds_passing": 0,
+      "n_seeds": 5,
+      "edge_rmse_per_horizon": {
+        "30min": 51.88,
+        "60min": 64.049,
+        "90min": 72.887,
+        "120min": 79.264,
+        "150min": 83.351,
+        "180min": 88.264
+      },
+      "cloud_rmse_per_horizon": {
+        "30min": 57.241,
+        "60min": 69.929,
+        "90min": 77.387,
+        "120min": 82.506,
+        "150min": 87.029,
+        "180min": 92.21
+      }
+    },
+    "step3": {
+      "gain_avg_seed_mean_rmse": 0.009192992318180382,
+      "gain_per_seed": [
+        0.0044,
+        -0.0043,
+        0.0188,
+        0.0641,
+        -0.0412
+      ],
+      "median_seed_gain": 0.0044,
+      "min_seed_gain": -0.0412,
+      "seeds_passing": 1,
+      "n_seeds": 5,
+      "edge_rmse_per_horizon": {
+        "30min": 51.88,
+        "60min": 64.049,
+        "90min": 72.887,
+        "120min": 79.264,
+        "150min": 83.351,
+        "180min": 88.264
+      },
+      "cloud_rmse_per_horizon": {
+        "30min": 54.04,
+        "60min": 64.91,
+        "90min": 72.942,
+        "120min": 76.93,
+        "150min": 81.721,
+        "180min": 85.11
+      }
+    },
+    "step4_gbt": {
+      "gain_avg_seed_mean_rmse": 0.05365479891361902,
+      "gain_per_seed": [
+        0.0507,
+        0.0396,
+        0.038,
+        0.1025,
+        0.0339
+      ],
+      "median_seed_gain": 0.0396,
+      "min_seed_gain": 0.0339,
+      "seeds_passing": 2,
+      "n_seeds": 5,
+      "edge_rmse_per_horizon": {
+        "30min": 51.88,
+        "60min": 64.049,
+        "90min": 72.887,
+        "120min": 79.264,
+        "150min": 83.351,
+        "180min": 88.264
+      },
+      "cloud_rmse_per_horizon": {
+        "30min": 44.836,
+        "60min": 59.869,
+        "90min": 69.279,
+        "120min": 75.341,
+        "150min": 79.729,
+        "180min": 87.049
+      }
+    },
+    "step4_gbt_plus_net": {
+      "gain_avg_seed_mean_rmse": 0.06312768725031048,
+      "gain_per_seed": [
+        0.0593,
+        0.0483,
+        0.0552,
+        0.1136,
+        0.0356
+      ],
+      "median_seed_gain": 0.0552,
+      "min_seed_gain": 0.0356,
+      "seeds_passing": 3,
+      "n_seeds": 5,
+      "edge_rmse_per_horizon": {
+        "30min": 51.88,
+        "60min": 64.049,
+        "90min": 72.887,
+        "120min": 79.264,
+        "150min": 83.351,
+        "180min": 88.264
+      },
+      "cloud_rmse_per_horizon": {
+        "30min": 46.769,
+        "60min": 60.081,
+        "90min": 68.657,
+        "120min": 73.82,
+        "150min": 78.699,
+        "180min": 83.912
+      }
+    },
+    "sens_lag0": {
+      "gain_avg_seed_mean_rmse": 0.011716155115972238,
+      "gain_per_seed": [
+        0.01,
+        0.0089,
+        0.0107,
+        0.081,
+        -0.0572
+      ],
+      "median_seed_gain": 0.01,
+      "min_seed_gain": -0.0572,
+      "seeds_passing": 1,
+      "n_seeds": 5,
+      "edge_rmse_per_horizon": {
+        "30min": 51.88,
+        "60min": 64.049,
+        "90min": 72.887,
+        "120min": 79.264,
+        "150min": 83.351,
+        "180min": 88.264
+      },
+      "cloud_rmse_per_horizon": {
+        "30min": 52.396,
+        "60min": 63.964,
+        "90min": 70.987,
+        "120min": 78.324,
+        "150min": 82.378,
+        "180min": 86.495
+      }
+    }
+  }
+}

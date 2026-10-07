@@ -73,3 +73,20 @@ def run_anchors(df, endo_cols, exo_cols, cfg) -> pd.DataFrame:
                              "eval_split": a["eval_split"], "n_fit": len(tr),
                              **metrics(y, p, preds["sp"])})
     return pd.DataFrame(rows)
+
+
+def anchor_predict(df: pd.DataFrame, fit_rows: np.ndarray, feats: list[str], drop_cols: list[str],
+                   target: str, h: str, cfg: dict) -> np.ndarray:
+    """LassoCV anchor as in run_anchors (fit rows dropna over `drop_cols`, kt target, clip,
+    times ghi_clear_h, night removed), predicted for every row of `df` whose features exist."""
+    a = cfg["anchors"]
+    cols = [f"{target}_{h}", f"{target}_kt_{h}", f"{target}_clear_{h}", f"elevation_{h}"]
+    tr = df.loc[fit_rows, list(dict.fromkeys(cols + drop_cols))].dropna(how="any")
+    sc = StandardScaler().fit(tr[feats].values)
+    m = linear_model.LassoCV(cv=a["cv_folds"], n_jobs=-1, max_iter=a["lasso_max_iter"])
+    m.fit(sc.transform(tr[feats].values), tr[f"{target}_kt_{h}"].values)
+    out = np.full(len(df), np.nan)
+    ok = df[feats].notna().all(axis=1).values
+    out[ok] = np.clip(m.predict(sc.transform(df.loc[ok, feats].values)), *a["kt_clip"]) * df.loc[ok, f"{target}_clear_{h}"].values
+    out[df[f"elevation_{h}"].values < a["night_elevation"]] = np.nan
+    return out

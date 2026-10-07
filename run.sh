@@ -8,5 +8,7 @@ case "${1:-}" in
   audit)    python scripts/audit_data.py --config configs/base.yaml ;;
   anchors)  python scripts/anchors.py --config configs/base.yaml ;;
   split)    python scripts/split_check.py --config configs/base.yaml ;;
-  *) echo "usage: ./run.sh {download|test|audit|anchors|split}"; exit 1 ;;
+  tiers)    python scripts/tiers.py --config configs/base.yaml "${@:2}"
+            [[ "${2:-}" == "--prepare-only" ]] || python scripts/tiers_summary.py ;;
+  *) echo "usage: ./run.sh {download|test|audit|anchors|split|tiers}"; exit 1 ;;
 esac
