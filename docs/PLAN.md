@@ -92,3 +92,92 @@ containing a user name, and any result that has no file in `results/`.
 
 After the short paper, the extended analyses in section 3 are the basis for a full paper
 (3 to 6 pages). Keep each one as its own script, config and results folder.
+
+## 6. Amendments before Stage 5 (2026-10-07)
+
+Recorded before any tier was trained. Decisions 1 to 7 are the author's, after reviewing
+`results/audit/AUDIT.md` at Checkpoint A. The implementation details below them were chosen by
+the assistant and are also fixed before training.
+
+1. **Satellite latency.** The primary setting is `satellite.availability_lag_minutes = 15`: only
+   frames stamped at or before t-15 min are used. A 0-minute variant is also trained and
+   reported, labelled "benchmark convention (sensitivity)". The go/no-go is judged on the
+   15-minute setting only.
+   *Reason:* a GOES image is not available at its nominal time stamp. The benchmark's feature
+   includes the frame stamped exactly t, which is optimistic.
+2. **NAM.** Interpolate linearly in time between valid times of the same run, which fills the
+   3-hourly part (leads 36 to 45 h), and add a binary flag for interpolated values. Runs are
+   never mixed. All NAM fields are standardised, and NAM dwsw divided by the benchmark
+   `ghi_clear_h` is added as a feature.
+   *Reason:* hourly bracketing left 14 to 18% of daylight targets, at late-afternoon valid
+   times, without NWP.
+3. **Evaluation rows.** Both tiers are scored on exactly the same issue times.
+   - Primary set: daylight issue times (elevation_h >= 5 degrees) where a satellite frame is
+     available under the 15-minute rule.
+   - Also reported: all daylight issue times, with the cloud tier receiving a satellite-missing
+     flag.
+   - The satellite availability rate on validation is reported before training.
+   *Reason:* a like-for-like comparison, and an honest picture of the cases where the cloud
+   tier has no satellite input.
+4. **Targets and scoring.** Train on the benchmark's kt target and score in W/m2 with the
+   benchmark's `ghi_clear_h`, exactly as the anchors do.
+   *Reason:* tiers and anchors stay comparable.
+5. **Anchors as a check.** Each tier is reported next to its linear anchor on the same rows:
+   edge against lasso_endo, cloud against lasso_exo. If a tier does not beat its anchor, the
+   report says so plainly.
+   *Reason:* a learned tier that loses to a linear model is a warning sign.
+6. **Fallback ladder, step 5.** The wording changes from "longer horizons" to "the horizons
+   where the gap exists".
+   *Reason:* the anchors (Stage 3) show the satellite gain is largest at 30 to 60 min.
+   This change was made after seeing the linear anchors and before training any tier. The
+   primary criterion is unchanged: about 5% RMSE gain, averaged over all six horizons.
+7. **Per-horizon gaps.** The edge-to-cloud gap is always reported per horizon as well as
+   averaged.
+
+### Implementation details fixed before training (assistant's choices)
+- **Satellite availability:** a frame is "available" at issue time t if one is stamped in
+  [t-lag-60 min, t-lag]; the 60 min is `tiers.sat_max_age_minutes`.
+- **NAM valid time** for horizon h is the midpoint of the target window, t+h-15 min. The run
+  used is the newest with reftime + 6 h <= t whose valid times bracket that time. A value is
+  flagged as interpolated when the bracketing valid times are more than 1 h apart. NaN after
+  standardisation becomes 0, with a missing flag.
+- **Edge inputs** (ground sensors and clear-sky only):
+  - intra-day B/V/L features for GHI and DNI;
+  - intra-hour (5-min) B/V/L features at t, verified to be backward-looking;
+  - 30-min means of the site weather sensors over (t-30 min, t];
+  - solar elevation and benchmark `ghi_clear_h` per horizon;
+  - sine and cosine of day of year and hour.
+  The network is an MLP with 6 outputs (kt per horizon), small enough for int8.
+- **Cloud inputs:** the edge inputs, plus the newest available GOES-15 tile (10 x 10) with its
+  age and a missing flag, plus NAM at each horizon (4 nodes, all fields, dwsw/clear, flags).
+  The network fuses a small CNN for the tile with an MLP for the tabular inputs.
+- **Training:**
+  - loss: mean squared error on kt, masked where elevation_h < 5;
+  - predictions clipped to [0, 1.2], the benchmark target range, for both tiers;
+  - early stopping on the last 30 days of models_train, with targets that cross the slice
+    boundary purged;
+  - hyper-parameters in `configs/base.yaml` under `tiers`, not tuned.
+- **Go/no-go statistic:** gain = 1 - RMSE_cloud / RMSE_edge. Each tier's RMSE is computed per
+  horizon and averaged over horizons, then averaged over the five seeds. The check passes if
+  gain >= `go_no_go.min_rmse_gain` (0.05).
+- **Ladder mechanics** (validation only, in order, stop at the first pass):
+  - Each step builds on the best cloud variant so far, measured by validation RMSE averaged over
+    horizons.
+  - The edge tier is not changed.
+  - Step 1 runs automated input checks:
+    - tiles present and stamped at or before t-lag;
+    - all four NAM nodes present;
+    - NAM reftime + 6 h <= t;
+    - no feature built from data after t.
+    A fault found is fixed and the step is re-scored; otherwise the step is logged as failed,
+    with an unchanged gap.
+  - Step 2: the last 4 tiles within 120 min, plus 3 successive tile differences.
+  - Step 3 adds, on top:
+    - NAM valid at t-15 min and at t+h-15 min ± 1 h;
+    - the NAM error at issue time (NAM dwsw/clear minus the measured B(ghi_kt|30min)).
+  - Step 4: gradient-boosted trees (scikit-learn HistGradientBoosting, one model per horizon) on
+    the same engineered features, with the tile summarised as mean, std and centre 4 x 4 mean
+    per frame. They are scored alone and averaged with the network.
+  - Step 5: with the best variant, keep the horizons whose per-horizon gain is >= 5%. The step
+    passes if their averaged gain is >= 5%, and the study is then restricted to those horizons
+    and says so.
