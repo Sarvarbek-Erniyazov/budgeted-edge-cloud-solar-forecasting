@@ -28,10 +28,10 @@ LOGS = Path("logs/tiers")
 
 
 class Run:
-    def __init__(self, cfg):
+    def __init__(self, cfg, include_test: bool = False):
         self.cfg = cfg
         self.tc = cfg["tiers"]
-        self.base = load_base(cfg)
+        self.base = load_base(cfg, include_test)
         self.df = self.base.df
         self.hz = self.base.hz
         self.tg = targets(self.base, cfg)
@@ -60,7 +60,7 @@ class Run:
         meta_df = pd.DataFrame(meta, columns=[f"sat_age{i}" for i in range(k)] + [f"sat_present{i}" for i in range(k)],
                                index=self.df.index)
         tab = pd.concat([self.ground, nam, meta_df], axis=1)
-        return {"x": standardise(tab, self.tr), "tiles": tiles, "kt": self.tg["kt"], "mask": self.tg["mask"],
+        return {"x": standardise(tab, self.tr), "tab": tab, "tiles": tiles, "kt": self.tg["kt"], "mask": self.tg["mask"],
                 "tab_cols": list(tab.columns), "n_nam": nam.shape[1], "stamps": stamps, "meta": meta,
                 "nam_info": info, "nam_raw": nam}
 

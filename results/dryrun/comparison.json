@@ -1,0 +1,520 @@
+{
+  "all_identical": false,
+  "n_items": 44,
+  "n_identical": 43,
+  "items": [
+    {
+      "item": "predictions/edge.parquet values",
+      "kind": "exact array equality",
+      "identical": true,
+      "max_abs_diff": 0.0
+    },
+    {
+      "item": "predictions/cloud.parquet values",
+      "kind": "exact array equality",
+      "identical": true,
+      "max_abs_diff": 0.0
+    },
+    {
+      "item": "predictions/trees_ground.parquet values",
+      "kind": "exact array equality",
+      "identical": true,
+      "max_abs_diff": 0.0
+    },
+    {
+      "item": "predictions/truth.parquet (local, not committed)",
+      "kind": "exact frame equality",
+      "identical": true
+    },
+    {
+      "item": "predictions/on_device_inputs.parquet (local, not committed)",
+      "kind": "exact frame equality",
+      "identical": true
+    },
+    {
+      "item": "gates/sweep_validation.csv",
+      "kind": "byte-identical file",
+      "identical": true
+    },
+    {
+      "item": "gates/summary_validation.csv",
+      "kind": "byte-identical file",
+      "identical": true
+    },
+    {
+      "item": "gates/bootstrap_validation.csv",
+      "kind": "byte-identical file",
+      "identical": true
+    },
+    {
+      "item": "gates/edge_vs_cloud_bootstrap.json",
+      "kind": "byte-identical file",
+      "identical": true
+    },
+    {
+      "item": "gates/meta.json",
+      "kind": "byte-identical file",
+      "identical": true
+    },
+    {
+      "item": "gate_thresholds.yaml vs configs/gate_thresholds.yaml",
+      "kind": "byte-identical file",
+      "identical": true
+    },
+    {
+      "item": "gate network uncertainty seed 0",
+      "kind": "exact tensor equality",
+      "identical": true
+    },
+    {
+      "item": "gate network learned seed 0",
+      "kind": "exact tensor equality",
+      "identical": true
+    },
+    {
+      "item": "gate network uncertainty seed 1",
+      "kind": "exact tensor equality",
+      "identical": true
+    },
+    {
+      "item": "gate network learned seed 1",
+      "kind": "exact tensor equality",
+      "identical": true
+    },
+    {
+      "item": "gate network uncertainty seed 2",
+      "kind": "exact tensor equality",
+      "identical": true
+    },
+    {
+      "item": "gate network learned seed 2",
+      "kind": "exact tensor equality",
+      "identical": true
+    },
+    {
+      "item": "gate network uncertainty seed 3",
+      "kind": "exact tensor equality",
+      "identical": true
+    },
+    {
+      "item": "gate network learned seed 3",
+      "kind": "exact tensor equality",
+      "identical": true
+    },
+    {
+      "item": "gate network uncertainty seed 4",
+      "kind": "exact tensor equality",
+      "identical": true
+    },
+    {
+      "item": "gate network learned seed 4",
+      "kind": "exact tensor equality",
+      "identical": true
+    },
+    {
+      "item": "claim 1 input effect (control_effects.json)",
+      "kind": "exact",
+      "reference": -0.0027337325644152255,
+      "dry_run": -0.0027337325644152255,
+      "max_abs_diff": 0.0,
+      "identical": true
+    },
+    {
+      "item": "claim 2 RMSE cap10x (footprint_trees.json)",
+      "kind": "exact",
+      "reference": 68.78254600739433,
+      "dry_run": 68.78254600739433,
+      "max_abs_diff": 0.0,
+      "identical": true
+    },
+    {
+      "item": "claim 2 cloud RMSE seed mean (footprint_trees.json)",
+      "kind": "exact",
+      "reference": 68.65634812625093,
+      "dry_run": 68.65634812625093,
+      "max_abs_diff": 0.0,
+      "identical": true
+    },
+    {
+      "item": "claim 2 interval point per seed (footprint_trees.json)",
+      "kind": "exact",
+      "reference": [
+        0.059874023606852234,
+        0.06371914811408885,
+        0.6705520022818661,
+        0.28511448920444593,
+        -0.4482702574902788
+      ],
+      "dry_run": [
+        0.059874023606852234,
+        0.06371914811408885,
+        0.6705520022818661,
+        0.28511448920444593,
+        -0.4482702574902788
+      ],
+      "max_abs_diff": 0.0,
+      "identical": true
+    },
+    {
+      "item": "claim 2 interval lo per seed (footprint_trees.json)",
+      "kind": "exact",
+      "reference": [
+        -2.3826310292001773,
+        -2.3675827656090234,
+        -1.7478031012835564,
+        -2.2667990555663042,
+        -2.865608396779559
+      ],
+      "dry_run": [
+        -2.3826310292001773,
+        -2.3675827656090234,
+        -1.7478031012835564,
+        -2.2667990555663042,
+        -2.865608396779559
+      ],
+      "max_abs_diff": 0.0,
+      "identical": true
+    },
+    {
+      "item": "claim 2 interval hi per seed (footprint_trees.json)",
+      "kind": "exact",
+      "reference": [
+        2.5419565927966943,
+        2.5716342616227434,
+        3.080141170270437,
+        2.848615911216058,
+        2.0169645190124417
+      ],
+      "dry_run": [
+        2.5419565927966943,
+        2.5716342616227434,
+        3.080141170270437,
+        2.848615911216058,
+        2.0169645190124417
+      ],
+      "max_abs_diff": 0.0,
+      "identical": true
+    },
+    {
+      "item": "claim 3 gain (go_no_go.json step4_gbt_plus_net)",
+      "kind": "exact",
+      "reference": 0.06312768725031048,
+      "dry_run": 0.06312768665079438,
+      "max_abs_diff": 5.995161034277885e-10,
+      "identical": false,
+      "note": "Stage 5 averaged trees and network in W/m2 (float64); the saved prediction files, the gates and this run average kt in float32, then multiply by ghi_clear_h. See the next item."
+    },
+    {
+      "item": "claim 3 gain, Stage 5 convention (W/m2 float64 average) vs go_no_go.json",
+      "kind": "exact",
+      "reference": 0.06312768725031048,
+      "dry_run": 0.06312768725031048,
+      "max_abs_diff": 0.0,
+      "identical": true
+    },
+    {
+      "item": "claim 3 gain per seed (go_no_go.json, stored to 4 dp)",
+      "kind": "exact",
+      "reference": [
+        0.0593,
+        0.0483,
+        0.0552,
+        0.1136,
+        0.0356
+      ],
+      "dry_run": [
+        0.0593,
+        0.0483,
+        0.0552,
+        0.1136,
+        0.0356
+      ],
+      "max_abs_diff": 0.0,
+      "identical": true
+    },
+    {
+      "item": "claim 3 interval point per seed (gates/edge_vs_cloud_bootstrap.json)",
+      "kind": "exact",
+      "reference": [
+        4.335123938240699,
+        3.4887564556657793,
+        3.9757067703132094,
+        8.777309756981609,
+        2.553877514900222
+      ],
+      "dry_run": [
+        4.335123938240699,
+        3.4887564556657793,
+        3.9757067703132094,
+        8.777309756981609,
+        2.553877514900222
+      ],
+      "max_abs_diff": 0.0,
+      "identical": true
+    },
+    {
+      "item": "claim 3 interval lo per seed (gates/edge_vs_cloud_bootstrap.json)",
+      "kind": "exact",
+      "reference": [
+        1.2307726632941298,
+        0.6423297967109857,
+        0.9722759419504244,
+        5.5902449658467335,
+        -0.010380629555433783
+      ],
+      "dry_run": [
+        1.2307726632941298,
+        0.6423297967109857,
+        0.9722759419504244,
+        5.5902449658467335,
+        -0.010380629555433783
+      ],
+      "max_abs_diff": 0.0,
+      "identical": true
+    },
+    {
+      "item": "claim 3 interval hi per seed (gates/edge_vs_cloud_bootstrap.json)",
+      "kind": "exact",
+      "reference": [
+        7.690874634627329,
+        6.344948153974978,
+        7.041993103690494,
+        11.99895685239461,
+        5.081576940066497
+      ],
+      "dry_run": [
+        7.690874634627329,
+        6.344948153974978,
+        7.041993103690494,
+        11.99895685239461,
+        5.081576940066497
+      ],
+      "max_abs_diff": 0.0,
+      "identical": true
+    },
+    {
+      "item": "edge fp32 RMSE per seed (gates/edge_vs_cloud_bootstrap.json)",
+      "kind": "exact",
+      "reference": [
+        73.05779592202818,
+        72.207583314946,
+        72.08770077542569,
+        77.27474127517148,
+        71.78469377978485
+      ],
+      "dry_run": [
+        73.05779592202818,
+        72.207583314946,
+        72.08770077542569,
+        77.27474127517148,
+        71.78469377978485
+      ],
+      "max_abs_diff": 0.0,
+      "identical": true
+    },
+    {
+      "item": "cloud RMSE per seed (gates/edge_vs_cloud_bootstrap.json)",
+      "kind": "exact",
+      "reference": [
+        68.72267198378746,
+        68.71882685928024,
+        68.11199400511244,
+        68.49743151818988,
+        69.2308162648846
+      ],
+      "dry_run": [
+        68.72267198378746,
+        68.71882685928024,
+        68.11199400511244,
+        68.49743151818988,
+        69.2308162648846
+      ],
+      "max_abs_diff": 0.0,
+      "identical": true
+    },
+    {
+      "item": "edge int8 RMSE per seed (measured.json)",
+      "kind": "exact",
+      "reference": [
+        73.72469438323691,
+        72.90613759399083,
+        73.21687127979278,
+        78.70266235030357,
+        72.54355271877378
+      ],
+      "dry_run": [
+        73.72469438323691,
+        72.90613759399083,
+        73.21687127979278,
+        78.70266235030357,
+        72.54355271877378
+      ],
+      "max_abs_diff": 0.0,
+      "identical": true
+    },
+    {
+      "item": "claim 4 share_mean at report budgets (summary_validation.csv)",
+      "kind": "exact",
+      "reference": [
+        0.1024,
+        0.236,
+        0.4898,
+        0.3635,
+        0.6053,
+        0.8293,
+        2.3603,
+        2.7844,
+        2.9005,
+        0.0963,
+        0.2483,
+        0.4941,
+        0.4207,
+        0.7001,
+        0.8663,
+        0.2334,
+        0.4,
+        0.6774
+      ],
+      "dry_run": [
+        0.1024,
+        0.236,
+        0.4898,
+        0.3635,
+        0.6053,
+        0.8293,
+        2.3603,
+        2.7844,
+        2.9005,
+        0.0963,
+        0.2483,
+        0.4941,
+        0.4207,
+        0.7001,
+        0.8663,
+        0.2334,
+        0.4,
+        0.6774
+      ],
+      "max_abs_diff": 0.0,
+      "identical": true
+    },
+    {
+      "item": "claim 4 realised_rate_mean at report budgets",
+      "kind": "exact",
+      "reference": [
+        0.0761,
+        0.2329,
+        0.4899,
+        0.074,
+        0.2088,
+        0.3784,
+        0.1,
+        0.2499,
+        0.4999,
+        0.1,
+        0.25,
+        0.5,
+        0.1006,
+        0.2414,
+        0.4326,
+        0.1126,
+        0.2365,
+        0.4518
+      ],
+      "dry_run": [
+        0.0761,
+        0.2329,
+        0.4899,
+        0.074,
+        0.2088,
+        0.3784,
+        0.1,
+        0.2499,
+        0.4999,
+        0.1,
+        0.25,
+        0.5,
+        0.1006,
+        0.2414,
+        0.4326,
+        0.1126,
+        0.2365,
+        0.4518
+      ],
+      "max_abs_diff": 0.0,
+      "identical": true
+    },
+    {
+      "item": "claim 5 ramp RMSE edge per seed (sweep, budget 0, 4 dp)",
+      "kind": "exact",
+      "reference": [
+        137.5341,
+        134.1817,
+        134.3722,
+        134.9778,
+        135.2245
+      ],
+      "dry_run": [
+        137.5341,
+        134.1817,
+        134.3722,
+        134.9778,
+        135.2245
+      ],
+      "max_abs_diff": 0.0,
+      "identical": true
+    },
+    {
+      "item": "claim 5 ramp RMSE cloud per seed (sweep, budget 1, 4 dp)",
+      "kind": "exact",
+      "reference": [
+        133.8944,
+        132.7911,
+        133.2923,
+        133.3618,
+        133.5371
+      ],
+      "dry_run": [
+        133.8944,
+        132.7911,
+        133.2923,
+        133.3618,
+        133.5371
+      ],
+      "max_abs_diff": 0.0,
+      "identical": true
+    },
+    {
+      "item": "smart persistence RMSE, primary (tiers/validation.csv, 4 dp)",
+      "kind": "exact",
+      "reference": 87.5511,
+      "dry_run": 87.5511,
+      "max_abs_diff": 0.0,
+      "identical": true
+    },
+    {
+      "item": "lasso_endo RMSE, primary (tiers/validation.csv, 4 dp)",
+      "kind": "exact",
+      "reference": 78.9773,
+      "dry_run": 78.9773,
+      "max_abs_diff": 0.0,
+      "identical": true
+    },
+    {
+      "item": "lasso_exo RMSE, anchor rows (tiers/validation.csv, 4 dp)",
+      "kind": "exact",
+      "reference": 74.8733,
+      "dry_run": 74.8733,
+      "max_abs_diff": 0.0,
+      "identical": true
+    },
+    {
+      "item": "anchor-row cells (tiers/validation.csv mean-row n)",
+      "kind": "exact",
+      "reference": 15104,
+      "dry_run": 15104,
+      "max_abs_diff": 0.0,
+      "identical": true
+    }
+  ]
+}

@@ -1,0 +1,477 @@
+{
+  "mode": "dry run (validation as test, gates fitted on gate_fit)",
+  "git_head": "096eb0d28d6fd41ad837d804788ac6581c59259d",
+  "primary_cells": 20125,
+  "anchor_cells": 15104,
+  "ramp_cells": 1173,
+  "claim1_input_effect": {
+    "rmse_trees_all": 69.35054505039676,
+    "rmse_trees_ground": 69.16147607105829,
+    "input_effect": -0.0027337325644152255,
+    "interval_rmse_ground_minus_all": {
+      "point": -0.1890689793384439,
+      "lo": -2.595855682226743,
+      "hi": 2.2842426453523887,
+      "includes_zero": true,
+      "n_days": 183
+    },
+    "counts_against": false
+  },
+  "claim2_on_device_sufficiency": {
+    "rmse_cap10x": 68.78254600739433,
+    "rmse_cloud_per_seed": {
+      "0": 68.72267198378746,
+      "1": 68.71882685928024,
+      "2": 68.11199400511244,
+      "3": 68.49743151818988,
+      "4": 69.2308162648846
+    },
+    "relative_difference_d": 0.0018381094332507052,
+    "intervals_rmse_cap10x_minus_cloud": [
+      {
+        "cloud_seed": 0,
+        "point": 0.059874023606852234,
+        "lo": -2.3826310292001773,
+        "hi": 2.5419565927966943,
+        "includes_zero": true,
+        "n_days": 183
+      },
+      {
+        "cloud_seed": 1,
+        "point": 0.06371914811408885,
+        "lo": -2.3675827656090234,
+        "hi": 2.5716342616227434,
+        "includes_zero": true,
+        "n_days": 183
+      },
+      {
+        "cloud_seed": 2,
+        "point": 0.6705520022818661,
+        "lo": -1.7478031012835564,
+        "hi": 3.080141170270437,
+        "includes_zero": true,
+        "n_days": 183
+      },
+      {
+        "cloud_seed": 3,
+        "point": 0.28511448920444593,
+        "lo": -2.2667990555663042,
+        "hi": 2.848615911216058,
+        "includes_zero": true,
+        "n_days": 183
+      },
+      {
+        "cloud_seed": 4,
+        "point": -0.4482702574902788,
+        "lo": -2.865608396779559,
+        "hi": 2.0169645190124417,
+        "includes_zero": true,
+        "n_days": 183
+      }
+    ],
+    "seeds_entirely_above_zero": 0,
+    "verdict": "matches",
+    "counts_against": false
+  },
+  "claim3_edge_vs_cloud_fp32": {
+    "rmse_edge_per_seed": {
+      "0": 73.05779592202818,
+      "1": 72.207583314946,
+      "2": 72.08770077542569,
+      "3": 77.27474127517148,
+      "4": 71.78469377978485
+    },
+    "gain_per_seed": [
+      0.059338279830771556,
+      0.04831565184018061,
+      0.05515097204582431,
+      0.1135857540528804,
+      0.03557690895408461
+    ],
+    "gain_mean_of_seed_rmse": 0.06312768665079438,
+    "gain_median_seed": 0.05515097204582431,
+    "intervals_rmse_edge_minus_cloud": [
+      {
+        "seed": 0,
+        "point": 4.335123938240699,
+        "lo": 1.2307726632941298,
+        "hi": 7.690874634627329,
+        "includes_zero": false,
+        "n_days": 183
+      },
+      {
+        "seed": 1,
+        "point": 3.4887564556657793,
+        "lo": 0.6423297967109857,
+        "hi": 6.344948153974978,
+        "includes_zero": false,
+        "n_days": 183
+      },
+      {
+        "seed": 2,
+        "point": 3.9757067703132094,
+        "lo": 0.9722759419504244,
+        "hi": 7.041993103690494,
+        "includes_zero": false,
+        "n_days": 183
+      },
+      {
+        "seed": 3,
+        "point": 8.777309756981609,
+        "lo": 5.5902449658467335,
+        "hi": 11.99895685239461,
+        "includes_zero": false,
+        "n_days": 183
+      },
+      {
+        "seed": 4,
+        "point": 2.553877514900222,
+        "lo": -0.010380629555433783,
+        "hi": 5.081576940066497,
+        "includes_zero": true,
+        "n_days": 183
+      }
+    ],
+    "seeds_including_zero_or_below": 1,
+    "below_5pct_threshold": false,
+    "counts_against": false
+  },
+  "claim3_edge_vs_cloud_int8_secondary": {
+    "rmse_edge_per_seed": {
+      "0": 73.72469438323691,
+      "1": 72.90613759399083,
+      "2": 73.21687127979278,
+      "3": 78.70266235030357,
+      "4": 72.54355271877378
+    },
+    "gain_per_seed": [
+      0.06784731278027212,
+      0.05743426922475903,
+      0.06972269076033644,
+      0.1296681780177964,
+      0.045665484108994736
+    ],
+    "gain_mean_of_seed_rmse": 0.07494646589816467,
+    "gain_median_seed": 0.06784731278027212,
+    "intervals_rmse_edge_minus_cloud": [
+      {
+        "seed": 0,
+        "point": 5.002022399449416,
+        "lo": 1.6713365431636655,
+        "hi": 8.559424897727556,
+        "includes_zero": false,
+        "n_days": 183
+      },
+      {
+        "seed": 1,
+        "point": 4.187310734710593,
+        "lo": 1.1827590952723628,
+        "hi": 7.241229672574544,
+        "includes_zero": false,
+        "n_days": 183
+      },
+      {
+        "seed": 2,
+        "point": 5.1048772746803195,
+        "lo": 2.066458821643178,
+        "hi": 8.321716251414315,
+        "includes_zero": false,
+        "n_days": 183
+      },
+      {
+        "seed": 3,
+        "point": 10.20523083211367,
+        "lo": 6.684295159137002,
+        "hi": 13.758349640686069,
+        "includes_zero": false,
+        "n_days": 183
+      },
+      {
+        "seed": 4,
+        "point": 3.3127364538891584,
+        "lo": 0.7315579451083614,
+        "hi": 5.907301439547134,
+        "includes_zero": false,
+        "n_days": 183
+      }
+    ],
+    "seeds_including_zero_or_below": 0,
+    "below_5pct_threshold": false,
+    "counts_against": "not judged (secondary row)"
+  },
+  "claim4_gates": {
+    "table": [
+      {
+        "gate": "fixed_interval",
+        "budget_target": 0.1,
+        "realised_rate_mean": 0.0761,
+        "share_mean": 0.1024,
+        "share_median": 0.1045,
+        "share_min": 0.0686,
+        "share_max": 0.131
+      },
+      {
+        "gate": "fixed_interval",
+        "budget_target": 0.25,
+        "realised_rate_mean": 0.2329,
+        "share_mean": 0.236,
+        "share_median": 0.2584,
+        "share_min": 0.1404,
+        "share_max": 0.3084
+      },
+      {
+        "gate": "fixed_interval",
+        "budget_target": 0.5,
+        "realised_rate_mean": 0.4899,
+        "share_mean": 0.4898,
+        "share_median": 0.4782,
+        "share_min": 0.463,
+        "share_max": 0.5424
+      },
+      {
+        "gate": "learned",
+        "budget_target": 0.1,
+        "realised_rate_mean": 0.074,
+        "share_mean": 0.3635,
+        "share_median": 0.353,
+        "share_min": 0.244,
+        "share_max": 0.4722
+      },
+      {
+        "gate": "learned",
+        "budget_target": 0.25,
+        "realised_rate_mean": 0.2088,
+        "share_mean": 0.6053,
+        "share_median": 0.6049,
+        "share_min": 0.4826,
+        "share_max": 0.7196
+      },
+      {
+        "gate": "learned",
+        "budget_target": 0.5,
+        "realised_rate_mean": 0.3784,
+        "share_mean": 0.8293,
+        "share_median": 0.8137,
+        "share_min": 0.7317,
+        "share_max": 1.0044
+      },
+      {
+        "gate": "oracle",
+        "budget_target": 0.1,
+        "realised_rate_mean": 0.1,
+        "share_mean": 2.3603,
+        "share_median": 2.2771,
+        "share_min": 1.3327,
+        "share_max": 3.346
+      },
+      {
+        "gate": "oracle",
+        "budget_target": 0.25,
+        "realised_rate_mean": 0.2499,
+        "share_mean": 2.7844,
+        "share_median": 2.7132,
+        "share_min": 1.6758,
+        "share_max": 3.8872
+      },
+      {
+        "gate": "oracle",
+        "budget_target": 0.5,
+        "realised_rate_mean": 0.4999,
+        "share_mean": 2.9005,
+        "share_median": 2.8522,
+        "share_min": 1.7905,
+        "share_max": 4.0043
+      },
+      {
+        "gate": "random",
+        "budget_target": 0.1,
+        "realised_rate_mean": 0.1,
+        "share_mean": 0.0963,
+        "share_median": 0.0941,
+        "share_min": 0.0919,
+        "share_max": 0.102
+      },
+      {
+        "gate": "random",
+        "budget_target": 0.25,
+        "realised_rate_mean": 0.25,
+        "share_mean": 0.2483,
+        "share_median": 0.2519,
+        "share_min": 0.2331,
+        "share_max": 0.2557
+      },
+      {
+        "gate": "random",
+        "budget_target": 0.5,
+        "realised_rate_mean": 0.5,
+        "share_mean": 0.4941,
+        "share_median": 0.4913,
+        "share_min": 0.4845,
+        "share_max": 0.5055
+      },
+      {
+        "gate": "uncertainty",
+        "budget_target": 0.1,
+        "realised_rate_mean": 0.1006,
+        "share_mean": 0.4207,
+        "share_median": 0.4173,
+        "share_min": 0.267,
+        "share_max": 0.5596
+      },
+      {
+        "gate": "uncertainty",
+        "budget_target": 0.25,
+        "realised_rate_mean": 0.2414,
+        "share_mean": 0.7001,
+        "share_median": 0.7066,
+        "share_min": 0.5835,
+        "share_max": 0.8662
+      },
+      {
+        "gate": "uncertainty",
+        "budget_target": 0.5,
+        "realised_rate_mean": 0.4326,
+        "share_mean": 0.8663,
+        "share_median": 0.8446,
+        "share_min": 0.7542,
+        "share_max": 0.9975
+      },
+      {
+        "gate": "variability",
+        "budget_target": 0.1,
+        "realised_rate_mean": 0.1126,
+        "share_mean": 0.2334,
+        "share_median": 0.2633,
+        "share_min": 0.0804,
+        "share_max": 0.333
+      },
+      {
+        "gate": "variability",
+        "budget_target": 0.25,
+        "realised_rate_mean": 0.2365,
+        "share_mean": 0.4,
+        "share_median": 0.4786,
+        "share_min": 0.1867,
+        "share_max": 0.4956
+      },
+      {
+        "gate": "variability",
+        "budget_target": 0.5,
+        "realised_rate_mean": 0.4518,
+        "share_mean": 0.6774,
+        "share_median": 0.6702,
+        "share_min": 0.5522,
+        "share_max": 0.7791
+      }
+    ],
+    "uncertainty_minus_random_share_at_25pct_per_seed": [
+      0.3316,
+      0.4728,
+      0.3705,
+      0.47350000000000003,
+      0.6105
+    ],
+    "against_gate_beats_random": false,
+    "learned_minus_uncertainty_seed_mean": {
+      "0.1": -0.05720000000000003,
+      "0.25": -0.0948,
+      "0.5": -0.03699999999999992
+    },
+    "against_learned_not_better": false,
+    "realised_minus_target": {
+      "variability@0.1": 0.0126,
+      "variability@0.25": -0.013500000000000012,
+      "variability@0.5": -0.04820000000000002,
+      "uncertainty@0.1": 0.0005999999999999894,
+      "uncertainty@0.25": -0.008599999999999997,
+      "uncertainty@0.5": -0.06740000000000002,
+      "learned@0.1": -0.02600000000000001,
+      "learned@0.25": -0.04119999999999999,
+      "learned@0.5": -0.12159999999999999
+    },
+    "against_refit_fixes_shortfall": true
+  },
+  "claim5_ramp": {
+    "rmse_edge_ramp": {
+      "0": 137.53413781204142,
+      "1": 134.18173079987974,
+      "2": 134.37220441820952,
+      "3": 134.9777625766343,
+      "4": 135.22454578356164
+    },
+    "rmse_cloud_ramp": {
+      "0": 133.8943977443456,
+      "1": 132.79108513817084,
+      "2": 133.2923452958989,
+      "3": 133.36176279884236,
+      "4": 133.5371072894835
+    },
+    "intervals_rmse_edge_minus_cloud_ramp": [
+      {
+        "seed": 0,
+        "point": 3.639740067695783,
+        "lo": -2.5893886355966913,
+        "hi": 9.66654820252874,
+        "includes_zero": true,
+        "n_days": 99
+      },
+      {
+        "seed": 1,
+        "point": 1.3906456617089304,
+        "lo": -4.336387392691563,
+        "hi": 7.337735713953925,
+        "includes_zero": true,
+        "n_days": 99
+      },
+      {
+        "seed": 2,
+        "point": 1.0798591223106087,
+        "lo": -5.355346383555975,
+        "hi": 7.070826134952874,
+        "includes_zero": true,
+        "n_days": 99
+      },
+      {
+        "seed": 3,
+        "point": 1.6159997777918989,
+        "lo": -4.959579623717623,
+        "hi": 8.441408088408268,
+        "includes_zero": true,
+        "n_days": 99
+      },
+      {
+        "seed": 4,
+        "point": 1.6874384940781795,
+        "lo": -4.311824000692898,
+        "hi": 7.270101944134272,
+        "includes_zero": true,
+        "n_days": 99
+      }
+    ],
+    "against_no_cloud_advantage": false,
+    "gate_share_at_25pct_ramp": {
+      "random": {
+        "share_mean": 0.25687999999999994,
+        "all_seeds_positive": true
+      },
+      "fixed_interval": {
+        "share_mean": 0.11601999999999998,
+        "all_seeds_positive": false
+      },
+      "variability": {
+        "share_mean": -0.54084,
+        "all_seeds_positive": false
+      },
+      "uncertainty": {
+        "share_mean": 0.11155999999999999,
+        "all_seeds_positive": false
+      },
+      "learned": {
+        "share_mean": 0.36038000000000003,
+        "all_seeds_positive": false
+      }
+    },
+    "against_no_gate_helps": false,
+    "note": "oracle excluded (headroom only)"
+  }
+}

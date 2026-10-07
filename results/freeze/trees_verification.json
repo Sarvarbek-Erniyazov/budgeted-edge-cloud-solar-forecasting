@@ -1,0 +1,36 @@
+{
+  "trees_all": {
+    "file": "checkpoints/trees/trees_all.pkl",
+    "bytes": 5917302,
+    "pickle_roundtrip_identical": true,
+    "matches_cached_step4_trees_predictions_all_rows": true,
+    "cloud_tier_matches_results/tiers/predictions/cloud.parquet_per_seed": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  "trees_ground": {
+    "file": "checkpoints/trees/trees_ground.pkl",
+    "bytes": 2899166,
+    "pickle_roundtrip_identical": true,
+    "matches_results/tiers/predictions/trees_ground.parquet": true
+  },
+  "trees_ground_cap10x": {
+    "file": "checkpoints/trees/trees_ground_cap10x.pkl",
+    "bytes": 1524285,
+    "pickle_roundtrip_identical": true,
+    "validation_rmse": 68.78254600739433,
+    "footprint_trees.json_rmse": 68.78254600739433,
+    "measured.json_rmse_sklearn": 68.78254600739433,
+    "identical_to_both": true
+  },
+  "norms": {
+    "file": "checkpoints/trees/norms.npz",
+    "ground_columns": 96,
+    "step3_columns": 434
+  },
+  "all_identical": true
+}

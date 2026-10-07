@@ -15,5 +15,13 @@ case "${1:-}" in
   predictions) python scripts/predictions.py --config configs/base.yaml ;;
   gates)    python scripts/gates.py --config configs/base.yaml ;;
   measure)  python scripts/measure_footprint.py --config configs/base.yaml ;;
-  *) echo "usage: ./run.sh {download|test|audit|anchors|split|tiers|control|footprint|predictions|gates|measure}"; exit 1 ;;
+  save_trees) python scripts/save_trees.py --config configs/base.yaml ;;
+  hashes)   python scripts/hash_checkpoints.py ;;
+  dryrun)   python scripts/test_run.py predictions --dry-run
+            python scripts/test_run.py gates --dry-run
+            python scripts/test_run.py claims --dry-run ;;
+  test_predictions) python scripts/test_run.py predictions ;;
+  test_gates)  python scripts/test_run.py gates ;;
+  test_claims) python scripts/test_run.py claims ;;
+  *) echo "usage: ./run.sh {download|test|audit|anchors|split|tiers|control|footprint|predictions|gates|measure|save_trees|hashes|dryrun|test_predictions|test_gates|test_claims}"; exit 1 ;;
 esac

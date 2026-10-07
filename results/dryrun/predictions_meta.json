@@ -1,0 +1,11 @@
+{
+  "mode": "dry run",
+  "git_head": "096eb0d28d6fd41ad837d804788ac6581c59259d",
+  "ground_stats_recomputed_equal_saved": true,
+  "step3_stats_recomputed_equal_saved": true,
+  "rows_saved": 8077,
+  "parts": {
+    "gate_fit": 4122,
+    "val": 3955
+  }
+}

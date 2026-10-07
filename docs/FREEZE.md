@@ -71,16 +71,30 @@ Sources for every value below:
 | tier | definition | checkpoints |
 |---|---|---|
 | **edge** | MLP 96 → 64 → 64 → 6 (ReLU), 10,758 parameters, fp32. Masked kt MSE, AdamW (lr 1e-3, weight decay 1e-4), batch 256, at most 300 epochs, patience 20 | `checkpoints/tiers/base/edge_seed{0..4}.pt` |
-| **cloud** | 0.5 × trees + 0.5 × step-3 network. Trees: HistGradientBoosting (one per horizon, learning rate 0.05, 31 leaves, at most 500 iterations, iterations chosen on the early-stop slice) on the step-3 inputs plus a tile summary. Network: the step-3 CloudNet | `checkpoints/tiers/step3/cloud_seed{0..4}.pt`; tree models **not yet saved** (section e) |
-| **trees_ground** | the same tree set-up on the edge inputs only | **not yet saved** (section e) |
-| **trees_ground, 10x cap** | 8 leaves, at most 103 trees per horizon (473 chosen); about 85 KB estimated, 87,183 B as a compiled object | **not yet saved** (section e) |
-| **trees, all inputs** (claim 1) | the step-4 trees alone | **not yet saved** (section e) |
+| **cloud** | 0.5 × trees + 0.5 × step-3 network, averaged as **kt in float32, then multiplied by `ghi_clear_h`** (see note below). Trees: HistGradientBoosting (one per horizon, learning rate 0.05, 31 leaves, at most 500 iterations, iterations chosen on the early-stop slice) on the step-3 inputs plus a tile summary. Network: the step-3 CloudNet | `checkpoints/tiers/step3/cloud_seed{0..4}.pt`, `checkpoints/trees/trees_all.pkl` |
+| **trees_ground** | the same tree set-up on the edge inputs only | `checkpoints/trees/trees_ground.pkl` |
+| **trees_ground, 10x cap** | 8 leaves, at most 103 trees per horizon (473 chosen); about 85 KB estimated, 87,183 B as a compiled object | `checkpoints/trees/trees_ground_cap10x.pkl` |
+| **trees, all inputs** (claim 1) | the step-4 trees alone | `checkpoints/trees/trees_all.pkl` |
+| standardisation | models_train training-row statistics for the edge inputs and the step-3 inputs | `checkpoints/trees/norms.npz` |
 
 - **Edge tier, fp32 and int8:** the fp32 edge network is the primary edge tier, and every
   claim is judged on it. The int8 edge network (`checkpoints/footprint/edge_seed{s}.int8.onnx`,
   `results/footprint/measured.json`) is a **secondary row, reported next to fp32 in every table
   that shows the edge tier**.
-- **Checkpoint SHA-256 hashes** (first 16 hex digits; the files are not in git):
+- **Cloud-tier arithmetic.** The average is formed as (kt_trees + kt_network) / 2 in float32,
+  then multiplied by `ghi_clear_h`. This is the form used by the saved prediction files, the
+  gates, the footprint step and the test run.
+  - Stage 5's go/no-go formed the average in W/m2 (float64). The gain differs by 6.0e-10
+    (0.0631276873 against 0.0631276867), and the largest cell difference is 5.8e-5 W/m2.
+  - `results/dryrun/comparison.json` shows both forms: the W/m2 form reproduces
+    `go_no_go.json` exactly.
+- **Saved trees** (`./run.sh save_trees`, `results/freeze/trees_verification.json`): pickled
+  with scikit-learn 1.9.1. They reproduce the committed development predictions exactly,
+  including the cloud tier for all five seeds and the capped model's validation RMSE.
+- **Checkpoint SHA-256 hashes:** the full list is in `docs/checkpoint_hashes.txt`, 19 files in
+  `sha256sum -c` format. It covers the edge and step-3 checkpoints, the three tree models, the
+  standardisation statistics and the int8 edge models. The first 16 hex digits of the network
+  checkpoints are repeated here:
 
   | file | edge_seed | step3 cloud_seed |
   |---|---|---|
@@ -90,9 +104,9 @@ Sources for every value below:
   | seed 3 | 3951bf917a3752c9 | 5fe6f27a5d6f2fec |
   | seed 4 | 8aca79f44357b0e7 | 7fd91cc7b86fece9 |
 
-  The full hashes are to be written to `docs/checkpoint_hashes.txt` at the freeze (section e).
-  The gate checkpoints in `checkpoints/gates/` are the gate_fit versions. The test run
-  replaces them with the 2015 refit.
+  The gate checkpoints in `checkpoints/gates/` are the gate_fit versions and are not test-run
+  inputs. The test run writes its 2015 refit to `checkpoints/gates_test/` and its thresholds to
+  `configs/gate_thresholds_test.yaml`.
 
 ### Gates
 - **Unit and inputs:**
@@ -290,21 +304,40 @@ its text.
    enter the models or the scoring (only the audit's sky classes), but it limits the ramp
    definition's meaning at low sun.
 
-## e. Required before the freeze tag (not done)
+## e. Required before the freeze tag
 
-1. Make the loaders able to read the test period, only when `select_split(..., "test")` is
+Status on 2026-10-08: items 1 to 5 are done (commit after `096eb0d`); item 6 is the author's.
+
+1. **Done.** Make the loaders able to read the test period, only when `select_split(..., "test")` is
    unlocked. Today every loader calls `dev_only`. Add a test that the test path raises
    `LockedTestYear` while the protocol is not frozen.
-2. Save the fitted tree models (step-4 trees, trees_ground, 10x-capped trees_ground) as
+2. **Done.** Save the fitted tree models (step-4 trees, trees_ground, 10x-capped trees_ground) as
    pickled files with SHA-256 hashes. Check that their development predictions reproduce the
    committed results exactly.
-3. Write `test_predictions`, `test_gates` (2015 refit) and `test_claims`.
+3. **Done** (`scripts/test_run.py`, `./run.sh dryrun`). Write `test_predictions`, `test_gates` (2015 refit) and `test_claims`.
    - Dry-run them on development data, treating validation as the "test" period with gates fitted
      on gate_fit only.
    - Check that the dry run reproduces `results/gates/` and the validation claims.
-4. Write `docs/checkpoint_hashes.txt` (full SHA-256 of every checkpoint and tree file).
-5. `requirements.lock.txt` must equal the environment (`pip freeze`), with ziglang added and
+4. **Done.** Write `docs/checkpoint_hashes.txt` (full SHA-256 of every checkpoint and tree file).
+5. **Done.** `requirements.lock.txt` must equal the environment (`pip freeze`), with ziglang added and
    skl2onnx removed. This matters because the pickled tree models depend on the scikit-learn
    version, which is pinned at 1.9.1. Checked on 2026-10-08: identical.
 6. The author approves sections a to d (done 2026-10-08, with amendments), checks the dry run,
    and then creates the tag.
+
+### Dry-run result (2026-10-08)
+`./run.sh dryrun` takes validation as the "test" period and fits gates on gate_fit only. The
+comparison is in `results/dryrun/comparison.json`: **43 of 44 items are identical.**
+
+Identical items:
+- prediction files (edge, cloud, trees_ground, truth, inputs);
+- all five gate output files, byte for byte;
+- the gate thresholds file, byte for byte;
+- all ten gate networks, tensor for tensor;
+- claims 1, 2, 4 and 5 values and intervals;
+- the claim 3 intervals and the per-seed edge and cloud RMSE;
+- int8 edge RMSE;
+- smart persistence, lasso_endo, lasso_exo and the anchor-row cell count.
+
+The one difference is the claim 3 seed-mean gain, by 6.0e-10. It is fully explained by the
+averaging convention noted in section a: recomputed with Stage 5's W/m2 average, it is identical.

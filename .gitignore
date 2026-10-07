@@ -14,3 +14,5 @@ logs/*
 # dataset-derived (measured GHI, inputs): regenerate with ./run.sh predictions
 results/tiers/predictions/truth.parquet
 results/tiers/predictions/on_device_inputs.parquet
+# dry-run prediction files (regenerate with ./run.sh dryrun)
+results/dryrun/predictions/

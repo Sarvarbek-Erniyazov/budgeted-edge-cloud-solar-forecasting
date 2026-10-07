@@ -1,0 +1,112 @@
+[
+  {
+    "seed": 0,
+    "edge_minus_cloud": {
+      "point": 4.335123938240699,
+      "lo": 1.2307726632941298,
+      "hi": 7.690874634627329,
+      "includes_zero": false,
+      "n_days": 183
+    },
+    "edge_minus_trees_ground": {
+      "point": 3.896319850969874,
+      "lo": 1.0857564125837396,
+      "hi": 6.726597877066514,
+      "includes_zero": false,
+      "n_days": 183
+    },
+    "rmse": {
+      "edge": 73.05779592202818,
+      "cloud": 68.72267198378746,
+      "trees_ground": 69.16147607105829
+    }
+  },
+  {
+    "seed": 1,
+    "edge_minus_cloud": {
+      "point": 3.4887564556657793,
+      "lo": 0.6423297967109857,
+      "hi": 6.344948153974978,
+      "includes_zero": false,
+      "n_days": 183
+    },
+    "edge_minus_trees_ground": {
+      "point": 3.046107243887718,
+      "lo": 0.9812148778555086,
+      "hi": 5.250182164645258,
+      "includes_zero": false,
+      "n_days": 183
+    },
+    "rmse": {
+      "edge": 72.207583314946,
+      "cloud": 68.71882685928024,
+      "trees_ground": 69.16147607105829
+    }
+  },
+  {
+    "seed": 2,
+    "edge_minus_cloud": {
+      "point": 3.9757067703132094,
+      "lo": 0.9722759419504244,
+      "hi": 7.041993103690494,
+      "includes_zero": false,
+      "n_days": 183
+    },
+    "edge_minus_trees_ground": {
+      "point": 2.926224704367371,
+      "lo": 0.544892514510835,
+      "hi": 5.238041230698421,
+      "includes_zero": false,
+      "n_days": 183
+    },
+    "rmse": {
+      "edge": 72.08770077542569,
+      "cloud": 68.11199400511244,
+      "trees_ground": 69.16147607105829
+    }
+  },
+  {
+    "seed": 3,
+    "edge_minus_cloud": {
+      "point": 8.777309756981609,
+      "lo": 5.5902449658467335,
+      "hi": 11.99895685239461,
+      "includes_zero": false,
+      "n_days": 183
+    },
+    "edge_minus_trees_ground": {
+      "point": 8.11326520411319,
+      "lo": 4.881973742582658,
+      "hi": 11.543986961814499,
+      "includes_zero": false,
+      "n_days": 183
+    },
+    "rmse": {
+      "edge": 77.27474127517148,
+      "cloud": 68.49743151818988,
+      "trees_ground": 69.16147607105829
+    }
+  },
+  {
+    "seed": 4,
+    "edge_minus_cloud": {
+      "point": 2.553877514900222,
+      "lo": -0.010380629555433783,
+      "hi": 5.081576940066497,
+      "includes_zero": true,
+      "n_days": 183
+    },
+    "edge_minus_trees_ground": {
+      "point": 2.6232177087265285,
+      "lo": 0.435581954303156,
+      "hi": 4.860374664691813,
+      "includes_zero": false,
+      "n_days": 183
+    },
+    "rmse": {
+      "edge": 71.78469377978485,
+      "cloud": 69.2308162648846,
+      "trees_ground": 69.16147607105829
+    }
+  }
+]

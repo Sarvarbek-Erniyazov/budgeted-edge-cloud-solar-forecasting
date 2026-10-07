@@ -1,0 +1,78 @@
+{
+  "period": "validation",
+  "bounds": [
+    "2015-07-01 00:00:00",
+    "2016-01-01 00:00:00"
+  ],
+  "issue_times": 3955,
+  "daylight_issue_times": 3857,
+  "daylight_cells": 20397,
+  "days_in_period": 184,
+  "local_days_with_issue_times": 183,
+  "largest_gaps_between_issue_times": [
+    {
+      "after": "2015-08-23 02:00:00",
+      "length": "1 days 12:00:00"
+    },
+    {
+      "after": "2015-12-28 00:00:00",
+      "length": "0 days 16:00:00"
+    },
+    {
+      "after": "2015-12-08 00:00:00",
+      "length": "0 days 16:00:00"
+    },
+    {
+      "after": "2015-12-05 00:00:00",
+      "length": "0 days 16:00:00"
+    },
+    {
+      "after": "2015-12-04 00:00:00",
+      "length": "0 days 16:00:00"
+    }
+  ],
+  "irradiance_minutes": {
+    "expected_minutes": 264000,
+    "missing_minutes": 1440,
+    "days_with_missing_minutes": 2,
+    "days_with_over_60_missing": 2,
+    "first": "2015-07-01 00:00:00",
+    "last": "2015-12-31 07:59:00"
+  },
+  "satellite_available_15min_share_of_daylight_issue_times": 0.9875550946331345,
+  "satellite_available_0min_share_of_daylight_issue_times": 0.9953331604874255,
+  "benchmark_satellite_feature_share_of_daylight_issue_times": 0.7539538501425979,
+  "primary_cells": 20125,
+  "nam_coverage": {
+    "30min": {
+      "daylight_cells": 3857,
+      "share_missing": 0.0054446460980036296,
+      "share_interpolated": 0.132486388384755
+    },
+    "60min": {
+      "daylight_cells": 3674,
+      "share_missing": 0.0,
+      "share_interpolated": 0.13881328252585737
+    },
+    "90min": {
+      "daylight_cells": 3491,
+      "share_missing": 0.0,
+      "share_interpolated": 0.14580349470065884
+    },
+    "120min": {
+      "daylight_cells": 3308,
+      "share_missing": 0.0,
+      "share_interpolated": 0.15356711003627568
+    },
+    "150min": {
+      "daylight_cells": 3125,
+      "share_missing": 0.0,
+      "share_interpolated": 0.16224
+    },
+    "180min": {
+      "daylight_cells": 2942,
+      "share_missing": 0.0,
+      "share_interpolated": 0.17199184228416042
+    }
+  }
+}

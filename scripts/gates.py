@@ -1,6 +1,8 @@
-"""Stage 6b: six gates and the budget sweep. Reads only results/tiers/predictions/ and configs.
-Gates use on-device inputs only, are fitted and thresholded on gate_fit, evaluated on validation.
-Writes configs/gate_thresholds.yaml and results/gates/."""
+"""Stage 6b: six gates and the budget sweep. Reads only prediction files and configs.
+Gates use on-device inputs only, are fitted and thresholded on the fitting period, evaluated on the
+evaluation period. Default (./run.sh gates): fit on gate_fit, evaluate on validation, read
+results/tiers/predictions/, write configs/gate_thresholds.yaml and results/gates/. The test run and the
+dry run call run_gates() with other folders and periods (scripts/test_run.py)."""
 from __future__ import annotations
 
 import argparse
@@ -23,11 +25,11 @@ OUT = Path("results/gates")
 GATES = ["random", "fixed_interval", "variability", "uncertainty", "learned", "oracle"]
 
 
-def load():
-    truth = pd.read_parquet(PRED / "truth.parquet")
-    inp = pd.read_parquet(PRED / "on_device_inputs.parquet")
+def load(pred: Path = PRED):
+    truth = pd.read_parquet(pred / "truth.parquet")
+    inp = pd.read_parquet(pred / "on_device_inputs.parquet")
     assert truth["timestamp"].equals(inp["timestamp"])
-    tiers = {k: pd.read_parquet(PRED / f"{k}.parquet") for k in ("edge", "cloud", "trees_ground")}
+    tiers = {k: pd.read_parquet(pred / f"{k}.parquet") for k in ("edge", "cloud", "trees_ground")}
     return truth, inp, tiers
 
 
@@ -39,32 +41,33 @@ def kt_array(df: pd.DataFrame, seed, hz) -> np.ndarray:
 CKPT = Path("checkpoints/gates")
 
 
-def gate_net(X, target, tr, es, cfg, seed, name: str) -> np.ndarray:
+def gate_net(X, target, tr, es, cfg, seed, name: str, ckpt: Path = CKPT, logs: Path = Path("logs/gates")) -> np.ndarray:
     set_seed(seed)
     m = EdgeNet(X.shape[1], 1, cfg["gates"]["net_hidden"])
     data = {"x": X.astype(np.float32), "kt": target[:, None].astype(np.float32),
             "mask": np.ones((len(X), 1), np.float32), "tiles": None}
-    fit(m, data, tr, es, cfg, seed, Path("logs/gates") / f"{name}_seed{seed}.json")
-    (CKPT / f"seed{seed}").mkdir(parents=True, exist_ok=True)
-    torch.save(m.state_dict(), CKPT / f"seed{seed}" / f"{name}.pt")
+    fit(m, data, tr, es, cfg, seed, logs / f"{name}_seed{seed}.json")
+    (ckpt / f"seed{seed}").mkdir(parents=True, exist_ok=True)
+    torch.save(m.state_dict(), ckpt / f"seed{seed}" / f"{name}.pt")
     return predict(m, data)[:, 0]
 
 
-def main() -> None:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--config", default="configs/base.yaml")
-    cfg = load_config(ap.parse_args().config)
+def run_gates(cfg: dict, pred: Path = PRED, out: Path = OUT, fit_parts=("gate_fit",), eval_part: str = "val",
+              label: str = "validation", thresholds_path: Path | None = None, ckpt: Path = CKPT,
+              logs: Path = Path("logs/gates")) -> None:
     gc, budgets, seeds = cfg["gates"], cfg["budget"]["targets"], cfg["seeds"]
-    OUT.mkdir(parents=True, exist_ok=True)
-    truth, inp, tiers = load()
+    thresholds_path = Path(thresholds_path or gc["thresholds_file"])
+    fit_label = "+".join(fit_parts)
+    out.mkdir(parents=True, exist_ok=True)
+    truth, inp, tiers = load(pred)
     hz = [c[4:] for c in truth.columns if c.startswith("ghi_")]
     y = truth[[f"ghi_{h}" for h in hz]].values
     clear = truth[[f"clear_{h}" for h in hz]].values
     sp = truth[[f"sp_{h}" for h in hz]].values
     day = truth[[f"day_{h}" for h in hz]].values.astype(bool)
     pop = truth["sat_available"].values & day.any(1)
-    gf = (truth["part"] == "gate_fit").values & pop
-    va = (truth["part"] == "val").values & pop
+    gf = truth["part"].isin(list(fit_parts)).values & pop
+    va = (truth["part"] == eval_part).values & pop
     sel = day & pop[:, None]
     kt = truth[[f"kt_{h}" for h in hz]].values
     prev = np.column_stack([truth["B(ghi_kt|30min)"].values, kt[:, :-1]])
@@ -72,7 +75,7 @@ def main() -> None:
     ts = truth["timestamp"]
     dayid = day_index(ts)
 
-    # gate_fit early-stop slice for the gate networks: its last es_days
+    # early-stop slice for the gate networks: the last es_days of the fitting period
     gf_end = ts[gf].max()
     es = gf & (ts >= gf_end.normalize() - pd.Timedelta(days=gc["es_days"] - 1)).values
     tr = gf & ~es
@@ -92,24 +95,25 @@ def main() -> None:
         X = pd.concat([inp.iloc[:, 1:], pd.DataFrame(kt_array(tiers["edge"], s, hz), columns=cols[-len(hz):])], axis=1)
         mu, sd = X[tr].mean(), X[tr].std().replace(0, 1).fillna(1)
         Xs = ((X - mu) / sd).fillna(0).values
-        (CKPT / f"seed{s}").mkdir(parents=True, exist_ok=True)
-        np.savez(CKPT / f"seed{s}" / "norm.npz", mu=mu.values, sd=sd.values, columns=np.array(cols))
+        (ckpt / f"seed{s}").mkdir(parents=True, exist_ok=True)
+        np.savez(ckpt / f"seed{s}" / "norm.npz", mu=mu.values, sd=sd.values, columns=np.array(cols))
 
         unc_t = np.where(sel, np.abs(y - E), np.nan)
         unc_t = np.nan_to_num(np.nanmean(unc_t, axis=1)) / gc["uncertainty_scale"]
         ben_c = G.benefit(y, E, C, sel)
         scores = {"variability": inp[gc["variability_feature"]].fillna(0).values,
-                  "uncertainty": gate_net(Xs, unc_t, tr, es, cfg, s, "uncertainty"),
-                  "learned": gate_net(Xs, ben_c / gc["benefit_scale"], tr, es, cfg, s, "learned")}
-        thresholds[s] = {g: G.fit_thresholds(sc[gf], budgets) for g, sc in scores.items()}   # gate_fit only
+                  "uncertainty": gate_net(Xs, unc_t, tr, es, cfg, s, "uncertainty", ckpt, logs),
+                  "learned": gate_net(Xs, ben_c / gc["benefit_scale"], tr, es, cfg, s, "learned", ckpt, logs)}
+        thresholds[s] = {g: G.fit_thresholds(sc[gf], budgets) for g, sc in scores.items()}   # fitting period only
         scores_by_seed[s] = scores
 
     # thresholds go to the config file first; evaluation reads them back from there
-    Path(gc["thresholds_file"]).write_text(
-        "# Generated by scripts/gates.py from gate_fit scores only. Do not edit by hand.\n"
+    thresholds_path.parent.mkdir(parents=True, exist_ok=True)
+    thresholds_path.write_text(
+        f"# Generated by scripts/gates.py from {fit_label} scores only. Do not edit by hand.\n"
         + yaml.safe_dump({"gate_thresholds": {int(s): {g: {float(b): float(t) for b, t in d.items()}
                                                        for g, d in gd.items()} for s, gd in thresholds.items()}}))
-    tau = yaml.safe_load(Path(gc["thresholds_file"]).read_text())["gate_thresholds"]
+    tau = yaml.safe_load(thresholds_path.read_text())["gate_thresholds"]
 
     for s in seeds:
         E = kt_array(tiers["edge"], s, hz) * clear
@@ -173,7 +177,7 @@ def main() -> None:
         print(f"seed {s} done", flush=True)
 
     sweep = pd.DataFrame(recs)
-    sweep.to_csv(OUT / "sweep_validation.csv", index=False, float_format="%.4f")
+    sweep.to_csv(out / f"sweep_{label}.csv", index=False, float_format="%.4f")
     summ = (sweep.groupby(["escalate_to", "row_set", "gate", "budget_target"])
             .agg(realised_rate_mean=("realised_rate", "mean"), realised_rate_min=("realised_rate", "min"),
                  realised_rate_max=("realised_rate", "max"),
@@ -181,20 +185,26 @@ def main() -> None:
                  RMSE_max=("RMSE", "max"), share_mean=("share_retained", "mean"),
                  share_median=("share_retained", "median"), share_min=("share_retained", "min"),
                  share_max=("share_retained", "max"), skill_mean=("skill", "mean")).reset_index())
-    summ.to_csv(OUT / "summary_validation.csv", index=False, float_format="%.4f")
+    summ.to_csv(out / f"summary_{label}.csv", index=False, float_format="%.4f")
     rows = []
     for r in boots:
         for k in ("rmse", "share_retained"):
             rows.append({**{x: r[x] for x in ("escalate_to", "gate", "budget_target", "seed")}, "metric": k, **r[k]})
-    pd.DataFrame(rows).to_csv(OUT / "bootstrap_validation.csv", index=False, float_format="%.4f")
-    (OUT / "edge_vs_cloud_bootstrap.json").write_text(json.dumps(edge_cloud, indent=2))
-    meta = {"population": "validation issue times with a satellite frame (15-min rule) and >= 1 daylight horizon",
-            "issue_times_validation": int(va.sum()), "issue_times_gate_fit": int(gf.sum()),
+    pd.DataFrame(rows).to_csv(out / f"bootstrap_{label}.csv", index=False, float_format="%.4f")
+    (out / "edge_vs_cloud_bootstrap.json").write_text(json.dumps(edge_cloud, indent=2))
+    meta = {"population": f"{label} issue times with a satellite frame (15-min rule) and >= 1 daylight horizon",
+            f"issue_times_{label}": int(va.sum()), f"issue_times_{fit_label}": int(gf.sum()),
             "gate_net_train_rows": int(tr.sum()), "gate_net_es_rows": int(es.sum()),
-            "ramp_cells_validation": int(ramp[v].sum()), "daylight_cells_validation": int(selv.sum()),
+            f"ramp_cells_{label}": int(ramp[v].sum()), f"daylight_cells_{label}": int(selv.sum()),
             "gate_input_columns": cols}
-    (OUT / "meta.json").write_text(json.dumps(meta, indent=2))
+    (out / "meta.json").write_text(json.dumps(meta, indent=2))
     print(json.dumps({k: v for k, v in meta.items() if k != "gate_input_columns"}))
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--config", default="configs/base.yaml")
+    run_gates(load_config(ap.parse_args().config))
 
 
 if __name__ == "__main__":

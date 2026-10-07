@@ -6,7 +6,8 @@ from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
 
-from escal.data import drop_targets_reaching_test, horizon_minutes, horizons, nam_files, read_dev
+from escal.data import (drop_targets_beyond, drop_targets_reaching_test, horizon_minutes, horizons, nam_files,
+                        read)
 from escal.nwp import nam_at
 from escal.splits import _bounds
 
@@ -27,15 +28,18 @@ class Base:
     nams: dict = field(repr=False)
 
 
-def load_base(cfg: dict) -> Base:
-    tar = read_dev("Target_intra-day.csv", cfg)
+def load_base(cfg: dict, include_test: bool = False) -> Base:
+    """include_test adds the test period (raises LockedTestYear unless the protocol is frozen)."""
+    tar = read("Target_intra-day.csv", cfg, include_test)
     hz = horizons(tar)
-    tar = drop_targets_reaching_test(tar, cfg, max(horizon_minutes(h) for h in hz))
-    endo = read_dev("Irradiance_features_intra-day.csv", cfg)
-    ih = read_dev("Irradiance_features_intra-hour.csv", cfg)
+    max_m = max(horizon_minutes(h) for h in hz)
+    tar = (drop_targets_beyond(tar, _bounds(cfg, "test")[1], max_m) if include_test
+           else drop_targets_reaching_test(tar, cfg, max_m))
+    endo = read("Irradiance_features_intra-day.csv", cfg, include_test)
+    ih = read("Irradiance_features_intra-hour.csv", cfg, include_test)
     ih.columns = ["timestamp"] + [f"ih_{c}" for c in ih.columns[1:]]
-    sif = read_dev("Sat_image_features_intra-day.csv", cfg)
-    wx = read_dev("Folsom_weather.csv", cfg).set_index("timestamp")
+    sif = read("Sat_image_features_intra-day.csv", cfg, include_test)
+    wx = read("Folsom_weather.csv", cfg, include_test).set_index("timestamp")
     wx = wx.resample("30min", closed="right", label="right").mean()     # mean over (t-30min, t]
     wx.columns = [f"wx_{c}" for c in wx.columns]
     df = (tar.merge(endo, on="timestamp").merge(ih, on="timestamp", how="left")
@@ -55,8 +59,8 @@ def load_base(cfg: dict) -> Base:
               + [f"elevation_{h}" for h in hz] + list(det.columns))
     df["part"] = assign_parts(df, cfg, max(horizon_minutes(h) for h in hz))
 
-    sat = read_dev("Folsom_satellite.csv", cfg)
-    nams = {p.name: read_dev(p.name, cfg) for p in nam_files(cfg)}
+    sat = read("Folsom_satellite.csv", cfg, include_test)
+    nams = {p.name: read(p.name, cfg, include_test) for p in nam_files(cfg)}
     return Base(df=df, hz=hz, ground_cols=ground, endo_cols=endo_cols,
                 sif_cols=[c for c in sif.columns if c != "timestamp"],
                 sat_t=sat["timestamp"].values, sat_px=sat.iloc[:, 1:].values.astype(np.float32).reshape(-1, 10, 10),
@@ -64,7 +68,7 @@ def load_base(cfg: dict) -> Base:
 
 
 def assign_parts(df: pd.DataFrame, cfg: dict, max_m: int) -> pd.Series:
-    """train / es (last days of models_train, early stopping only) / gate_fit / val; targets never cross."""
+    """train / es (last days of models_train, early stopping only) / gate_fit / val / test; targets never cross."""
     part = pd.Series(None, index=df.index, dtype=object)
     t, reach = df["timestamp"], df["timestamp"] + pd.Timedelta(minutes=max_m)
     s, e = _bounds(cfg, "models_train")
@@ -75,6 +79,8 @@ def assign_parts(df: pd.DataFrame, cfg: dict, max_m: int) -> pd.Series:
     part[(t >= gs) & (reach < ge)] = "gate_fit"
     vs, ve = _bounds(cfg, "validation")
     part[(t >= vs) & (reach < ve)] = "val"
+    ts_, te_ = _bounds(cfg, "test")
+    part[(t >= ts_) & (reach < te_)] = "test"     # present only when the test period was loaded
     return part
 
 
@@ -156,10 +162,16 @@ def nwp(base: Base, cfg: dict, extra: bool) -> tuple[pd.DataFrame, dict]:
     return pd.DataFrame(cols, index=df.index), info
 
 
-def standardise(x: pd.DataFrame, train_mask: np.ndarray) -> np.ndarray:
-    mu = x[train_mask].mean()
-    sd = x[train_mask].std().replace(0, 1).fillna(1)
+def fit_standardiser(x: pd.DataFrame, train_mask: np.ndarray) -> tuple[pd.Series, pd.Series]:
+    return x[train_mask].mean(), x[train_mask].std().replace(0, 1).fillna(1)
+
+
+def apply_standardiser(x: pd.DataFrame, mu: pd.Series, sd: pd.Series) -> np.ndarray:
     return ((x - mu) / sd).fillna(0.0).values.astype(np.float32)
+
+
+def standardise(x: pd.DataFrame, train_mask: np.ndarray) -> np.ndarray:
+    return apply_standardiser(x, *fit_standardiser(x, train_mask))
 
 
 def targets(base: Base, cfg: dict) -> dict:

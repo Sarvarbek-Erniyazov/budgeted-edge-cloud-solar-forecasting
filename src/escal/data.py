@@ -8,7 +8,7 @@ from pathlib import Path
 import pandas as pd
 import yaml
 
-from escal.splits import _bounds, dev_only
+from escal.splits import _bounds, dev_only, select_split
 
 # file -> how to read it. `time` is the column the split guard filters on.
 FILES = {
@@ -42,21 +42,32 @@ def nam_files(cfg: dict) -> list[Path]:
     return sorted(raw_dir(cfg).glob(NAM_GLOB))
 
 
-def _finish(df: pd.DataFrame, cfg: dict) -> pd.DataFrame:
-    df = dev_only(df, cfg)
+def _finish(df: pd.DataFrame, cfg: dict, include_test: bool = False) -> pd.DataFrame:
+    """Split guard, applied right after the time stamps are parsed. Development rows always go
+    through `dev_only`. Test rows are added only through `select_split(..., "test")`, which raises
+    LockedTestYear unless the protocol is frozen and ESCAL_UNLOCK_TEST=1."""
+    if include_test:
+        df = pd.concat([dev_only(df, cfg), select_split(df, cfg, "test")])
+    else:
+        df = dev_only(df, cfg)
     df.columns = [c.strip() if isinstance(c, str) else c for c in df.columns]
     return df.sort_values("timestamp").reset_index(drop=True)
 
 
 def read_dev(name: str, cfg: dict) -> pd.DataFrame:
-    """Read one benchmark CSV; the time column is renamed to `timestamp`."""
+    """Read one benchmark CSV, development rows only; the time column is renamed to `timestamp`."""
+    return read(name, cfg, include_test=False)
+
+
+def read(name: str, cfg: dict, include_test: bool = False) -> pd.DataFrame:
+    """Read one benchmark CSV. With include_test, test-period rows are added (locked unless frozen)."""
     if re.fullmatch(r"Folsom_NAM_lat.*\.csv", name):
-        return read_nam(raw_dir(cfg) / name, cfg)
+        return read_nam(raw_dir(cfg) / name, cfg, include_test)
     spec = FILES[name]
     df = pd.read_csv(raw_dir(cfg) / name, header=spec.get("header", "infer"))
     df = df.rename(columns={spec["time"]: "timestamp"})
     df["timestamp"] = pd.to_datetime(df["timestamp"])
-    df = _finish(df, cfg)
+    df = _finish(df, cfg, include_test)
     if name == "Folsom_satellite.csv":
         df.columns = ["timestamp"] + [f"px{i:02d}" for i in range(df.shape[1] - 1)]
     if name == "Sat_image_features_intra-day.csv":
@@ -64,13 +75,13 @@ def read_dev(name: str, cfg: dict) -> pd.DataFrame:
     return df
 
 
-def read_nam(path: Path, cfg: dict) -> pd.DataFrame:
+def read_nam(path: Path, cfg: dict, include_test: bool = False) -> pd.DataFrame:
     """NAM node file: one title line, then reftime, valtime, fields. Filtered on valtime
-    (the later of the two), so no forecast valid in the test year is kept."""
+    (the later of the two), so no forecast valid in the test year is kept unless unlocked."""
     df = pd.read_csv(path, skiprows=1)
     df["reftime"] = pd.to_datetime(df["reftime"])
     df["timestamp"] = pd.to_datetime(df["valtime"])
-    df = _finish(df.drop(columns="valtime"), cfg)
+    df = _finish(df.drop(columns="valtime"), cfg, include_test)
     df["lead_h"] = (df["timestamp"] - df["reftime"]).dt.total_seconds() / 3600
     return df
 
@@ -90,3 +101,8 @@ def drop_targets_reaching_test(df: pd.DataFrame, cfg: dict, max_minutes: int) ->
     """Drop issue times whose furthest target falls in the test period."""
     test_start, _ = _bounds(cfg, "test")
     return df.loc[df["timestamp"] + pd.Timedelta(minutes=max_minutes) < test_start].copy()
+
+
+def drop_targets_beyond(df: pd.DataFrame, end: pd.Timestamp, max_minutes: int) -> pd.DataFrame:
+    """Drop issue times whose furthest target falls at or after `end`."""
+    return df.loc[df["timestamp"] + pd.Timedelta(minutes=max_minutes) < end].copy()
