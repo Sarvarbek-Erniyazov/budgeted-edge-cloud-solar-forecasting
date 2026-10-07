@@ -7,5 +7,6 @@ case "${1:-}" in
   test)     python -m pytest -q ;;
   audit)    python scripts/audit_data.py --config configs/base.yaml ;;
   anchors)  python scripts/anchors.py --config configs/base.yaml ;;
-  *) echo "usage: ./run.sh {download|test|audit|anchors}"; exit 1 ;;
+  split)    python scripts/split_check.py --config configs/base.yaml ;;
+  *) echo "usage: ./run.sh {download|test|audit|anchors|split}"; exit 1 ;;
 esac

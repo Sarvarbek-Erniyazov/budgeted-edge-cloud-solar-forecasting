@@ -219,3 +219,26 @@ rows.
    comment says 1.1. This is reproduced as written (`anchors.kt_clip`).
 
 Conclusion: the anchors look sane, so the work continues to the split decision.
+
+## 4. Split decision (Stage 4)
+
+`./run.sh split` (`scripts/split_check.py`) writes `results/audit/split_decision.json`.
+
+- **Question:** does gate_fit (2015-01-01 to 2015-06-30) contain enough variable-sky days to
+  fit a gate?
+- **Criterion:** at least 30 partly-cloudy days, and a partly-cloudy share of at least 15% of
+  classified days. Both values are in `configs/base.yaml` under `split_check`; they were written
+  before `sky_mix.csv` was first computed.
+- **Evidence** (`sky_mix_by_split.csv`, `sky_mix.csv`):
+  - gate_fit: 134 partly-cloudy days out of 181 classified (74%), with at least 18 in every
+    month (2015-06 has the fewest, 18; 2015-02 the most, 26).
+  - For reference: models_train has 229 (65%) and validation 113 (62%).
+- **Decision: criterion passed. The boundaries are kept unchanged** (models_train 2014, gate_fit
+  2015 H1, validation 2015 H2, test 2016), and `split.provisional` is set to false.
+  `protocol.frozen` stays false.
+- **Caveat** (from section 2): gate_fit is the wet half of the year and validation the dry
+  half. A gate tuned on gate_fit meets a somewhat clearer validation period (37% clear days
+  against 24%). This is reported as a limitation, not corrected by moving boundaries.
+- **Tests:** `tests/test_splits.py::test_splits_ordered_and_disjoint` already checks that the
+  config splits are ordered and disjoint and together cover the development data. No new test
+  was needed.

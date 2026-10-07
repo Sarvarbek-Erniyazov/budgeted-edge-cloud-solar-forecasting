@@ -7,7 +7,7 @@ split:
   gate_fit:     ["2015-01-01", "2015-06-30"]
   validation:   ["2015-07-01", "2015-12-31"]
   test:         ["2016-01-01", "2016-12-31"]
-  provisional: true          # set false when frozen on Oct 8 after the data audit
+  provisional: false         # frozen on Oct 8 after the data audit; see results/audit/AUDIT.md
 protocol:
   frozen: false              # set true on Oct 12; only then may the test year be loaded
 seeds: [0, 1, 2, 3, 4]

@@ -1,0 +1,42 @@
+{
+  "criterion": {
+    "min_variable_days": 30,
+    "min_variable_share": 0.15
+  },
+  "gate_fit": {
+    "classified_days": 181,
+    "partly_cloudy_days": 134,
+    "partly_cloudy_share": 0.7403314917127072
+  },
+  "for_reference": {
+    "models_train": {
+      "partly_cloudy_days": 229,
+      "partly_cloudy_share": 0.6505681818181818
+    },
+    "validation": {
+      "partly_cloudy_days": 113,
+      "partly_cloudy_share": 0.6208791208791209
+    }
+  },
+  "split": {
+    "models_train": [
+      "2014-01-01",
+      "2014-12-31"
+    ],
+    "gate_fit": [
+      "2015-01-01",
+      "2015-06-30"
+    ],
+    "validation": [
+      "2015-07-01",
+      "2015-12-31"
+    ],
+    "test": [
+      "2016-01-01",
+      "2016-12-31"
+    ],
+    "provisional": true
+  },
+  "passed": true,
+  "decision": "keep boundaries"
+}
