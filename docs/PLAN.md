@@ -181,3 +181,86 @@ the assistant and are also fixed before training.
   - Step 5: with the best variant, keep the horizons whose per-horizon gain is >= 5%. The step
     passes if their averaged gain is >= 5%, and the study is then restricted to those horizons
     and says so.
+
+## 7. Amendments before Stage 6 (2026-10-08)
+
+Recorded before any Stage 6 computation. Decisions are the author's, after Checkpoint B.
+
+**Standing decisions**
+- The cloud tier going forward is the step-4 average: gradient-boosted trees on the step-3
+  inputs, averaged with the step-3 network.
+  *Reason:* it is the first ladder step that passed (gain 0.0631, `results/go_no_go.json`).
+- The go/no-go verdict and the chosen cloud tier do not change, whatever Stage 6a shows. No new
+  edge tier is chosen; the edge tier stays the base MLP.
+  *Reason:* changing them after seeing the control would be tuning on validation.
+
+**Stage 6a: model-type control** (validation only, same rows and seeds as Stage 5)
+- Train the same gradient-boosted tree model on four input sets:
+  - edge inputs only (trees_ground);
+  - ground + satellite;
+  - ground + NAM;
+  - all inputs.
+- Write `results/tiers/control.csv` with RMSE per horizon and averaged, per seed, for:
+  - the edge network;
+  - the four tree models;
+  - the step-4 average.
+- Report two effects, with mean, median and range over seeds:
+  - (a) the input effect: trees on all inputs against trees_ground;
+  - (b) the model effect: trees_ground against the edge network.
+  *Reason:* Stage 5 passed only with trees. This separates "the cloud inputs help" from "trees
+  beat the MLP".
+
+**Stage 6b: gates and budget sweep** (only after Checkpoint B2)
+- **Unit of decision:** one issue time. An escalation returns the cloud forecast for all six
+  horizons, and the budget is the share of issue times escalated.
+  *Reason:* one request per issue time is the deployable unit.
+- **Predictions:** both tiers' predictions on gate_fit and validation are out of sample (both
+  were trained on 2014). They are saved once to `results/tiers/predictions/`, and gates are
+  built only from those files.
+- **Gate inputs:** on-device information only (ground history, clear-sky features, the edge
+  forecast). Nothing from satellite, NAM or the cloud forecast.
+  *Reason:* the gate runs on the device before any request is made.
+- **Six gates:**
+  - random: expected curve over many draws;
+  - fixed-interval;
+  - variability threshold on recent clear-sky-index variability;
+  - uncertainty: a small on-device model predicting the edge tier's absolute error;
+  - learned: a small int8-compatible network predicting edge error minus cloud error, summed
+    over horizons;
+  - oracle: escalate the issue times with the largest true benefit.
+- **Fitting:** the learned and uncertainty gates are fitted on gate_fit only. Each gate's
+  threshold for every budget is set on gate_fit and stored in configs. Gates are evaluated on
+  validation, with the realised escalation rate reported next to each target.
+- **Metrics** per budget and gate:
+  - RMSE, MAE, skill over smart persistence;
+  - share of gain retained = (RMSE_edge - RMSE_gate) / (RMSE_edge - RMSE_cloud). The oracle can
+    exceed 100%.
+- **Ramp subset:** defined in the config before anything is computed on it.
+- **Intervals:** day-block bootstrap with the settings in the config. Mean, median and range
+  over the five seeds.
+- **Tests:**
+  - budget accounting (realised against target rate);
+  - gate inputs contain no cloud-side column;
+  - thresholds come from gate_fit only.
+- **For the freeze, not done now:** whether gates are refitted on all of 2015 before the test
+  run. This is to be proposed with a reason at Checkpoint C.
+
+**Stage 6a implementation details** (assistant's choices, fixed before computing)
+- **Rows:** the primary rows of Stage 5 (daylight cells with a satellite frame under the
+  15-minute rule). All daylight cells are reported as a second row set.
+- **Tree model:** the same HistGradientBoosting set-up and settings as ladder step 4 (one model
+  per horizon, iterations chosen on the early-stop slice). The tile is summarised the same way.
+- **Input sets:**
+  - ground: the edge inputs;
+  - satellite: the newest tile and its age/present flags, with the base frame settings;
+  - NAM: the step-3 NAM block, including the step-3 extras;
+  - all: exactly the step-4 input set.
+- **Effects** use RMSE per horizon, averaged over horizons:
+  - effect = 1 - RMSE_A / RMSE_B, positive when A is better, also given in W/m2;
+  - (a) A = trees all inputs, B = trees_ground;
+  - (b) A = trees_ground, B = the edge network, seed by seed.
+- **Seeds:** the tree models are deterministic, so their five seeds are identical. The spread of
+  effect (b) comes from the edge network seeds only. This is stated in the report.
+- **Re-use:** the edge network and the step-3 network are not retrained. Their saved Stage 5
+  validation predictions are re-used (training is deterministic). The trees on all inputs are
+  recomputed and checked against Stage 5.
