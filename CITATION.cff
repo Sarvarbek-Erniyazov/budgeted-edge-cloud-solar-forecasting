@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite it as below. The manuscript is in preparation."
+title: "Budgeted Edge-to-Cloud Escalation for Solar Irradiance Forecasting"
+type: software
+authors:
+  - family-names: Erniyazov
+    given-names: Sarvarbek
+  - family-names: Lim
+    given-names: Chang Gyoon
+license: MIT

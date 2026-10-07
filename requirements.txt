@@ -1,0 +1,14 @@
+# Install PyTorch separately with the CUDA wheel (see README), then:
+#   pip install -r requirements.txt
+#   pip freeze > requirements.lock.txt     <- the pinned environment of record; commit it
+numpy
+pandas
+pyarrow
+scipy
+scikit-learn
+pvlib
+pyyaml
+matplotlib
+onnx
+onnxruntime
+pytest

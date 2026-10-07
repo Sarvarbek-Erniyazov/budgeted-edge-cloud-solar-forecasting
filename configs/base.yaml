@@ -1,0 +1,22 @@
+# Single source for splits, seeds and budgets. All timestamps are UTC, as in the dataset.
+data:
+  raw_dir: data/raw
+  task: intra-day            # benchmark task; horizons are read from Target_intra-day.csv
+split:
+  models_train: ["2014-01-01", "2014-12-31"]
+  gate_fit:     ["2015-01-01", "2015-06-30"]
+  validation:   ["2015-07-01", "2015-12-31"]
+  test:         ["2016-01-01", "2016-12-31"]
+  provisional: true          # set false when frozen on Oct 8 after the data audit
+protocol:
+  frozen: false              # set true on Oct 12; only then may the test year be loaded
+seeds: [0, 1, 2, 3, 4]
+budget:
+  targets: [0.0, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.40, 0.50, 0.60, 0.75, 1.0]
+  report_at: [0.10, 0.25, 0.50]
+gates: [random, fixed_interval, variability, uncertainty, learned, oracle]
+go_no_go:
+  min_rmse_gain: 0.05        # cloud vs edge on validation; suggested threshold
+bootstrap:
+  block: day
+  n_resamples: 2000
