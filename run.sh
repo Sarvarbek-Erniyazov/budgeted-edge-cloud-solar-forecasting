@@ -10,5 +10,6 @@ case "${1:-}" in
   split)    python scripts/split_check.py --config configs/base.yaml ;;
   tiers)    python scripts/tiers.py --config configs/base.yaml "${@:2}"
             [[ "${2:-}" == "--prepare-only" ]] || python scripts/tiers_summary.py ;;
-  *) echo "usage: ./run.sh {download|test|audit|anchors|split|tiers}"; exit 1 ;;
+  control)  python scripts/control.py --config configs/base.yaml ;;
+  *) echo "usage: ./run.sh {download|test|audit|anchors|split|tiers|control}"; exit 1 ;;
 esac

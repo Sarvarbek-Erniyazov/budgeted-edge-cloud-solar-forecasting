@@ -186,13 +186,18 @@ def ablation(run: Run, variant: str, data: dict) -> dict:
     return {"seed": run.cfg["seeds"][0], "rmse_avg_primary": out}
 
 
+def tile_summary(tiles: np.ndarray) -> np.ndarray:
+    return np.concatenate([tiles.mean((2, 3)), tiles.std((2, 3)), tiles[:, :, 3:7, 3:7].mean((2, 3))], axis=1)
+
+
 def gbt(run: Run, data: dict, seed: int) -> np.ndarray:
-    """Ladder step 4: one HistGradientBoosting model per horizon; iterations picked on the es slice."""
+    """Ladder step 4: trees on the tabular inputs plus the tile summary."""
+    return gbt_on(run, np.concatenate([data["x"], tile_summary(data["tiles"])], axis=1), seed)
+
+
+def gbt_on(run: Run, X: np.ndarray, seed: int) -> np.ndarray:
+    """One HistGradientBoosting model per horizon; iterations picked on the es slice."""
     s4 = run.cfg["ladder"]["step4"]
-    k = data["tiles"].shape[1]
-    t = data["tiles"]
-    summ = np.concatenate([t.mean((2, 3)), t.std((2, 3)), t[:, :, 3:7, 3:7].mean((2, 3))], axis=1)
-    X = np.concatenate([data["x"], summ], axis=1)
     out = np.zeros((len(X), len(run.hz)), np.float32)
     for j in range(len(run.hz)):
         m = run.tg["mask"][:, j] > 0

@@ -87,3 +87,9 @@ ladder:
     max_leaf_nodes: 31
     # iterations chosen on the same early-stop slice (staged predictions), no random split
   step5: {min_horizon_gain: 0.05}
+control:                     # Stage 6a model-type control; see docs/PLAN.md section 7
+  row_sets: [primary, all_daylight]
+  nam_extra: true            # the step-3 NAM block
+  reuse_predictions:         # saved Stage 5 validation predictions (deterministic training)
+    edge: checkpoints/tiers/base/edge_seed{seed}_pred_kt.npy
+    step3_network: checkpoints/tiers/step3/cloud_seed{seed}_pred_kt.npy
