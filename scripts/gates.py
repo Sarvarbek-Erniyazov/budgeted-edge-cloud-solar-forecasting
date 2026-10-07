@@ -9,6 +9,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import torch
 import yaml
 
 from escal import gates as G
@@ -35,12 +36,17 @@ def kt_array(df: pd.DataFrame, seed, hz) -> np.ndarray:
     return d[[f"kt_{h}" for h in hz]].values
 
 
-def gate_net(X, target, tr, es, cfg, seed) -> np.ndarray:
+CKPT = Path("checkpoints/gates")
+
+
+def gate_net(X, target, tr, es, cfg, seed, name: str) -> np.ndarray:
     set_seed(seed)
     m = EdgeNet(X.shape[1], 1, cfg["gates"]["net_hidden"])
     data = {"x": X.astype(np.float32), "kt": target[:, None].astype(np.float32),
             "mask": np.ones((len(X), 1), np.float32), "tiles": None}
-    fit(m, data, tr, es, cfg, seed, Path("logs/gates") / f"net_seed{seed}_{hash(target.tobytes()) % 10**8}.json")
+    fit(m, data, tr, es, cfg, seed, Path("logs/gates") / f"{name}_seed{seed}.json")
+    (CKPT / f"seed{seed}").mkdir(parents=True, exist_ok=True)
+    torch.save(m.state_dict(), CKPT / f"seed{seed}" / f"{name}.pt")
     return predict(m, data)[:, 0]
 
 
@@ -86,13 +92,15 @@ def main() -> None:
         X = pd.concat([inp.iloc[:, 1:], pd.DataFrame(kt_array(tiers["edge"], s, hz), columns=cols[-len(hz):])], axis=1)
         mu, sd = X[tr].mean(), X[tr].std().replace(0, 1).fillna(1)
         Xs = ((X - mu) / sd).fillna(0).values
+        (CKPT / f"seed{s}").mkdir(parents=True, exist_ok=True)
+        np.savez(CKPT / f"seed{s}" / "norm.npz", mu=mu.values, sd=sd.values, columns=np.array(cols))
 
         unc_t = np.where(sel, np.abs(y - E), np.nan)
         unc_t = np.nan_to_num(np.nanmean(unc_t, axis=1)) / gc["uncertainty_scale"]
         ben_c = G.benefit(y, E, C, sel)
         scores = {"variability": inp[gc["variability_feature"]].fillna(0).values,
-                  "uncertainty": gate_net(Xs, unc_t, tr, es, cfg, s),
-                  "learned": gate_net(Xs, ben_c / gc["benefit_scale"], tr, es, cfg, s)}
+                  "uncertainty": gate_net(Xs, unc_t, tr, es, cfg, s, "uncertainty"),
+                  "learned": gate_net(Xs, ben_c / gc["benefit_scale"], tr, es, cfg, s, "learned")}
         thresholds[s] = {g: G.fit_thresholds(sc[gf], budgets) for g, sc in scores.items()}   # gate_fit only
         scores_by_seed[s] = scores
 

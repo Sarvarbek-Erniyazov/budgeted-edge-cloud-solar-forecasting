@@ -14,5 +14,6 @@ case "${1:-}" in
   footprint) python scripts/footprint_trees.py --config configs/base.yaml ;;
   predictions) python scripts/predictions.py --config configs/base.yaml ;;
   gates)    python scripts/gates.py --config configs/base.yaml ;;
-  *) echo "usage: ./run.sh {download|test|audit|anchors|split|tiers|control|footprint|predictions|gates}"; exit 1 ;;
+  measure)  python scripts/measure_footprint.py --config configs/base.yaml ;;
+  *) echo "usage: ./run.sh {download|test|audit|anchors|split|tiers|control|footprint|predictions|gates|measure}"; exit 1 ;;
 esac

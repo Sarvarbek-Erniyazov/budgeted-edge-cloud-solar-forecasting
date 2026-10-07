@@ -399,3 +399,6 @@ and all score thresholds are refitted on gate_fit + validation (all of 2015).
     RMSE before and after).
   - The 12-bytes-per-node estimate stays in the table next to the measurements.
 - **New tools:** skl2onnx and ziglang, added to requirements.txt and the lock file.
+- *Deviation (Stage 7):* skl2onnx 1.20 could not convert sklearn 1.9 HistGradientBoosting. The
+  trees were exported to ONNX with a custom TreeEnsembleRegressor builder instead, checked
+  against sklearn to 5e-7. skl2onnx was removed from requirements.
