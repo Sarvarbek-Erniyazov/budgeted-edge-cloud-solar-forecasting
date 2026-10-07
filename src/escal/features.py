@@ -8,7 +8,7 @@ import pandas as pd
 
 from escal.data import drop_targets_reaching_test, horizon_minutes, horizons, nam_files, read_dev
 from escal.nwp import nam_at
-from escal.splits import _bounds, select_split
+from escal.splits import _bounds
 
 NAM_FIELDS = ["dwsw", "cloud_cover", "precipitation", "pressure", "wind-u", "wind-v", "temperature", "rel_humidity"]
 MIN = pd.Timedelta(minutes=1)
@@ -64,13 +64,15 @@ def load_base(cfg: dict) -> Base:
 
 
 def assign_parts(df: pd.DataFrame, cfg: dict, max_m: int) -> pd.Series:
-    """train / es (last days of models_train, early stopping only) / val; targets never cross."""
+    """train / es (last days of models_train, early stopping only) / gate_fit / val; targets never cross."""
     part = pd.Series(None, index=df.index, dtype=object)
     t, reach = df["timestamp"], df["timestamp"] + pd.Timedelta(minutes=max_m)
     s, e = _bounds(cfg, "models_train")
     es_start = e - pd.Timedelta(days=cfg["tiers"]["early_stop_days"])
     part[(t >= s) & (reach < es_start)] = "train"
     part[(t >= es_start) & (reach < e)] = "es"
+    gs, ge = _bounds(cfg, "gate_fit")
+    part[(t >= gs) & (reach < ge)] = "gate_fit"
     vs, ve = _bounds(cfg, "validation")
     part[(t >= vs) & (reach < ve)] = "val"
     return part

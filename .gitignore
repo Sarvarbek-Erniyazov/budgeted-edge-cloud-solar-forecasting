@@ -11,3 +11,6 @@ logs/*
 !logs/.gitkeep
 *.docx
 *.zip
+# dataset-derived (measured GHI, inputs): regenerate with ./run.sh predictions
+results/tiers/predictions/truth.parquet
+results/tiers/predictions/on_device_inputs.parquet

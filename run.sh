@@ -12,5 +12,7 @@ case "${1:-}" in
             [[ "${2:-}" == "--prepare-only" ]] || python scripts/tiers_summary.py ;;
   control)  python scripts/control.py --config configs/base.yaml ;;
   footprint) python scripts/footprint_trees.py --config configs/base.yaml ;;
-  *) echo "usage: ./run.sh {download|test|audit|anchors|split|tiers|control|footprint}"; exit 1 ;;
+  predictions) python scripts/predictions.py --config configs/base.yaml ;;
+  gates)    python scripts/gates.py --config configs/base.yaml ;;
+  *) echo "usage: ./run.sh {download|test|audit|anchors|split|tiers|control|footprint|predictions|gates}"; exit 1 ;;
 esac

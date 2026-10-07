@@ -43,8 +43,11 @@ def interval(point: float, samples: np.ndarray, cfg: dict) -> dict:
 
 
 def paired_diff(y, pa, pb, sel, timestamps, cfg) -> dict:
-    """Interval for RMSE_a - RMSE_b (averaged over horizons), paired by day."""
-    day = day_index(timestamps)
+    """Interval for RMSE_a - RMSE_b (averaged over horizons), paired by day. Only rows with at
+    least one selected cell form day blocks, so empty days never enter a resample."""
+    keep = sel.any(axis=1)
+    y, pa, pb, sel = y[keep], pa[keep], pb[keep], sel[keep]
+    day = day_index(pd.DatetimeIndex(timestamps)[keep])
     n = day.max() + 1
     sa, ca = day_sums(y, pa, sel, day, n)
     sb, cb = day_sums(y, pb, sel, day, n)

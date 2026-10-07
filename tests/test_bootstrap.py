@@ -31,3 +31,16 @@ def test_clearly_better_model_excludes_zero():
 def test_day_blocks_are_local_days():
     d = day_index(pd.to_datetime(["2015-07-01 16:00", "2015-07-02 02:00", "2015-07-02 09:00"]))
     assert d[0] == d[1] != d[2]
+
+
+def test_rows_outside_selection_do_not_change_interval():
+    ts, y, sel = _setup()
+    rng = np.random.default_rng(3)
+    a, b = y + rng.normal(0, 20, y.shape), y + rng.normal(0, 25, y.shape)
+    r1 = paired_diff(y, a, b, sel, ts, CFG)
+    # prepend 30 days of rows that are not selected: the interval must not move
+    ts2 = pd.date_range(ts[0] - pd.Timedelta(days=30), periods=30 * 20, freq="30min").append(ts)
+    pad = np.zeros((30 * 20, 2))
+    sel2 = np.vstack([np.zeros_like(pad, dtype=bool), sel])
+    r2 = paired_diff(np.vstack([pad, y]), np.vstack([pad, a]), np.vstack([pad, b]), sel2, ts2, CFG)
+    assert r1 == r2

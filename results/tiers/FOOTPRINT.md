@@ -35,11 +35,11 @@ five cloud seeds:
 
 | cloud seed | point (W/m2) | 95% interval |
 |---|---|---|
-| 0 | +0.06 | -2.27 to +2.46 |
-| 1 | +0.06 | -2.30 to +2.41 |
-| 2 | +0.67 | -1.66 to +3.01 |
-| 3 | +0.29 | -2.21 to +2.85 |
-| 4 | -0.45 | -2.82 to +1.93 |
+| 0 | +0.06 | -2.38 to +2.54 |
+| 1 | +0.06 | -2.37 to +2.57 |
+| 2 | +0.67 | -1.75 to +3.08 |
+| 3 | +0.29 | -2.27 to +2.85 |
+| 4 | -0.45 | -2.87 to +2.02 |
 
 Uncapped trees_ground also matches the cloud tier on all five seeds, with points from -0.07 to
 +1.05 W/m2.
@@ -53,8 +53,16 @@ Caveats:
 
 | seed | point | 95% interval | includes zero? |
 |---|---|---|---|
-| 0 | 4.34 | 1.27 to 7.83 | no |
-| 1 | 3.49 | 0.65 to 6.51 | no |
-| 2 | 3.98 | 1.14 to 7.10 | no |
-| 3 | 8.78 | 5.61 to 11.98 | no |
-| 4 | 2.55 | 0.04 to 5.14 | no (lower bound barely above zero) |
+| 0 | 4.34 | 1.23 to 7.69 | no |
+| 1 | 3.49 | 0.64 to 6.34 | no |
+| 2 | 3.98 | 0.97 to 7.04 | no |
+| 3 | 8.78 | 5.59 to 12.00 | no |
+| 4 | 2.55 | -0.01 to 5.08 | **yes** |
+
+For one of five seeds (seed 4), the edge-cloud interval includes zero.
+
+Correction (2026-10-08): an earlier version of this file built bootstrap day blocks from all
+development days, including days with no validation cells. Day blocks are now built only from
+days that have selected cells (`src/escal/bootstrap.py`, `tests/test_bootstrap.py`). With that
+correction, the seed-4 edge-cloud interval moved from 0.04 to 5.14 to -0.01 to 5.08, so it now
+includes zero. The other intervals moved slightly, and no conclusion changed.

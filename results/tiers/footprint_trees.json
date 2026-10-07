@@ -6,7 +6,7 @@
     "float32_bytes": 43032,
     "int8_bytes_estimate": 11208,
     "int8_estimate_rule": "int8 weights + int32 biases + 8 bytes per tensor for scale/zero point",
-    "single_row_cpu_ms_median": 0.018599967006593943
+    "single_row_cpu_ms_median": 0.025649991584941745
   },
   "trees": {
     "trees_ground": {
@@ -25,7 +25,7 @@
       "nodes": 31537,
       "compact_size_bytes_estimate": 378444,
       "pickle_size_bytes": 2899166,
-      "single_row_cpu_ms_median": 4.261199996108189
+      "single_row_cpu_ms_median": 4.474850022234023
     },
     "trees_ground_cap10x": {
       "cap_bytes": 112080,
@@ -47,7 +47,7 @@
       "nodes": 7095,
       "compact_size_bytes_estimate": 85140,
       "pickle_size_bytes": 1524285,
-      "single_row_cpu_ms_median": 3.9735499885864556
+      "single_row_cpu_ms_median": 4.102699982468039
     },
     "trees_ground_cap100x": {
       "cap_bytes": 1120800,
@@ -69,7 +69,7 @@
       "nodes": 31537,
       "compact_size_bytes_estimate": 378444,
       "pickle_size_bytes": 2899166,
-      "single_row_cpu_ms_median": 4.312200006097555
+      "single_row_cpu_ms_median": 4.653599986340851
     }
   },
   "validation_rmse_seed_mean": {
@@ -126,46 +126,46 @@
         {
           "cloud_seed": 0,
           "point": 0.43880408727082454,
-          "lo": -2.185284512339649,
-          "hi": 3.0720409115920404,
+          "lo": -2.2511922609752,
+          "hi": 3.1601815156494086,
           "includes_zero": true,
-          "n_days": 715,
+          "n_days": 183,
           "matches_cloud": true
         },
         {
           "cloud_seed": 1,
           "point": 0.44264921177806116,
-          "lo": -2.130224343799931,
-          "hi": 3.001555983944446,
+          "lo": -2.222592617077332,
+          "hi": 3.0200880601556293,
           "includes_zero": true,
-          "n_days": 715,
+          "n_days": 183,
           "matches_cloud": true
         },
         {
           "cloud_seed": 2,
           "point": 1.0494820659458384,
-          "lo": -1.3954499907134397,
-          "hi": 3.574165966757723,
+          "lo": -1.5834650654520417,
+          "hi": 3.7006331457021027,
           "includes_zero": true,
-          "n_days": 715,
+          "n_days": 183,
           "matches_cloud": true
         },
         {
           "cloud_seed": 3,
           "point": 0.6640445528684182,
-          "lo": -1.9157879128889304,
-          "hi": 3.361129809953357,
+          "lo": -2.044724290231425,
+          "hi": 3.3919381722347426,
           "includes_zero": true,
-          "n_days": 715,
+          "n_days": 183,
           "matches_cloud": true
         },
         {
           "cloud_seed": 4,
           "point": -0.06934019382630652,
-          "lo": -2.5096163513614327,
-          "hi": 2.4246720461848668,
+          "lo": -2.640504197030794,
+          "hi": 2.5116652382804445,
           "includes_zero": true,
-          "n_days": 715,
+          "n_days": 183,
           "matches_cloud": true
         }
       ],
@@ -176,46 +176,46 @@
         {
           "cloud_seed": 0,
           "point": 0.059874023606852234,
-          "lo": -2.2679405666103154,
-          "hi": 2.461006554930667,
+          "lo": -2.3826310292001773,
+          "hi": 2.5419565927966943,
           "includes_zero": true,
-          "n_days": 715,
+          "n_days": 183,
           "matches_cloud": true
         },
         {
           "cloud_seed": 1,
           "point": 0.06371914811408885,
-          "lo": -2.2981729534017363,
-          "hi": 2.405475869076729,
+          "lo": -2.3675827656090234,
+          "hi": 2.5716342616227434,
           "includes_zero": true,
-          "n_days": 715,
+          "n_days": 183,
           "matches_cloud": true
         },
         {
           "cloud_seed": 2,
           "point": 0.6705520022818661,
-          "lo": -1.6642048168535004,
-          "hi": 3.0115757827183547,
+          "lo": -1.7478031012835564,
+          "hi": 3.080141170270437,
           "includes_zero": true,
-          "n_days": 715,
+          "n_days": 183,
           "matches_cloud": true
         },
         {
           "cloud_seed": 3,
           "point": 0.28511448920444593,
-          "lo": -2.2094921823030633,
-          "hi": 2.849294372055231,
+          "lo": -2.2667990555663042,
+          "hi": 2.848615911216058,
           "includes_zero": true,
-          "n_days": 715,
+          "n_days": 183,
           "matches_cloud": true
         },
         {
           "cloud_seed": 4,
           "point": -0.4482702574902788,
-          "lo": -2.817455140359437,
-          "hi": 1.931068910606402,
+          "lo": -2.865608396779559,
+          "hi": 2.0169645190124417,
           "includes_zero": true,
-          "n_days": 715,
+          "n_days": 183,
           "matches_cloud": true
         }
       ],
@@ -226,46 +226,46 @@
         {
           "cloud_seed": 0,
           "point": 0.43880408727082454,
-          "lo": -2.185284512339649,
-          "hi": 3.0720409115920404,
+          "lo": -2.2511922609752,
+          "hi": 3.1601815156494086,
           "includes_zero": true,
-          "n_days": 715,
+          "n_days": 183,
           "matches_cloud": true
         },
         {
           "cloud_seed": 1,
           "point": 0.44264921177806116,
-          "lo": -2.130224343799931,
-          "hi": 3.001555983944446,
+          "lo": -2.222592617077332,
+          "hi": 3.0200880601556293,
           "includes_zero": true,
-          "n_days": 715,
+          "n_days": 183,
           "matches_cloud": true
         },
         {
           "cloud_seed": 2,
           "point": 1.0494820659458384,
-          "lo": -1.3954499907134397,
-          "hi": 3.574165966757723,
+          "lo": -1.5834650654520417,
+          "hi": 3.7006331457021027,
           "includes_zero": true,
-          "n_days": 715,
+          "n_days": 183,
           "matches_cloud": true
         },
         {
           "cloud_seed": 3,
           "point": 0.6640445528684182,
-          "lo": -1.9157879128889304,
-          "hi": 3.361129809953357,
+          "lo": -2.044724290231425,
+          "hi": 3.3919381722347426,
           "includes_zero": true,
-          "n_days": 715,
+          "n_days": 183,
           "matches_cloud": true
         },
         {
           "cloud_seed": 4,
           "point": -0.06934019382630652,
-          "lo": -2.5096163513614327,
-          "hi": 2.4246720461848668,
+          "lo": -2.640504197030794,
+          "hi": 2.5116652382804445,
           "includes_zero": true,
-          "n_days": 715,
+          "n_days": 183,
           "matches_cloud": true
         }
       ],
@@ -276,42 +276,42 @@
     {
       "seed": 0,
       "point": 4.335123938240699,
-      "lo": 1.2655779950448776,
-      "hi": 7.832557516479462,
+      "lo": 1.2307726632941298,
+      "hi": 7.690874634627329,
       "includes_zero": false,
-      "n_days": 715
+      "n_days": 183
     },
     {
       "seed": 1,
       "point": 3.4887564556657793,
-      "lo": 0.6494290988804559,
-      "hi": 6.5092618488601985,
+      "lo": 0.6423297967109857,
+      "hi": 6.344948153974978,
       "includes_zero": false,
-      "n_days": 715
+      "n_days": 183
     },
     {
       "seed": 2,
       "point": 3.9757067703132094,
-      "lo": 1.135610851964789,
-      "hi": 7.098646299701197,
+      "lo": 0.9722759419504244,
+      "hi": 7.041993103690494,
       "includes_zero": false,
-      "n_days": 715
+      "n_days": 183
     },
     {
       "seed": 3,
       "point": 8.777309756981609,
-      "lo": 5.614813372552773,
-      "hi": 11.98458593640634,
+      "lo": 5.5902449658467335,
+      "hi": 11.99895685239461,
       "includes_zero": false,
-      "n_days": 715
+      "n_days": 183
     },
     {
       "seed": 4,
       "point": 2.553877514900222,
-      "lo": 0.042955542272696115,
-      "hi": 5.13637086392796,
-      "includes_zero": false,
-      "n_days": 715
+      "lo": -0.010380629555433783,
+      "hi": 5.081576940066497,
+      "includes_zero": true,
+      "n_days": 183
     }
   ],
   "timing_note": "single-row CPU time on a PC through Python/sklearn or PyTorch; not microcontroller latency"
