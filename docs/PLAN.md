@@ -264,3 +264,96 @@ Recorded before any Stage 6 computation. Decisions are the author's, after Check
 - **Re-use:** the edge network and the step-3 network are not retrained. Their saved Stage 5
   validation predictions are re-used (training is deterministic). The trees on all inputs are
   recomputed and checked against Stage 5.
+
+## 8. Amendments after Stage 6a (2026-10-08)
+
+Recorded before any further work. Decisions 1 to 6 are the author's. The details below them are
+the assistant's operational choices, also fixed before computing.
+
+1. **Finding carried forward (validation only).** With the model type held fixed, the input
+   effect of satellite and NAM is about zero (-0.27%, `results/tiers/control_effects.json`).
+   The cloud tier's gain over the edge network is a model-capacity effect.
+   - The study now measures escalation from a small on-device network to a stronger cloud
+     model.
+   - The input ablation is a main result, not an extended one.
+   - The result is reported as found, and no further cloud variants are searched.
+2. **Tiers unchanged.** Edge is the base MLP; cloud is the step-4 average. Neither is retuned.
+3. **Footprint comparison before the gates** (`results/tiers/footprint_trees.json`):
+   - trees_ground: tree count, depth, node count, serialised size, single-row CPU inference time;
+   - edge network: parameter count, float32 size, estimated int8 size;
+   - two size-capped ground-only tree models, at about 10x and 100x the edge int8 size, with
+     validation RMSE per horizon;
+   - a plain statement of whether a ground-only tree model of on-device size matches the cloud
+     tier.
+4. **Stage 6b as specified in section 7**, plus one reference curve: escalating to trees_ground
+   instead of the cloud tier.
+5. **Every report** gives the paired day-block bootstrap interval for edge against cloud RMSE,
+   and says whether it includes zero.
+6. **Commits:** commit and push after the footprint step and after the gates.
+
+### Operational details (assistant's choices, fixed before computing)
+
+**Footprint**
+- Caps are multiples of the edge network's estimated int8 size: `footprint.cap_multiples`
+  [10, 100].
+- Tree size on device is estimated as node count x 12 bytes (`footprint.bytes_per_node`):
+  a 2-byte feature index, a 4-byte threshold (or leaf value), two 2-byte child indices and
+  2 bytes of padding. The pickle size is reported as well, but it includes sklearn overhead.
+- A capped model uses `max_leaf_nodes` = 8 (10x cap) or 31 (100x cap). Each of the six horizon
+  models gets one sixth of the node budget, giving a maximum of floor(budget / (2L-1)) trees.
+  The early-stop slice of models_train then picks the best number of trees up to that maximum.
+  Everything else is as in step 4.
+- Edge int8 size estimate: int8 weights (1 byte), int32 biases (4 bytes), and 8 bytes per
+  tensor for scale and zero point.
+- **"Matches the cloud tier"** means the paired day-block bootstrap 95% interval of
+  RMSE_trees - RMSE_cloud (averaged over horizons, primary validation rows) lies at or below
+  zero, or includes zero, for the cloud seed in question. Reported per cloud seed.
+- Single-row CPU time: the median of 200 repeats on one validation row, through all six
+  horizon models. It measures Python and sklearn call overhead on a PC CPU, not
+  microcontroller latency.
+
+**Bootstrap** (`bootstrap` in config): day blocks are local standard-time days (08 UTC to
+08 UTC), with 2,000 resamples, random seed 0 and 95% percentile intervals. Every model in a
+comparison is resampled with the same days, which makes the comparison paired.
+
+**Stage 6b**
+- **Prediction files** (`results/tiers/predictions/`):
+  - per seed, the edge and cloud kt forecasts at every gate_fit and validation issue time;
+  - trees_ground, which is deterministic, so a single set;
+  - the truth (ghi, clear-sky, elevation, smart persistence, satellite availability);
+  - the on-device inputs.
+  The gate_fit rows are issue times in gate_fit whose targets stay inside it.
+- **Evaluation population:** validation issue times in the Stage 5 primary set (satellite
+  available, at least one daylight horizon). Budgets are shares of these issue times. The
+  threshold population is the matching gate_fit issue times.
+- **Gate inputs:** the edge inputs (ground history, weather, clear-sky and calendar terms)
+  plus the edge kt forecast for the six horizons. A test forbids any column containing sat,
+  nam, cloud or sif.
+- **Gates:**
+  - random: the mean over 200 draws, with the interval from the expected squared error;
+  - fixed-interval: escalate when floor((i+1)b) > floor(ib), with i counting issue times
+    within each day, so the rate is exactly b;
+  - variability: score = `ih_V(ghi_kt|30min)`, the variability of the 5-min clear-sky index
+    over the last 30 min;
+  - uncertainty: a Linear+ReLU MLP (one hidden layer of 32) predicting the mean absolute edge
+    error over daylight horizons (W/m2 / 100);
+  - learned: the same network shape predicting the benefit B = sum over daylight horizons of
+    (e_edge^2 - e_cloud^2) / 1e4, the total reduction in squared error from escalating;
+  - oracle: the true B on validation, top share b.
+- **Fitting the uncertainty and learned gates:** on gate_fit, with its last 30 days used only
+  for early stopping, MSE loss, one gate per seed.
+- **Thresholds:** for each score-based gate and budget, the (1-b) quantile of its scores on the
+  gate_fit population. They are written to `configs/gate_thresholds.yaml` and read back for
+  validation.
+- **Blending:** an escalated issue time takes the cloud forecast (or trees_ground, for the
+  reference curve) for all six horizons.
+- **Metrics:** per horizon, then averaged as in Stage 5. Share of gain retained =
+  (RMSE_edge - RMSE_gate) / (RMSE_edge - RMSE_cloud), always relative to the cloud tier's gain,
+  so the trees_ground curve is on the same scale.
+- **Ramp subset** (`ramp` in config): a ramp cell is an (issue time, horizon) pair whose
+  30-min target kt differs from the previous 30-min window's kt by at least 0.25 in absolute
+  value. For the 30-min horizon, the previous window is the last observed block,
+  `B(ghi_kt|30min)`. Gate metrics are reported on ramp cells as a separate row set.
+- **Intervals:** at the report budgets (0.10, 0.25, 0.50), day-block bootstrap intervals for
+  each gate's RMSE and share retained, per seed. They are summarised as mean, median and range
+  over seeds.

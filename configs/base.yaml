@@ -18,8 +18,10 @@ gates: [random, fixed_interval, variability, uncertainty, learned, oracle]
 go_no_go:
   min_rmse_gain: 0.05        # cloud vs edge on validation; suggested threshold
 bootstrap:
-  block: day
+  block: day                 # local standard-time day, 08 UTC to 08 UTC
   n_resamples: 2000
+  seed: 0
+  ci: 0.95
 site:                        # inferred from the data, see results/audit/task_definition.md:
   latitude: 38.6435          # exact fit of pvlib solar elevation (mean over the 30 minutes of each
   longitude: -121.1477       # target window) to the benchmark's elevation_* columns
@@ -93,3 +95,21 @@ control:                     # Stage 6a model-type control; see docs/PLAN.md sec
   reuse_predictions:         # saved Stage 5 validation predictions (deterministic training)
     edge: checkpoints/tiers/base/edge_seed{seed}_pred_kt.npy
     step3_network: checkpoints/tiers/step3/cloud_seed{seed}_pred_kt.npy
+footprint:                   # see docs/PLAN.md section 8
+  cap_multiples: [10, 100]   # x the edge network's estimated int8 size
+  cap_max_leaf_nodes: [8, 31]
+  bytes_per_node: 12
+  int8_bias_bytes: 4
+  int8_bytes_per_tensor_qparams: 8
+  timing_repeats: 200
+ramp:
+  delta_kt: 0.25             # |kt(t,h) - kt(t,h-30min)| >= this; kt(t,0) = B(ghi_kt|30min)
+gates:
+  n_random_draws: 200
+  variability_feature: "ih_V(ghi_kt|30min)"
+  forbidden_input_substrings: [sat, nam, cloud, sif]
+  net_hidden: [32]
+  es_days: 30                # last days of gate_fit, early stopping only
+  uncertainty_scale: 100.0   # W/m2
+  benefit_scale: 10000.0     # (W/m2)^2
+  thresholds_file: configs/gate_thresholds.yaml
