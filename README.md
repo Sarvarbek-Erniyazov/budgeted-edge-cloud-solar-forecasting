@@ -18,7 +18,7 @@ A low-power device at a photovoltaic site forecasts solar irradiance from its ow
 
 ```bash
 py -3.11 -m venv .venv && source .venv/Scripts/activate   # Windows, Git Bash
-pip install torch --index-url <CUDA wheel index from pytorch.org>
+pip install torch --index-url https://download.pytorch.org/whl/cu124
 pip install -r requirements.txt
 ./run.sh test        # unit tests
 ./run.sh download    # Folsom non-image files, about 0.52 GB, MD5-checked
