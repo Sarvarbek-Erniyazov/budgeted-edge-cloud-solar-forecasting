@@ -1,6 +1,7 @@
-# Freeze proposal (draft, 2026-10-08): NOT FROZEN
+# Freeze proposal (approved with amendments 2026-10-08): NOT FROZEN
 
-This is a proposal for the author to approve or amend. Nothing in it has been executed.
+The author approved this proposal on 2026-10-08 with seven amendments, which are folded in
+below and listed in `docs/PLAN.md` section 10. The freeze itself has not happened.
 - `protocol.frozen` is false.
 - `ESCAL_UNLOCK_TEST` is not set.
 - No 2016 row has been loaded.
@@ -75,8 +76,10 @@ Sources for every value below:
 | **trees_ground, 10x cap** | 8 leaves, at most 103 trees per horizon (473 chosen); about 85 KB estimated, 87,183 B as a compiled object | **not yet saved** (section e) |
 | **trees, all inputs** (claim 1) | the step-4 trees alone | **not yet saved** (section e) |
 
-- **Primary edge tier:** fp32. The int8 edge network (`results/footprint/measured.json`) is
-  reported only as secondary.
+- **Edge tier, fp32 and int8:** the fp32 edge network is the primary edge tier, and every
+  claim is judged on it. The int8 edge network (`checkpoints/footprint/edge_seed{s}.int8.onnx`,
+  `results/footprint/measured.json`) is a **secondary row, reported next to fp32 in every table
+  that shows the edge tier**.
 - **Checkpoint SHA-256 hashes** (first 16 hex digits; the files are not in git):
 
   | file | edge_seed | step3 cloud_seed |
@@ -122,6 +125,13 @@ Sources for every value below:
   - **secondary:** all 2016 daylight cells;
   - **ramp:** cells with |kt(t,h) - kt(t,h-30 min)| >= 0.25, where kt(t,0) is
     `B(ghi_kt|30min)` (`ramp.delta_kt`).
+- **Reference models**, scored on the same 2016 rows:
+  - smart persistence;
+  - lasso_endo and lasso_exo, fitted on models_train only exactly as in Stage 3 (LassoCV 10-fold,
+    kt clipped to [0, 1]).
+  lasso_exo needs the benchmark satellite feature, so it is scored on the primary cells where
+  that feature exists. It is reported with its cell count, next to every model on those same
+  cells.
 - **Metrics:**
   - RMSE and MAE per horizon, averaged over horizons;
   - skill = 1 - RMSE / RMSE(smart persistence), where smart persistence is
@@ -154,8 +164,17 @@ seeds" rules) are **proposed here, before 2016 is seen, and need the author's ap
 - *Claim:* a ground-only tree model of about 85 KB (estimated; 87 KB compiled object) matches
   the cloud tier. Validation: 68.78 against 68.66 W/m2; the interval includes zero for 5 of 5
   seeds.
-- *Metric:* the interval of RMSE_cap10x - RMSE_cloud, per cloud seed.
-- *Counts against:* the interval lies entirely above zero for 3 or more of the 5 cloud seeds.
+- *Metrics:*
+  - d = seed-mean (RMSE_cap10x - RMSE_cloud), with RMSE averaged over horizons, as a share of
+    the seed-mean cloud RMSE;
+  - the interval of RMSE_cap10x - RMSE_cloud, per cloud seed.
+- *Verdict rule* (equivalence margin of 2%, amendment 1):
+  - **"matches"** only if |d| <= 2% **and** the interval is not entirely above zero for 3 or
+    more of the 5 seeds;
+  - **"not distinguishable"** if the interval is not entirely above zero for 3 or more seeds,
+    but |d| > 2%;
+  - **"worse"**, which counts against the claim, if the interval lies entirely above zero for 3
+    or more of the 5 seeds.
 
 **3. Gap between the edge network and the cloud tier**
 - *Claim:* the cloud tier beats the edge network. Validation: gain 0.063 (median seed 0.055);
@@ -197,26 +216,36 @@ seeds" rules) are **proposed here, before 2016 is seen, and need the author's ap
 ## c. The single test run
 
 ### Commit
-- The run uses the commit tagged **`freeze-2026-10-12`**, which does not exist yet.
+- The run uses the commit tagged **`freeze-<YYYY-MM-DD>`**, named with the date the tag is
+  created. It does not exist yet.
 - It is created only after every item in section e is done and the author approves this file.
 - At the time of writing, HEAD is `926972e`. **That commit is not freezable**: it has no test
   path.
 
 ### Command sequence (proposed; the `test_*` stages are to be built in section e)
 ```bash
-git checkout freeze-2026-10-12
+git checkout freeze-<YYYY-MM-DD>
 source .venv/Scripts/activate
-./run.sh test                      # unit tests must pass
-sha256sum -c docs/checkpoint_hashes.txt          # checkpoints unchanged
-# set protocol.frozen: true in configs/base.yaml, committed as part of the tag
+pip freeze | diff - requirements.lock.txt        # environment unchanged (pickled trees need sklearn 1.9.1)
+./run.sh test                                    # unit tests must pass
+sha256sum -c docs/checkpoint_hashes.txt          # checkpoints and tree models unchanged
+# protocol.frozen: true is set in configs/base.yaml in the tagged commit itself
 export ESCAL_UNLOCK_TEST=1
-./run.sh test_predictions          # 2016 tier predictions from the saved checkpoints and tree models
-./run.sh test_gates                # refit gates on 2015, thresholds, evaluate on 2016
-./run.sh test_claims               # claims 1 to 5, bootstrap, results/test/
+./run.sh test_predictions   # writes results/test/data_quality.json first, then 2016 predictions
+./run.sh test_gates         # refit gates on all of 2015, thresholds, evaluate on 2016
+./run.sh test_claims        # claims 1 to 5, smart persistence, lasso_endo, lasso_exo, int8 edge row, bootstrap
 unset ESCAL_UNLOCK_TEST
 ```
 All output goes to `results/test/`, together with the console log and the hash of the commit it
 ran from.
+
+**Data quality is recorded first.** Before any metric is computed on 2016, `test_predictions`
+writes `results/test/data_quality.json`: row counts, gaps, satellite availability and NAM
+coverage. The run proceeds whatever these show, and they are reported.
+
+**Dry run.** `./run.sh dryrun` runs the same three stages with validation as the "test" period
+and gates fitted on gate_fit only. Its output goes to `results/dryrun/`. It must reproduce
+`results/gates/` and the validation claim values exactly before the tag is created.
 
 ### Forbidden afterwards
 - Retraining, retuning, or changing any setting, feature, threshold, margin or row definition.
@@ -227,6 +256,10 @@ If a bug is found after the run, it is reported. Any re-run is labelled as such,
 results kept.
 
 **Allowed afterwards:** figures, tables and text built from the files in `results/test/`.
+
+**Analyses after the run.** Only A1 to A7 in `docs/PLAN.md` section 3 count as planned. Any
+other analysis of the saved 2016 predictions must carry "exploratory" in its file name and in
+its text.
 
 ---
 
@@ -270,4 +303,8 @@ results kept.
      on gate_fit only.
    - Check that the dry run reproduces `results/gates/` and the validation claims.
 4. Write `docs/checkpoint_hashes.txt` (full SHA-256 of every checkpoint and tree file).
-5. The author approves sections a to d, including the margins in b, and then creates the tag.
+5. `requirements.lock.txt` must equal the environment (`pip freeze`), with ziglang added and
+   skl2onnx removed. This matters because the pickled tree models depend on the scikit-learn
+   version, which is pinned at 1.9.1. Checked on 2026-10-08: identical.
+6. The author approves sections a to d (done 2026-10-08, with amendments), checks the dry run,
+   and then creates the tag.

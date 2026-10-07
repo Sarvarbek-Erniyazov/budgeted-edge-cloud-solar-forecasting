@@ -402,3 +402,29 @@ and all score thresholds are refitted on gate_fit + validation (all of 2015).
 - *Deviation (Stage 7):* skl2onnx 1.20 could not convert sklearn 1.9 HistGradientBoosting. The
   trees were exported to ONNX with a custom TreeEnsembleRegressor builder instead, checked
   against sklearn to 5e-7. skl2onnx was removed from requirements.
+
+## 10. Amendments to the freeze proposal (2026-10-08)
+
+The author approved `docs/FREEZE.md` with these amendments, which are folded into that file.
+1. **Claim 2 equivalence margin:** "matches" only if the seed-mean RMSE difference is within 2%
+   of the cloud tier's RMSE **and** the interval is not entirely above zero for 3 or more of 5
+   seeds. If the interval includes zero but the difference exceeds 2%, report "not
+   distinguishable".
+2. **Edge tier:** fp32 stays primary; int8 is a secondary row next to it in every table that
+   shows the edge tier.
+3. **References:** the test run also scores smart persistence and the linear anchors
+   (lasso_endo, lasso_exo, fitted on models_train only) on the same 2016 rows, in the
+   test_claims output.
+4. **Data quality first:** before any metric is computed on 2016, test_predictions writes
+   `results/test/data_quality.json` (row counts, gaps, satellite availability, NAM coverage).
+   The run proceeds whatever these show.
+5. **Planned analyses:** only A1 to A7 (section 3) count as planned after the run. Any other
+   analysis of the saved 2016 predictions is labelled "exploratory" in its file name and text.
+6. **Tag name:** `freeze-<date the tag is created>`, not 2026-10-12.
+7. **Lock file:** `requirements.lock.txt` must reflect the current environment (ziglang added,
+   skl2onnx removed), because the pickled tree models depend on the sklearn version. Checked:
+   identical to `pip freeze`.
+
+Section e of FREEZE.md, items 1 to 4, is authorised. The dry run (validation as the "test"
+period, gates fitted on gate_fit only) must reproduce `results/gates/` and the validation claim
+values exactly, and any difference is reported.
