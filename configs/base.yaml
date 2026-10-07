@@ -20,3 +20,34 @@ go_no_go:
 bootstrap:
   block: day
   n_resamples: 2000
+site:                        # inferred from the data, see results/audit/task_definition.md:
+  latitude: 38.6435          # exact fit of pvlib solar elevation (mean over the 30 minutes of each
+  longitude: -121.1477       # target window) to the benchmark's elevation_* columns
+  altitude: 54.0             # m; pvlib.location.lookup_altitude at the coordinates above
+clearsky:
+  model: ineichen            # pvlib, Linke turbidity climatology
+  daylight_min_elevation: 5.0  # degrees; same night cut as the benchmark scripts
+  max_kt: 1.2                # cap on the clear-sky index, as in the benchmark target files
+sky:                         # daily sky class from clear-sky-index level and variability
+  resample: 10min            # kt averaged to this step before the daily statistics
+  min_elevation: 10.0        # degrees; only these daylight samples enter the daily statistics
+  min_coverage: 0.8          # share of expected samples needed to classify a day
+  clear_min_mean_kt: 0.8     # clear: mean kt >= this and variability < low_variability
+  overcast_max_mean_kt: 0.5  # overcast: mean kt < this and variability < low_variability
+  low_variability: 0.03      # RMS of successive kt differences; everything else is partly cloudy
+split_check:                 # criterion for the gate_fit period, fixed before sky_mix.csv was read
+  min_variable_days: 30      # partly-cloudy days in gate_fit
+  min_variable_share: 0.15   # partly-cloudy share of classified days in gate_fit
+nam:
+  availability_lag_hours: 6  # assumed delay from 12Z reference time to availability; unverified
+satellite:
+  availability_lag_minutes: 15  # assumed delay from frame time stamp to availability; unverified
+  benchmark_window_minutes: 30  # benchmark feature = mean of frames stamped in (t-30min, t]
+anchors:                     # benchmark persistence and linear models (logic of Forecast_intra-day.py)
+  targets: [ghi, dni]
+  fit_split: models_train
+  eval_split: validation
+  kt_clip: [0.0, 1.0]        # as in the benchmark script (its comment says 1.1; the code uses 1)
+  night_elevation: 5.0       # predictions below this solar elevation are excluded
+  cv_folds: 10               # RidgeCV and LassoCV, as in the benchmark script
+  lasso_max_iter: 10000

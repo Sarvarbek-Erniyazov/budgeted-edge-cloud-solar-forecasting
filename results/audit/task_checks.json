@@ -1,0 +1,390 @@
+{
+  "horizons": [
+    "30min",
+    "60min",
+    "90min",
+    "120min",
+    "150min",
+    "180min"
+  ],
+  "target_rows": 15961,
+  "target_rows_after_dropping_targets_in_test_year": 15961,
+  "issue_time_minutes_past_hour": [
+    0,
+    30
+  ],
+  "issue_rows_by_utc_hour": {
+    "0": 1292,
+    "1": 896,
+    "2": 504,
+    "13": 146,
+    "14": 647,
+    "15": 1036,
+    "16": 1430,
+    "17": 1430,
+    "18": 1430,
+    "19": 1430,
+    "20": 1430,
+    "21": 1430,
+    "22": 1430,
+    "23": 1430
+  },
+  "same_timestamps_target_features_satellite": true,
+  "target_window": {
+    "30min": {
+      "(t+h-30, t+h]": {
+        "median_abs_diff": 3.329359969939105e-07,
+        "max_abs_diff": 3.383798556910733e-07
+      },
+      "[t+h-30, t+h)": {
+        "median_abs_diff": 2.3716666666666697,
+        "max_abs_diff": 26.72000033353197
+      },
+      "(t+h, t+h+30]": {
+        "median_abs_diff": 65.56116666668657,
+        "max_abs_diff": 397.52000033296076
+      },
+      "[t+h-15, t+h+15)": {
+        "median_abs_diff": 31.95499999981996,
+        "max_abs_diff": 321.1433330003974
+      }
+    },
+    "60min": {
+      "(t+h-30, t+h]": {
+        "median_abs_diff": 3.330352456032415e-07,
+        "max_abs_diff": 3.384990634458518e-07
+      },
+      "[t+h-30, t+h)": {
+        "median_abs_diff": 2.2449998335754913,
+        "max_abs_diff": 26.096666999900663
+      },
+      "(t+h, t+h+30]": {
+        "median_abs_diff": 61.559999999984484,
+        "max_abs_diff": 499.7100003309492
+      },
+      "[t+h-15, t+h+15)": {
+        "median_abs_diff": 30.70933350038743,
+        "max_abs_diff": 306.919999666766
+      }
+    },
+    "90min": {
+      "(t+h-30, t+h]": {
+        "median_abs_diff": 3.329358833070728e-07,
+        "max_abs_diff": 3.379030317773868e-07
+      },
+      "[t+h-30, t+h)": {
+        "median_abs_diff": 2.105833333204213,
+        "max_abs_diff": 27.329999999602705
+      },
+      "(t+h, t+h+30]": {
+        "median_abs_diff": 59.08899966573284,
+        "max_abs_diff": 499.7100003309492
+      },
+      "[t+h-15, t+h+15)": {
+        "median_abs_diff": 28.181666999801323,
+        "max_abs_diff": 321.1433330003974
+      }
+    },
+    "120min": {
+      "(t+h-30, t+h]": {
+        "median_abs_diff": 3.3273727240157314e-07,
+        "max_abs_diff": 3.379030317773868e-07
+      },
+      "[t+h-30, t+h)": {
+        "median_abs_diff": 1.9900001660209625,
+        "max_abs_diff": 26.72000033353197
+      },
+      "(t+h, t+h+30]": {
+        "median_abs_diff": 53.898333167213025,
+        "max_abs_diff": 484.99666699995026
+      },
+      "[t+h-15, t+h+15)": {
+        "median_abs_diff": 26.041666834106948,
+        "max_abs_diff": 306.919999666766
+      }
+    },
+    "150min": {
+      "(t+h-30, t+h]": {
+        "median_abs_diff": 3.323399369037361e-07,
+        "max_abs_diff": 3.3770436402846826e-07
+      },
+      "[t+h-30, t+h)": {
+        "median_abs_diff": 1.80200016663688,
+        "max_abs_diff": 26.496667001192066
+      },
+      "(t+h, t+h+30]": {
+        "median_abs_diff": 46.71716666673618,
+        "max_abs_diff": 460.08333299998753
+      },
+      "[t+h-15, t+h+15)": {
+        "median_abs_diff": 23.43000000008226,
+        "max_abs_diff": 311.1306663328962
+      }
+    },
+    "180min": {
+      "(t+h-30, t+h]": {
+        "median_abs_diff": 3.323399013765993e-07,
+        "max_abs_diff": 3.3730697168721235e-07
+      },
+      "[t+h-30, t+h)": {
+        "median_abs_diff": 1.5333335006457105,
+        "max_abs_diff": 22.61666633323398
+      },
+      "(t+h, t+h+30]": {
+        "median_abs_diff": 41.38666683304777,
+        "max_abs_diff": 382.4999996656733
+      },
+      "[t+h-15, t+h+15)": {
+        "median_abs_diff": 20.315000332778396,
+        "max_abs_diff": 253.68000033283664
+      }
+    }
+  },
+  "features": {
+    "rows_compared": 14531,
+    "B(ghi_kt|30min) == kt of the 30-min block ending at t": 1.0,
+    "L(ghi_kt|60min) == kt of the block ending at t-30min": 1.0,
+    "B(ghi_kt|60min) == mean of the two blocks ending at t and t-30min": 1.0,
+    "V(ghi_kt|60min) == std of those two blocks (ddof 0)": 0.003991466519854105,
+    "V(ghi_kt|60min) == std of those two blocks (ddof 1)": 0.003578556190214025,
+    "V(ghi_kt|30min) nonzero share (one block only)": 0.9629722448468141
+  },
+  "elevation": {
+    "30min": {
+      "mean over minutes t+h-29..t+h": {
+        "rms_deg": 2.021347386986074e-05,
+        "max_abs_deg": 3.132335832845001e-05
+      },
+      "instant t+h": {
+        "rms_deg": 2.170534498669785,
+        "max_abs_deg": 2.833227374702237
+      },
+      "instant t+h-15min": {
+        "rms_deg": 0.08003509771605341,
+        "max_abs_deg": 0.12360974791658919
+      }
+    },
+    "60min": {
+      "mean over minutes t+h-29..t+h": {
+        "rms_deg": 2.010958447095947e-05,
+        "max_abs_deg": 3.139943751406804e-05
+      },
+      "instant t+h": {
+        "rms_deg": 2.172301716486652,
+        "max_abs_deg": 2.832042544577021
+      },
+      "instant t+h-15min": {
+        "rms_deg": 0.080278805491676,
+        "max_abs_deg": 0.12763988748275779
+      }
+    },
+    "90min": {
+      "mean over minutes t+h-29..t+h": {
+        "rms_deg": 2.0076452618391042e-05,
+        "max_abs_deg": 3.123034839802585e-05
+      },
+      "instant t+h": {
+        "rms_deg": 2.171791862899517,
+        "max_abs_deg": 2.833227374702237
+      },
+      "instant t+h-15min": {
+        "rms_deg": 0.08053108667941156,
+        "max_abs_deg": 0.12647437186039667
+      }
+    },
+    "120min": {
+      "mean over minutes t+h-29..t+h": {
+        "rms_deg": 1.998594628301535e-05,
+        "max_abs_deg": 3.1291962457657974e-05
+      },
+      "instant t+h": {
+        "rms_deg": 2.1739290003938687,
+        "max_abs_deg": 2.8332601325473226
+      },
+      "instant t+h-15min": {
+        "rms_deg": 0.0803415592194273,
+        "max_abs_deg": 0.1276921190025604
+      }
+    },
+    "150min": {
+      "mean over minutes t+h-29..t+h": {
+        "rms_deg": 1.9855225580297072e-05,
+        "max_abs_deg": 3.133092852536379e-05
+      },
+      "instant t+h": {
+        "rms_deg": 2.179141516896043,
+        "max_abs_deg": 2.8336246448035274
+      },
+      "instant t+h-15min": {
+        "rms_deg": 0.08016586566184424,
+        "max_abs_deg": 0.1274102710763998
+      }
+    },
+    "180min": {
+      "mean over minutes t+h-29..t+h": {
+        "rms_deg": 1.9744921818526184e-05,
+        "max_abs_deg": 3.13008601438014e-05
+      },
+      "instant t+h": {
+        "rms_deg": 2.183556001397697,
+        "max_abs_deg": 2.832816402630133
+      },
+      "instant t+h-15min": {
+        "rms_deg": 0.08052154707443862,
+        "max_abs_deg": 0.12770352038515398
+      }
+    }
+  },
+  "kt": {
+    "30min": {
+      "share_kt_equals_ratio_of_means": 0.36839797005200176,
+      "kt_min": 0.004679,
+      "kt_max": 1.2
+    },
+    "60min": {
+      "share_kt_equals_ratio_of_means": 0.4029822692813734,
+      "kt_min": 0.004679,
+      "kt_max": 1.2
+    },
+    "90min": {
+      "share_kt_equals_ratio_of_means": 0.4228384991843393,
+      "kt_min": 0.004679,
+      "kt_max": 1.2
+    },
+    "120min": {
+      "share_kt_equals_ratio_of_means": 0.44209445585215607,
+      "kt_min": 0.004679,
+      "kt_max": 1.2
+    },
+    "150min": {
+      "share_kt_equals_ratio_of_means": 0.46160489384670744,
+      "kt_min": 0.004679,
+      "kt_max": 1.2
+    },
+    "180min": {
+      "share_kt_equals_ratio_of_means": 0.47830045523520487,
+      "kt_min": 0.004679,
+      "kt_max": 1.2
+    }
+  },
+  "rows_with_missing_target_ghi": {
+    "30min": 0,
+    "60min": 0,
+    "90min": 0,
+    "120min": 0,
+    "150min": 0,
+    "180min": 0
+  },
+  "clearsky_ours_minus_benchmark": {
+    "30min": {
+      "ineichen": {
+        "rows": 3124,
+        "mean_diff_Wm2": -19.042639075480263,
+        "rms_diff_Wm2": 21.517284438594892
+      },
+      "haurwitz": {
+        "rows": 3124,
+        "mean_diff_Wm2": 16.876151725904414,
+        "rms_diff_Wm2": 20.301392750782263
+      },
+      "simplified_solis": {
+        "rows": 3124,
+        "mean_diff_Wm2": 13.02922164782512,
+        "rms_diff_Wm2": 13.986953421406035
+      }
+    },
+    "60min": {
+      "ineichen": {
+        "rows": 3124,
+        "mean_diff_Wm2": -18.676907819189722,
+        "rms_diff_Wm2": 21.376709434794904
+      },
+      "haurwitz": {
+        "rows": 3124,
+        "mean_diff_Wm2": 16.053742961042236,
+        "rms_diff_Wm2": 19.613470341654423
+      },
+      "simplified_solis": {
+        "rows": 3124,
+        "mean_diff_Wm2": 12.68323047234134,
+        "rms_diff_Wm2": 13.669190963183832
+      }
+    },
+    "90min": {
+      "ineichen": {
+        "rows": 3124,
+        "mean_diff_Wm2": -18.033385083261305,
+        "rms_diff_Wm2": 21.085944194753804
+      },
+      "haurwitz": {
+        "rows": 3124,
+        "mean_diff_Wm2": 14.819762509063194,
+        "rms_diff_Wm2": 18.659801100528693
+      },
+      "simplified_solis": {
+        "rows": 3124,
+        "mean_diff_Wm2": 12.150692726155935,
+        "rms_diff_Wm2": 13.40833166107747
+      }
+    },
+    "120min": {
+      "ineichen": {
+        "rows": 3124,
+        "mean_diff_Wm2": -17.268447303239196,
+        "rms_diff_Wm2": 20.682567587191453
+      },
+      "haurwitz": {
+        "rows": 3124,
+        "mean_diff_Wm2": 13.618545242544776,
+        "rms_diff_Wm2": 17.677350983301586
+      },
+      "simplified_solis": {
+        "rows": 3124,
+        "mean_diff_Wm2": 11.761876669808354,
+        "rms_diff_Wm2": 13.298365098115475
+      }
+    },
+    "150min": {
+      "ineichen": {
+        "rows": 3124,
+        "mean_diff_Wm2": -16.405157326354804,
+        "rms_diff_Wm2": 20.212615583248112
+      },
+      "haurwitz": {
+        "rows": 3124,
+        "mean_diff_Wm2": 12.413675876693453,
+        "rms_diff_Wm2": 16.735734230182842
+      },
+      "simplified_solis": {
+        "rows": 3124,
+        "mean_diff_Wm2": 11.306429857242732,
+        "rms_diff_Wm2": 13.094408552120534
+      }
+    },
+    "180min": {
+      "ineichen": {
+        "rows": 3124,
+        "mean_diff_Wm2": -15.554220689804467,
+        "rms_diff_Wm2": 19.726185174447558
+      },
+      "haurwitz": {
+        "rows": 3124,
+        "mean_diff_Wm2": 11.486647486102594,
+        "rms_diff_Wm2": 16.144569236256434
+      },
+      "simplified_solis": {
+        "rows": 3124,
+        "mean_diff_Wm2": 10.826132565591992,
+        "rms_diff_Wm2": 12.904990707226377
+      }
+    }
+  },
+  "minute_kt_daylight": {
+    "minutes": 478656,
+    "night_minutes_with_kt": 0,
+    "kt_median": 1.0280388306471981,
+    "kt_p99": 1.2,
+    "share_kt_at_cap": 0.13202174421714133,
+    "nonfinite_kt": 0
+  }
+}

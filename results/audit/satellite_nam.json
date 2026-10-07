@@ -1,0 +1,568 @@
+{
+  "satellite": {
+    "frames": 30364,
+    "pixel_columns": 100,
+    "pixel_value_range": [
+      0.0,
+      255.0
+    ],
+    "frame_minutes_past_hour_top": {
+      "30": 10829,
+      "0": 10405,
+      "45": 3802,
+      "15": 3396,
+      "4": 1216,
+      "1": 415,
+      "52": 73,
+      "41": 61
+    },
+    "share_frames_on_irradiance_minute": 0.9979251745488078,
+    "benchmark_feature": {
+      "rows_with_satellite": 11006,
+      "share_equal_to_mean_of_frames_in_(t-30min,t]": 1.0,
+      "frames_in_window_counts": {
+        "1": 8140,
+        "2": 2792,
+        "3": 69,
+        "4": 5
+      },
+      "rows_all_missing": 4955
+    },
+    "availability_at_daylight_issue_times": {
+      "lag_0min": {
+        "median_age_min": 0.0,
+        "p90_age_min": 60.0,
+        "share_age_le_60min": 0.8406530089628681
+      },
+      "lag_15min": {
+        "median_age_min": 30.0,
+        "p90_age_min": 90.0,
+        "share_age_le_60min": 0.819910371318822
+      }
+    }
+  },
+  "nam": {
+    "Folsom_NAM_lat38.579454_lon-121.260320.csv": {
+      "summary": {
+        "reftime_hours_utc": [
+          12
+        ],
+        "runs": 729,
+        "days_without_run": 0,
+        "lead_hours": [
+          26.0,
+          27.0,
+          28.0,
+          29.0,
+          30.0,
+          31.0,
+          32.0,
+          33.0,
+          34.0,
+          35.0,
+          36.0,
+          39.0,
+          42.0,
+          45.0
+        ],
+        "rows_per_run": {
+          "14": 728,
+          "10": 1
+        },
+        "duplicate_reftime_valtime": 0,
+        "missing_by_field": {
+          "dwsw": 0,
+          "cloud_cover": 0,
+          "precipitation": 0,
+          "pressure": 0,
+          "wind-u": 0,
+          "wind-v": 0,
+          "temperature": 0,
+          "rel_humidity": 0
+        },
+        "field_ranges": {
+          "dwsw": [
+            0.0,
+            1096.24
+          ],
+          "cloud_cover": [
+            0.0,
+            100.0
+          ],
+          "precipitation": [
+            0.0,
+            34.125
+          ],
+          "pressure": [
+            99005.0,
+            102622.0
+          ],
+          "wind-u": [
+            -5.6033,
+            6.3516
+          ],
+          "wind-v": [
+            -7.1983,
+            12.0513
+          ],
+          "temperature": [
+            268.365,
+            329.589
+          ],
+          "rel_humidity": [
+            5.0,
+            100.0
+          ]
+        }
+      },
+      "alignment": {
+        "30min": {
+          "daylight_targets": 15620,
+          "covered": 13399,
+          "share_covered": 0.8578104993597951,
+          "lead_h_min": 26.0,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.6500485110829166
+        },
+        "60min": {
+          "daylight_targets": 14905,
+          "covered": 12684,
+          "share_covered": 0.850989600805099,
+          "lead_h_min": 26.5,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.630321665089877
+        },
+        "90min": {
+          "daylight_targets": 14190,
+          "covered": 11969,
+          "share_covered": 0.8434813248766737,
+          "lead_h_min": 27.0,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.608237948032417
+        },
+        "120min": {
+          "daylight_targets": 13475,
+          "covered": 11254,
+          "share_covered": 0.8351762523191094,
+          "lead_h_min": 27.5,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.5833481428825307
+        },
+        "150min": {
+          "daylight_targets": 12760,
+          "covered": 10539,
+          "share_covered": 0.8259404388714734,
+          "lead_h_min": 28.0,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.5550811272416738
+        },
+        "180min": {
+          "daylight_targets": 12045,
+          "covered": 9824,
+          "share_covered": 0.8156081361560814,
+          "lead_h_min": 28.5,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.5226995114006515
+        }
+      }
+    },
+    "Folsom_NAM_lat38.599891_lon-121.126680.csv": {
+      "summary": {
+        "reftime_hours_utc": [
+          12
+        ],
+        "runs": 729,
+        "days_without_run": 0,
+        "lead_hours": [
+          26.0,
+          27.0,
+          28.0,
+          29.0,
+          30.0,
+          31.0,
+          32.0,
+          33.0,
+          34.0,
+          35.0,
+          36.0,
+          39.0,
+          42.0,
+          45.0
+        ],
+        "rows_per_run": {
+          "14": 728,
+          "10": 1
+        },
+        "duplicate_reftime_valtime": 0,
+        "missing_by_field": {
+          "dwsw": 0,
+          "cloud_cover": 0,
+          "precipitation": 0,
+          "pressure": 0,
+          "wind-u": 0,
+          "wind-v": 0,
+          "temperature": 0,
+          "rel_humidity": 0
+        },
+        "field_ranges": {
+          "dwsw": [
+            0.0,
+            1095.24
+          ],
+          "cloud_cover": [
+            0.0,
+            100.0
+          ],
+          "precipitation": [
+            0.0,
+            44.0
+          ],
+          "pressure": [
+            98160.0,
+            101736.0
+          ],
+          "wind-u": [
+            -6.8533,
+            6.2749
+          ],
+          "wind-v": [
+            -6.9483,
+            11.9066
+          ],
+          "temperature": [
+            268.223,
+            329.589
+          ],
+          "rel_humidity": [
+            5.0,
+            100.0
+          ]
+        }
+      },
+      "alignment": {
+        "30min": {
+          "daylight_targets": 15620,
+          "covered": 13399,
+          "share_covered": 0.8578104993597951,
+          "lead_h_min": 26.0,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.6500485110829166
+        },
+        "60min": {
+          "daylight_targets": 14905,
+          "covered": 12684,
+          "share_covered": 0.850989600805099,
+          "lead_h_min": 26.5,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.630321665089877
+        },
+        "90min": {
+          "daylight_targets": 14190,
+          "covered": 11969,
+          "share_covered": 0.8434813248766737,
+          "lead_h_min": 27.0,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.608237948032417
+        },
+        "120min": {
+          "daylight_targets": 13475,
+          "covered": 11254,
+          "share_covered": 0.8351762523191094,
+          "lead_h_min": 27.5,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.5833481428825307
+        },
+        "150min": {
+          "daylight_targets": 12760,
+          "covered": 10539,
+          "share_covered": 0.8259404388714734,
+          "lead_h_min": 28.0,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.5550811272416738
+        },
+        "180min": {
+          "daylight_targets": 12045,
+          "covered": 9824,
+          "share_covered": 0.8156081361560814,
+          "lead_h_min": 28.5,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.5226995114006515
+        }
+      }
+    },
+    "Folsom_NAM_lat38.683880_lon-121.286556.csv": {
+      "summary": {
+        "reftime_hours_utc": [
+          12
+        ],
+        "runs": 729,
+        "days_without_run": 0,
+        "lead_hours": [
+          26.0,
+          27.0,
+          28.0,
+          29.0,
+          30.0,
+          31.0,
+          32.0,
+          33.0,
+          34.0,
+          35.0,
+          36.0,
+          39.0,
+          42.0,
+          45.0
+        ],
+        "rows_per_run": {
+          "14": 728,
+          "10": 1
+        },
+        "duplicate_reftime_valtime": 0,
+        "missing_by_field": {
+          "dwsw": 0,
+          "cloud_cover": 0,
+          "precipitation": 0,
+          "pressure": 0,
+          "wind-u": 0,
+          "wind-v": 0,
+          "temperature": 0,
+          "rel_humidity": 0
+        },
+        "field_ranges": {
+          "dwsw": [
+            0.0,
+            1095.86
+          ],
+          "cloud_cover": [
+            0.0,
+            100.0
+          ],
+          "precipitation": [
+            0.0,
+            32.375
+          ],
+          "pressure": [
+            98919.0,
+            102494.0
+          ],
+          "wind-u": [
+            -5.9639,
+            5.7749
+          ],
+          "wind-v": [
+            -7.1299,
+            12.3013
+          ],
+          "temperature": [
+            269.378,
+            327.719
+          ],
+          "rel_humidity": [
+            5.0,
+            100.0
+          ]
+        }
+      },
+      "alignment": {
+        "30min": {
+          "daylight_targets": 15620,
+          "covered": 13399,
+          "share_covered": 0.8578104993597951,
+          "lead_h_min": 26.0,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.6500485110829166
+        },
+        "60min": {
+          "daylight_targets": 14905,
+          "covered": 12684,
+          "share_covered": 0.850989600805099,
+          "lead_h_min": 26.5,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.630321665089877
+        },
+        "90min": {
+          "daylight_targets": 14190,
+          "covered": 11969,
+          "share_covered": 0.8434813248766737,
+          "lead_h_min": 27.0,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.608237948032417
+        },
+        "120min": {
+          "daylight_targets": 13475,
+          "covered": 11254,
+          "share_covered": 0.8351762523191094,
+          "lead_h_min": 27.5,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.5833481428825307
+        },
+        "150min": {
+          "daylight_targets": 12760,
+          "covered": 10539,
+          "share_covered": 0.8259404388714734,
+          "lead_h_min": 28.0,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.5550811272416738
+        },
+        "180min": {
+          "daylight_targets": 12045,
+          "covered": 9824,
+          "share_covered": 0.8156081361560814,
+          "lead_h_min": 28.5,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.5226995114006515
+        }
+      }
+    },
+    "Folsom_NAM_lat38.704328_lon-121.152788.csv": {
+      "summary": {
+        "reftime_hours_utc": [
+          12
+        ],
+        "runs": 729,
+        "days_without_run": 0,
+        "lead_hours": [
+          26.0,
+          27.0,
+          28.0,
+          29.0,
+          30.0,
+          31.0,
+          32.0,
+          33.0,
+          34.0,
+          35.0,
+          36.0,
+          39.0,
+          42.0,
+          45.0
+        ],
+        "rows_per_run": {
+          "14": 728,
+          "10": 1
+        },
+        "duplicate_reftime_valtime": 0,
+        "missing_by_field": {
+          "dwsw": 0,
+          "cloud_cover": 0,
+          "precipitation": 0,
+          "pressure": 0,
+          "wind-u": 0,
+          "wind-v": 0,
+          "temperature": 0,
+          "rel_humidity": 0
+        },
+        "field_ranges": {
+          "dwsw": [
+            0.0,
+            1094.99
+          ],
+          "cloud_cover": [
+            0.0,
+            100.0
+          ],
+          "precipitation": [
+            0.0,
+            43.75
+          ],
+          "pressure": [
+            97946.0,
+            101472.0
+          ],
+          "wind-u": [
+            -7.4639,
+            5.6499
+          ],
+          "wind-v": [
+            -6.5733,
+            11.9263
+          ],
+          "temperature": [
+            269.628,
+            328.714
+          ],
+          "rel_humidity": [
+            5.0,
+            100.0
+          ]
+        }
+      },
+      "alignment": {
+        "30min": {
+          "daylight_targets": 15620,
+          "covered": 13399,
+          "share_covered": 0.8578104993597951,
+          "lead_h_min": 26.0,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.6500485110829166
+        },
+        "60min": {
+          "daylight_targets": 14905,
+          "covered": 12684,
+          "share_covered": 0.850989600805099,
+          "lead_h_min": 26.5,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.630321665089877
+        },
+        "90min": {
+          "daylight_targets": 14190,
+          "covered": 11969,
+          "share_covered": 0.8434813248766737,
+          "lead_h_min": 27.0,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.608237948032417
+        },
+        "120min": {
+          "daylight_targets": 13475,
+          "covered": 11254,
+          "share_covered": 0.8351762523191094,
+          "lead_h_min": 27.5,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.5833481428825307
+        },
+        "150min": {
+          "daylight_targets": 12760,
+          "covered": 10539,
+          "share_covered": 0.8259404388714734,
+          "lead_h_min": 28.0,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.5550811272416738
+        },
+        "180min": {
+          "daylight_targets": 12045,
+          "covered": 9824,
+          "share_covered": 0.8156081361560814,
+          "lead_h_min": 28.5,
+          "lead_h_max": 39.0,
+          "issue_minus_reftime_h_min": 25.5,
+          "share_where_newest_available_run_lacked_valid_time": 0.5226995114006515
+        }
+      }
+    }
+  },
+  "nam_availability_lag_hours_assumed": 6,
+  "satellite_availability_lag_minutes_assumed": 15
+}
