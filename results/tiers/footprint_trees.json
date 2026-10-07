@@ -1,0 +1,318 @@
+{
+  "rows": "validation primary rows (Stage 5)",
+  "cells": 20125,
+  "edge_network": {
+    "parameters": 10758,
+    "float32_bytes": 43032,
+    "int8_bytes_estimate": 11208,
+    "int8_estimate_rule": "int8 weights + int32 biases + 8 bytes per tensor for scale/zero point",
+    "single_row_cpu_ms_median": 0.018599967006593943
+  },
+  "trees": {
+    "trees_ground": {
+      "horizon_models": 6,
+      "trees": 517,
+      "trees_per_horizon": [
+        114,
+        114,
+        96,
+        69,
+        65,
+        59
+      ],
+      "max_depth": 18,
+      "leaves": 16027,
+      "nodes": 31537,
+      "compact_size_bytes_estimate": 378444,
+      "pickle_size_bytes": 2899166,
+      "single_row_cpu_ms_median": 4.261199996108189
+    },
+    "trees_ground_cap10x": {
+      "cap_bytes": 112080,
+      "max_leaf_nodes": 8,
+      "max_trees_per_horizon": 103,
+      "within_cap": true,
+      "horizon_models": 6,
+      "trees": 473,
+      "trees_per_horizon": [
+        92,
+        98,
+        84,
+        74,
+        61,
+        64
+      ],
+      "max_depth": 7,
+      "leaves": 3784,
+      "nodes": 7095,
+      "compact_size_bytes_estimate": 85140,
+      "pickle_size_bytes": 1524285,
+      "single_row_cpu_ms_median": 3.9735499885864556
+    },
+    "trees_ground_cap100x": {
+      "cap_bytes": 1120800,
+      "max_leaf_nodes": 31,
+      "max_trees_per_horizon": 255,
+      "within_cap": true,
+      "horizon_models": 6,
+      "trees": 517,
+      "trees_per_horizon": [
+        114,
+        114,
+        96,
+        69,
+        65,
+        59
+      ],
+      "max_depth": 18,
+      "leaves": 16027,
+      "nodes": 31537,
+      "compact_size_bytes_estimate": 378444,
+      "pickle_size_bytes": 2899166,
+      "single_row_cpu_ms_median": 4.312200006097555
+    }
+  },
+  "validation_rmse_seed_mean": {
+    "edge_network": {
+      "30min": 51.88002248946053,
+      "60min": 64.0489848092861,
+      "90min": 72.88662940013005,
+      "120min": 79.26447835060394,
+      "150min": 83.35063785031022,
+      "180min": 88.26426518103663,
+      "mean": 73.28250301347124
+    },
+    "cloud_step4_average": {
+      "30min": 46.768529758772864,
+      "60min": 60.08139471709908,
+      "90min": 68.65657151583979,
+      "120min": 73.8203543886631,
+      "150min": 78.69936127652973,
+      "180min": 83.91187710060099,
+      "mean": 68.65634812625093
+    },
+    "trees_ground": {
+      "30min": 44.32866004523188,
+      "60min": 58.81677199863319,
+      "90min": 69.15848870503166,
+      "120min": 74.58094329949313,
+      "150min": 80.96743510072973,
+      "180min": 87.11655727723019,
+      "mean": 69.16147607105829
+    },
+    "trees_ground_cap10x": {
+      "30min": 44.95579131560055,
+      "60min": 59.137389418985435,
+      "90min": 68.7012621581892,
+      "120min": 75.14673071910539,
+      "150min": 79.92666462409635,
+      "180min": 84.82743780838905,
+      "mean": 68.78254600739433
+    },
+    "trees_ground_cap100x": {
+      "30min": 44.32866004523188,
+      "60min": 58.81677199863319,
+      "90min": 69.15848870503166,
+      "120min": 74.58094329949313,
+      "150min": 80.96743510072973,
+      "180min": 87.11655727723019,
+      "mean": 69.16147607105829
+    }
+  },
+  "match_rule": "matches if the 95% paired day-block bootstrap interval of RMSE_trees - RMSE_cloud has lo <= 0",
+  "match_vs_cloud": {
+    "trees_ground": {
+      "rmse_trees_minus_cloud": [
+        {
+          "cloud_seed": 0,
+          "point": 0.43880408727082454,
+          "lo": -2.185284512339649,
+          "hi": 3.0720409115920404,
+          "includes_zero": true,
+          "n_days": 715,
+          "matches_cloud": true
+        },
+        {
+          "cloud_seed": 1,
+          "point": 0.44264921177806116,
+          "lo": -2.130224343799931,
+          "hi": 3.001555983944446,
+          "includes_zero": true,
+          "n_days": 715,
+          "matches_cloud": true
+        },
+        {
+          "cloud_seed": 2,
+          "point": 1.0494820659458384,
+          "lo": -1.3954499907134397,
+          "hi": 3.574165966757723,
+          "includes_zero": true,
+          "n_days": 715,
+          "matches_cloud": true
+        },
+        {
+          "cloud_seed": 3,
+          "point": 0.6640445528684182,
+          "lo": -1.9157879128889304,
+          "hi": 3.361129809953357,
+          "includes_zero": true,
+          "n_days": 715,
+          "matches_cloud": true
+        },
+        {
+          "cloud_seed": 4,
+          "point": -0.06934019382630652,
+          "lo": -2.5096163513614327,
+          "hi": 2.4246720461848668,
+          "includes_zero": true,
+          "n_days": 715,
+          "matches_cloud": true
+        }
+      ],
+      "matches_cloud_seeds": 5
+    },
+    "trees_ground_cap10x": {
+      "rmse_trees_minus_cloud": [
+        {
+          "cloud_seed": 0,
+          "point": 0.059874023606852234,
+          "lo": -2.2679405666103154,
+          "hi": 2.461006554930667,
+          "includes_zero": true,
+          "n_days": 715,
+          "matches_cloud": true
+        },
+        {
+          "cloud_seed": 1,
+          "point": 0.06371914811408885,
+          "lo": -2.2981729534017363,
+          "hi": 2.405475869076729,
+          "includes_zero": true,
+          "n_days": 715,
+          "matches_cloud": true
+        },
+        {
+          "cloud_seed": 2,
+          "point": 0.6705520022818661,
+          "lo": -1.6642048168535004,
+          "hi": 3.0115757827183547,
+          "includes_zero": true,
+          "n_days": 715,
+          "matches_cloud": true
+        },
+        {
+          "cloud_seed": 3,
+          "point": 0.28511448920444593,
+          "lo": -2.2094921823030633,
+          "hi": 2.849294372055231,
+          "includes_zero": true,
+          "n_days": 715,
+          "matches_cloud": true
+        },
+        {
+          "cloud_seed": 4,
+          "point": -0.4482702574902788,
+          "lo": -2.817455140359437,
+          "hi": 1.931068910606402,
+          "includes_zero": true,
+          "n_days": 715,
+          "matches_cloud": true
+        }
+      ],
+      "matches_cloud_seeds": 5
+    },
+    "trees_ground_cap100x": {
+      "rmse_trees_minus_cloud": [
+        {
+          "cloud_seed": 0,
+          "point": 0.43880408727082454,
+          "lo": -2.185284512339649,
+          "hi": 3.0720409115920404,
+          "includes_zero": true,
+          "n_days": 715,
+          "matches_cloud": true
+        },
+        {
+          "cloud_seed": 1,
+          "point": 0.44264921177806116,
+          "lo": -2.130224343799931,
+          "hi": 3.001555983944446,
+          "includes_zero": true,
+          "n_days": 715,
+          "matches_cloud": true
+        },
+        {
+          "cloud_seed": 2,
+          "point": 1.0494820659458384,
+          "lo": -1.3954499907134397,
+          "hi": 3.574165966757723,
+          "includes_zero": true,
+          "n_days": 715,
+          "matches_cloud": true
+        },
+        {
+          "cloud_seed": 3,
+          "point": 0.6640445528684182,
+          "lo": -1.9157879128889304,
+          "hi": 3.361129809953357,
+          "includes_zero": true,
+          "n_days": 715,
+          "matches_cloud": true
+        },
+        {
+          "cloud_seed": 4,
+          "point": -0.06934019382630652,
+          "lo": -2.5096163513614327,
+          "hi": 2.4246720461848668,
+          "includes_zero": true,
+          "n_days": 715,
+          "matches_cloud": true
+        }
+      ],
+      "matches_cloud_seeds": 5
+    }
+  },
+  "paired_bootstrap_edge_minus_cloud_rmse": [
+    {
+      "seed": 0,
+      "point": 4.335123938240699,
+      "lo": 1.2655779950448776,
+      "hi": 7.832557516479462,
+      "includes_zero": false,
+      "n_days": 715
+    },
+    {
+      "seed": 1,
+      "point": 3.4887564556657793,
+      "lo": 0.6494290988804559,
+      "hi": 6.5092618488601985,
+      "includes_zero": false,
+      "n_days": 715
+    },
+    {
+      "seed": 2,
+      "point": 3.9757067703132094,
+      "lo": 1.135610851964789,
+      "hi": 7.098646299701197,
+      "includes_zero": false,
+      "n_days": 715
+    },
+    {
+      "seed": 3,
+      "point": 8.777309756981609,
+      "lo": 5.614813372552773,
+      "hi": 11.98458593640634,
+      "includes_zero": false,
+      "n_days": 715
+    },
+    {
+      "seed": 4,
+      "point": 2.553877514900222,
+      "lo": 0.042955542272696115,
+      "hi": 5.13637086392796,
+      "includes_zero": false,
+      "n_days": 715
+    }
+  ],
+  "timing_note": "single-row CPU time on a PC through Python/sklearn or PyTorch; not microcontroller latency"
+}

@@ -195,23 +195,28 @@ def gbt(run: Run, data: dict, seed: int) -> np.ndarray:
     return gbt_on(run, np.concatenate([data["x"], tile_summary(data["tiles"])], axis=1), seed)
 
 
-def gbt_on(run: Run, X: np.ndarray, seed: int) -> np.ndarray:
-    """One HistGradientBoosting model per horizon; iterations picked on the es slice."""
+def gbt_on(run: Run, X: np.ndarray, seed: int, max_iter: int | None = None, max_leaf_nodes: int | None = None,
+           return_models: bool = False):
+    """One HistGradientBoosting model per horizon; iterations picked on the es slice.
+    max_iter / max_leaf_nodes override the step-4 settings (used only for size-capped models)."""
     s4 = run.cfg["ladder"]["step4"]
     out = np.zeros((len(X), len(run.hz)), np.float32)
+    models = []
     for j in range(len(run.hz)):
         m = run.tg["mask"][:, j] > 0
         tr, es = run.tr & m, run.es & m
-        model = HistGradientBoostingRegressor(max_iter=s4["max_iter"], learning_rate=s4["learning_rate"],
-                                              max_leaf_nodes=s4["max_leaf_nodes"], early_stopping=False,
-                                              random_state=seed)
+        model = HistGradientBoostingRegressor(max_iter=max_iter or s4["max_iter"], learning_rate=s4["learning_rate"],
+                                              max_leaf_nodes=max_leaf_nodes or s4["max_leaf_nodes"],
+                                              early_stopping=False, random_state=seed)
         model.fit(X[tr], run.tg["kt"][tr, j])
         errs = [np.mean((p - run.tg["kt"][es, j]) ** 2) for p in model.staged_predict(X[es])]
         best = int(np.argmin(errs)) + 1
         model.set_params(max_iter=best, warm_start=False)
         model.fit(X[tr], run.tg["kt"][tr, j])
         out[:, j] = model.predict(X)
-    return np.clip(out, *run.tc["kt_clip"])
+        models.append(model)
+    out = np.clip(out, *run.tc["kt_clip"])
+    return (out, models) if return_models else out
 
 
 def main() -> None:
