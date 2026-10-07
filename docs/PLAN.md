@@ -357,3 +357,45 @@ comparison is resampled with the same days, which makes the comparison paired.
 - **Intervals:** at the report budgets (0.10, 0.25, 0.50), day-block bootstrap intervals for
   each gate's RMSE and share retained, per seed. They are summarised as mean, median and range
   over seeds.
+
+## 9. Amendments before Stage 7 (2026-10-08)
+
+**Author's decision (Checkpoint C).** Before the test run, the uncertainty and learned gates
+and all score thresholds are refitted on gate_fit + validation (all of 2015).
+- Unchanged: the architecture, inputs, early-stopping rule (the last 30 days of the fitting
+  period) and the budget grid.
+- The tiers stay as trained on 2014.
+- *Reason:* on validation, the gates fitted on January to June under-escalated, because
+  validation is a clearer half-year (learned gate: realised 0.38 at a 0.50 target). A full
+  year matches the test year's seasonal mix.
+- *Cost:* the refitted gates get no out-of-sample check before 2016. Their realised rates on
+  2016 are reported next to the targets.
+
+**Stage 7 measurement rules** (assistant's choices, fixed before measuring)
+- **int8 quantisation:**
+  - ONNX Runtime static quantisation, QDQ format, int8 weights (per tensor), uint8
+    activations, MinMax calibration.
+  - Calibration uses models_train rows only. For the edge network these are its training
+    inputs. For the gates they are the gate inputs (on-device inputs plus edge forecast) on
+    models_train rows, standardised with the gate's own statistics.
+  - Covers all five seeds of the edge network and of each gate. The gates are the ones fitted
+    on gate_fit, the same as at Checkpoint C.
+- **Before and after:**
+  - edge network: validation RMSE per horizon and averaged, on the primary rows;
+  - gates: correlation of float and int8 scores on validation, plus realised rate and share
+    kept at 10, 25 and 50%. The thresholds are recomputed on gate_fit from each version's own
+    scores, as a deployment would.
+- **Latency:** ONNX Runtime, one intra-op and one inter-op thread, sequential execution, a
+  single row. 200 warm-up runs, then 5,000 timed runs; median and 95th percentile reported.
+  For the trees, all six horizon models run in sequence. The generated C is timed the same way
+  inside a compiled benchmark. All of this is on a PC CPU; nothing runs on a microcontroller.
+- **Trees, measured:**
+  - The 10x-capped trees_ground is exported to ONNX with skl2onnx (one file per horizon; the
+    total is reported).
+  - It is also exported to generated C: static node arrays (int16 feature index, float32
+    threshold or leaf value, int16 child indices) plus a predict function. This is compiled
+    with `zig cc -O2` (the ziglang package), and the object file's section sizes are reported.
+  - Both exports are checked against sklearn on validation (maximum absolute difference, and
+    RMSE before and after).
+  - The 12-bytes-per-node estimate stays in the table next to the measurements.
+- **New tools:** skl2onnx and ziglang, added to requirements.txt and the lock file.

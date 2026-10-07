@@ -12,3 +12,5 @@ matplotlib
 onnx
 onnxruntime
 pytest
+skl2onnx
+ziglang

@@ -113,3 +113,12 @@ gates:
   uncertainty_scale: 100.0   # W/m2
   benefit_scale: 10000.0     # (W/m2)^2
   thresholds_file: configs/gate_thresholds.yaml
+quantise:                    # Stage 7; see docs/PLAN.md section 9
+  opset: 17
+  format: QDQ
+  calibration_split: models_train
+  latency_warmup: 200
+  latency_runs: 5000
+  threads: 1
+  report_budgets: [0.10, 0.25, 0.50]
+  c_compiler: [python, -m, ziglang, cc, -O2]
