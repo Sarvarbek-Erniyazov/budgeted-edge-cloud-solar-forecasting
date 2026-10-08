@@ -167,6 +167,16 @@ def core_table() -> pd.DataFrame:
           "tier. lasso_exo is on the anchor rows (29,948 cells), and every other row is on the primary rows (39,655 cells). "
           "Share kept is shown for tiers that could serve as an escalation target and for gates; n/a for the anchors. "
           "Cloud-tier size is not stated: the trees pickle alone is 5,917,302 B, plus the step-3 network.", "",
+          "**How skill is computed.** Skill is a per-horizon average: for each of the 6 horizons h, "
+          "skill_h = 1 - RMSE_h / RMSE_h(smart persistence) on the same cells, and the skill shown is the mean of the "
+          "6 values (`escal.gates.avg_metrics`). It is not computed from the horizon-mean RMSE: "
+          "1 - RMSE / RMSE(smart persistence) with both RMSEs averaged over horizons gives larger values "
+          "(trees on all inputs: 0.207 instead of 0.200; edge fp32, seed mean: 0.142 instead of 0.130). For models "
+          "with seeds the skill shown is the mean over seeds of the per-seed skill; for the random gate it is also "
+          "averaged over the random draws. Share kept, by contrast, uses the horizon-mean RMSE. "
+          "`docs/FREEZE.md` (section a, Metrics) lists 'skill = 1 - RMSE / RMSE(smart persistence)' under "
+          "'RMSE and MAE per horizon, averaged over horizons'. The per-horizon computation is consistent with that "
+          "wording, but FREEZE.md does not state explicitly whether the average is taken before or after the ratio.", "",
           "| name | RMSE [seed range] | skill | share kept | realised rate | size (B) | CPU latency (µs) |",
           "|---|---|---|---|---|---|---|"]
 
