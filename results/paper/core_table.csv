@@ -1,0 +1,28 @@
+group,name,rows,RMSE,RMSE_seed_min,RMSE_seed_max,skill,share_kept,realised_rate,size_bytes,cpu_latency_median_us
+tier/anchor,Smart persistence,primary,89.4271,89.4271,89.4271,0.0000,,,0.0000,
+tier/anchor,"Linear anchor, ground (lasso_endo)",primary,88.2063,88.2063,88.2063,0.0134,,,,
+tier/anchor,"Linear anchor, ground + satellite (lasso_exo)",anchor rows,82.0462,82.0462,82.0462,0.0884,,,,
+tier/anchor,"Edge tier, fp32",primary,76.7101,75.4340,79.7761,0.1301,0.0000,0.0000,43846.0000,7.5000
+tier/anchor,"Edge tier, int8 (secondary)",primary,77.2067,75.8403,81.0392,0.1238,-0.0821,0.0000,15177.0000,9.6000
+tier/anchor,"Ground-only trees, 10x cap (C object)",primary,73.2878,73.2878,73.2878,0.1762,0.5659,,87183.0000,3.5000
+tier/anchor,"Ground-only trees, uncapped (pickle)",primary,73.9775,73.9775,73.9775,0.1692,0.4519,,2899166.0000,
+tier/anchor,"Trees, all inputs (pickle)",primary,70.8956,70.8956,70.8956,0.2004,0.9615,,5917302.0000,
+tier/anchor,Cloud tier (trees + network),primary,70.6627,70.1465,71.1406,0.2001,1.0000,1.0000,,
+gate,Random (expected) @ 10%,primary,76.1317,75.0165,78.9060,0.1368,0.0956,0.1000,0.0000,
+gate,Random (expected) @ 25%,primary,75.2549,74.4018,77.6011,0.1469,0.2406,0.2500,0.0000,
+gate,Random (expected) @ 50%,primary,73.7646,73.0344,75.4475,0.1642,0.4876,0.5000,0.0000,
+gate,Fixed interval @ 10%,primary,76.1802,75.1603,78.9587,0.1364,0.0864,0.0774,0.0000,
+gate,Fixed interval @ 25%,primary,75.3065,74.4138,77.6465,0.1466,0.2297,0.2316,0.0000,
+gate,Fixed interval @ 50%,primary,73.8937,73.1718,75.5924,0.1626,0.4654,0.4875,0.0000,
+gate,Variability rule @ 10%,primary,75.5097,74.4778,78.3086,0.1440,0.2046,0.1055,0.0000,
+gate,Variability rule @ 25%,primary,74.3254,73.4248,76.1227,0.1579,0.3948,0.2362,0.0000,
+gate,Variability rule @ 50%,primary,71.7789,71.2541,72.6692,0.1864,0.8249,0.4986,0.0000,
+gate,Uncertainty gate @ 10%,primary,73.8994,73.0380,76.0334,0.1623,0.4745,0.0994,6067.0000,8.6000
+gate,Uncertainty gate @ 25%,primary,72.6094,71.8954,74.0614,0.1766,0.6878,0.2303,6067.0000,8.6000
+gate,Uncertainty gate @ 50%,primary,71.2592,70.6929,71.6375,0.1927,0.9039,0.4770,6067.0000,8.6000
+gate,Learned gate @ 10%,primary,74.1699,73.3445,76.4573,0.1595,0.4281,0.1053,6067.0000,8.5000
+gate,Learned gate @ 25%,primary,72.7926,72.0930,73.7390,0.1754,0.6493,0.2476,6067.0000,8.5000
+gate,Learned gate @ 50%,primary,71.5249,71.0769,71.9446,0.1904,0.8550,0.4939,6067.0000,8.5000
+gate,Oracle @ 10%,primary,66.5716,65.3917,68.3609,0.2409,1.7584,0.1000,,
+gate,Oracle @ 25%,primary,64.4523,63.8213,65.1759,0.2660,2.1092,0.2500,,
+gate,Oracle @ 50%,primary,63.7939,63.4575,64.0349,0.2743,2.2145,0.4999,,
