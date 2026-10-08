@@ -36,9 +36,9 @@ def test_test_year_locked_by_default(cfg, df, monkeypatch):
 
 def test_env_alone_does_not_unlock(cfg, df, monkeypatch):
     monkeypatch.setenv("ESCAL_UNLOCK_TEST", "1")
-    assert cfg["protocol"]["frozen"] is False
+    unfrozen = {**cfg, "protocol": {**cfg["protocol"], "frozen": False}}   # own copy, independent of the live config
     with pytest.raises(LockedTestYear):
-        select_split(df, cfg, "test")
+        select_split(df, unfrozen, "test")
 
 
 def test_unlock_needs_both(cfg, df, monkeypatch):

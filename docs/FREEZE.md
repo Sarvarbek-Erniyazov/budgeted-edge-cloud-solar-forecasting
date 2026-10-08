@@ -341,3 +341,21 @@ Identical items:
 
 The one difference is the claim 3 seed-mean gain, by 6.0e-10. It is fully explained by the
 averaging convention noted in section a: recomputed with Stage 5's W/m2 average, it is identical.
+
+### Test change before the freeze (2026-10-08, author's decision, option B)
+**What changed.** Three tests no longer read the live `protocol.frozen` value. Each now sets
+`frozen: false` on its own copy of the config before checking that the test period stays locked:
+- `tests/test_splits.py::test_env_alone_does_not_unlock`: the assertion on the live config was
+  removed, and the test still asserts that `select_split(..., "test")` raises `LockedTestYear`
+  with `ESCAL_UNLOCK_TEST=1`. The author lifted the no-edit rule for this one change only.
+  No other test in that file changed.
+- `tests/test_test_path.py::test_test_path_locked_while_not_frozen` and
+  `::test_env_alone_does_not_unlock_test_path`.
+
+**Why.** These tests asserted that the live config was unfrozen, so they would have failed by
+construction at the tagged commit, where `protocol.frozen` is true.
+
+**What is unchanged.** The locking logic itself: `src/escal/splits.py` and the loaders.
+
+**Checked:** the full suite (30 tests, nothing deselected) passes with the live config unfrozen
+and on a throwaway copy with `frozen: true`. Section c keeps `./run.sh test` with the full suite.

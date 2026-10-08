@@ -26,7 +26,7 @@ def cfg(tmp_path):
 
 def test_test_path_locked_while_not_frozen(cfg, monkeypatch):
     monkeypatch.delenv("ESCAL_UNLOCK_TEST", raising=False)
-    assert cfg["protocol"]["frozen"] is False
+    cfg["protocol"]["frozen"] = False                    # own copy, independent of the live config
     with pytest.raises(LockedTestYear):
         read("Target_intra-day.csv", cfg, include_test=True)
     with pytest.raises(LockedTestYear):
@@ -37,6 +37,7 @@ def test_test_path_locked_while_not_frozen(cfg, monkeypatch):
 
 def test_env_alone_does_not_unlock_test_path(cfg, monkeypatch):
     monkeypatch.setenv("ESCAL_UNLOCK_TEST", "1")
+    cfg["protocol"]["frozen"] = False                    # own copy, independent of the live config
     with pytest.raises(LockedTestYear):
         read("Target_intra-day.csv", cfg, include_test=True)
 
