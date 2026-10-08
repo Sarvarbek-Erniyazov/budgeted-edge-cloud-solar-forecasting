@@ -17,8 +17,8 @@ PAPER = Path("results/paper")
 
 
 def fig_architecture() -> list[str]:
-    fig, ax = plt.subplots(figsize=(8.0, 3.2))
-    ax.set_xlim(0, 12)
+    fig, ax = plt.subplots(figsize=(8.9, 3.2))
+    ax.set_xlim(0, 14.1)
     ax.set_ylim(0, 4.2)
     ax.axis("off")
     ax.grid(False)
@@ -28,29 +28,30 @@ def fig_architecture() -> list[str]:
         ax.text(x + w / 2, y + h / 2, text, ha="center", va="center", fontsize=7.5, color=S.INK,
                 fontweight="bold" if bold else "normal", linespacing=1.35)
 
-    def arrow(x0, y0, x1, y1, text="", tx=None, ty=None):
+    def arrow(x0, y0, x1, y1):
         ax.add_patch(FancyArrowPatch((x0, y0), (x1, y1), arrowstyle="-|>", mutation_scale=10, lw=1.0, color=S.MUTED))
-        if text:
-            ax.text(tx if tx is not None else (x0 + x1) / 2, ty if ty is not None else (y0 + y1) / 2 + 0.1, text,
-                    ha="center", va="bottom", fontsize=7, color=S.MUTED)
 
-    for x, w, label in ((0.1, 6.4, "On device (PV site)"), (7.0, 4.9, "Cloud")):
+    for x, w, label in ((0.1, 6.9, "On device (PV site)"), (9.1, 4.9, "Cloud")):
         ax.add_patch(FancyBboxPatch((x, 0.25), w, 3.7, boxstyle="round,pad=0.02,rounding_size=0.1", fc="none",
                                     ec=S.MUTED, lw=0.8, ls=(0, (3, 2))))
         ax.text(x + 0.15, 3.72, label, fontsize=8, color=S.MUTED, fontweight="bold")
-    box(0.3, 2.25, 1.9, 1.1, "Ground sensors\nGHI, DNI, weather\n+ clear-sky terms", "#f2f2f2")
-    box(2.5, 2.25, 1.6, 1.1, "Edge tier\nMLP, int8\n15.2 KB", "#cfe3f3", bold=True)
-    box(4.4, 2.25, 1.9, 1.1, "Gate\nint8, 6.1 KB\nescalate or not", "#fde2c8", bold=True)
-    box(2.5, 0.5, 3.8, 0.95, "Forecast, 30 to 180 min ahead\n(edge, or cloud if escalated)", "#f2f2f2")
-    box(9.2, 2.25, 2.5, 1.1, "Cloud tier\ntrees + network\n(averaged in kt)", "#cfe3f3", bold=True)
-    box(9.2, 0.5, 2.5, 0.95, "GOES-15 tile\nNAM, 4 nodes", "#f2f2f2")
-    arrow(2.2, 2.8, 2.5, 2.8)
-    arrow(4.1, 2.8, 4.4, 2.8)
-    arrow(3.3, 2.25, 3.3, 1.45)
-    arrow(6.3, 3.05, 9.2, 3.05, "request (share b of issue times)", ty=3.12)
-    arrow(10.45, 1.45, 10.45, 2.25)
-    arrow(9.2, 2.45, 6.3, 1.05, "cloud forecast", tx=7.75, ty=1.95)
-    ax.set_title("Budgeted edge-to-cloud escalation", loc="left", fontsize=10, color=S.INK)
+    box(0.3, 2.25, 2.05, 1.1, "Ground sensors\nGHI, DNI, weather\n+ clear-sky terms", "#f2f2f2")
+    box(2.6, 2.25, 2.05, 1.1, "Edge tier, MLP\n43.8 kB\n(int8: 15.2 kB)", "#cfe3f3", bold=True)
+    box(4.9, 2.25, 1.9, 1.1, "Gate\nint8, 6.1 kB\nescalate or not", "#fde2c8", bold=True)
+    box(2.6, 0.5, 4.2, 0.95, "Forecast, 30 to 180 min ahead\n(edge, or cloud if escalated)", "#f2f2f2")
+    box(11.2, 2.25, 2.6, 1.1, "Cloud tier\ntrees + network\n(averaged in kt)", "#cfe3f3", bold=True)
+    box(11.2, 0.5, 2.6, 0.95, "GOES-15 tile\nNAM, 4 nodes", "#f2f2f2")
+    arrow(2.35, 2.8, 2.6, 2.8)
+    arrow(4.65, 2.8, 4.9, 2.8)
+    arrow(3.6, 2.25, 3.6, 1.45)
+    arrow(6.8, 3.05, 11.2, 3.05)
+    arrow(12.5, 1.45, 12.5, 2.25)
+    arrow(11.2, 2.45, 6.8, 1.05)
+    # labels sit in the gap between the two groups, clear of every box, border and arrow
+    ax.text(8.05, 3.17, "request\n(share b of\nissue times)", ha="center", va="bottom", fontsize=7, color=S.MUTED)
+    ax.text(8.05, 2.05, "cloud forecast", ha="center", va="center", fontsize=7, color=S.MUTED)
+    bad = S.layout_problems(fig)
+    assert not bad, bad
     return S.save(fig, FIG / "architecture")
 
 

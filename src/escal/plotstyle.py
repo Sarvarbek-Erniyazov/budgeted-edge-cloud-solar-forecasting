@@ -40,3 +40,38 @@ def save(fig, path_stem: Path) -> list[str]:
         out.append(str(p).replace("\\", "/"))
     plt.close(fig)
     return out
+
+
+def _outline_hits(path, bb, step_px: float = 0.5) -> bool:
+    """True if any point on the drawn outline (sampled every step_px) lies inside bb."""
+    import numpy as np
+    for poly in path.to_polygons(closed_only=False):
+        for (x0, y0), (x1, y1) in zip(poly[:-1], poly[1:]):
+            n = max(2, int(np.hypot(x1 - x0, y1 - y0) / step_px) + 1)
+            xs, ys = np.linspace(x0, x1, n), np.linspace(y0, y1, n)
+            if np.any((xs >= bb.x0) & (xs <= bb.x1) & (ys >= bb.y0) & (ys <= bb.y1)):
+                return True
+    return False
+
+
+def layout_problems(fig, min_pt: float = 0.0, pad_px: float = 1.0) -> list[str]:
+    """Text that touches a patch outline (box, border, arrow) or another text, or is smaller than min_pt."""
+    from matplotlib.patches import Patch
+    from matplotlib.text import Text
+    fig.canvas.draw()
+    r = fig.canvas.get_renderer()
+    texts = [t for t in fig.findobj(Text) if t.get_visible() and t.get_text().strip()]
+    patches = [p for ax in fig.axes for p in ax.patches if isinstance(p, Patch)]
+    out = []
+    boxes = [(t, t.get_window_extent(r).expanded(1.0, 1.0).padded(pad_px)) for t in texts]
+    for t, bb in boxes:
+        if t.get_fontsize() < min_pt:
+            out.append(f"{t.get_text()!r}: {t.get_fontsize()} pt < {min_pt} pt")
+        for p in patches:
+            if _outline_hits(p.get_transform().transform_path(p.get_path()), bb):
+                out.append(f"{t.get_text()!r} touches a patch outline")
+    for i, (a, ba) in enumerate(boxes):
+        for b, bb in boxes[i + 1:]:
+            if ba.overlaps(bb):
+                out.append(f"{a.get_text()!r} overlaps {b.get_text()!r}")
+    return out
