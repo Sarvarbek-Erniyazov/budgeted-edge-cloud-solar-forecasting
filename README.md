@@ -2,7 +2,7 @@
 
 <!-- Badges: add once they are true. Suggested: Python version, PyTorch, License: MIT, tests (GitHub Actions), status: work in progress -->
 
-> **Status: work in progress.** No experiment has been run yet. The results table below is empty until the protocol is frozen and the test year is evaluated.
+> **Status:** the protocol was frozen on 2026-10-08 (tag `freeze-2026-10-08`, [docs/FREEZE.md](docs/FREEZE.md)), and the 2016 test year was evaluated once from that tag. **Two of the five pre-specified claims were refuted on the test year.** The paper is in preparation.
 
 ## Summary
 
@@ -10,9 +10,9 @@ A low-power device at a photovoltaic site forecasts solar irradiance from its ow
 
 ## Figures
 
-<!-- Fig. 1: two-tier architecture (figures/architecture.svg) -->
-<!-- Fig. 2: accuracy versus escalation budget for all gates (figures/budget_sweep.svg) -->
-<!-- Fig. 3: routing map, hour by month (figures/routing_map.svg) -->
+- Two-tier architecture: [figures/core/architecture.svg](figures/core/architecture.svg)
+- RMSE against escalation budget for all gates, 2016: [figures/core/budget_sweep.svg](figures/core/budget_sweep.svg)
+- Routing map, hour by month (uncertainty gate, 25% budget): [figures/core/routing_map.svg](figures/core/routing_map.svg)
 
 ## Reproduce
 
@@ -23,19 +23,44 @@ pip install -r requirements.txt
 ./run.sh test        # unit tests
 ./run.sh download    # Folsom non-image files, about 0.52 GB, MD5-checked
 ./run.sh audit       # data audit
+bash scripts/install_hooks.sh   # optional: pre-commit guard against leaked local paths
 ```
 
-Further stages are added to `run.sh` as they are built. The exact environment is in `requirements.lock.txt`.
+Every stage has its own `./run.sh` command (`./run.sh` lists them). The test-year sequence is in
+[docs/FREEZE.md](docs/FREEZE.md), section c. The exact environment is in `requirements.lock.txt`.
 
-## Results
+## Results (2016 test year, single run from the frozen tag)
 
-| Setting | RMSE | MAE | Skill vs smart persistence | Escalation rate |
+The table uses 39,655 daylight forecast cells; RMSE and MAE are in W/m², averaged over the six horizons
+(30 to 180 min) and over five seeds.
+
+| Setting | RMSE | MAE | Skill vs smart persistence | Escalation rate (target → realised) |
 |---|---|---|---|---|
-| Edge only | | | | 0% |
-| Gate at 10% / 25% / 50% budget | | | | |
-| Cloud only | | | | 100% |
+| Edge only (on-device MLP, fp32) | 76.71 | 45.36 | 0.130 | 0% |
+| Edge only, int8 (secondary row) | 77.21 | 46.47 | 0.124 | 0% |
+| Uncertainty gate, 10% budget | 73.90 | 44.06 | 0.162 | 10% → 9.9% |
+| Uncertainty gate, 25% budget | 72.61 | 43.29 | 0.177 | 25% → 23.0% |
+| Uncertainty gate, 50% budget | 71.26 | 41.44 | 0.193 | 50% → 47.7% |
+| Cloud only (trees + network, satellite and NWP) | 70.66 | 40.40 | 0.200 | 100% |
+| Smart persistence (reference) | 89.43 | 49.90 | 0 | n/a |
 
-Filled from `results/` after the test-year run. Every number traces to a file there.
+At a 25% budget, the uncertainty gate keeps 69% of the cloud tier's RMSE gain, against 24% for random escalation.
+The other gates, the linear anchors, model sizes and CPU latency are in
+[results/paper/core_table.md](results/paper/core_table.md). Every number traces to a file; see
+[docs/number_trace.md](docs/number_trace.md).
+
+**Pre-specified claims** ([docs/FREEZE.md](docs/FREEZE.md), [results/test/claims_test.json](results/test/claims_test.json)):
+
+| # | Claim (from validation) | 2016 result |
+|---|---|---|
+| 1 | Satellite and NWP add nothing when the model type is held fixed | **Refuted:** they reduce error by 4.2% |
+| 2 | A ground-only tree model of about 85 KB matches the cloud tier | **Refuted:** it is worse by 3.7%, with the interval above zero for 4 of 5 seeds |
+| 3 | The cloud tier beats the on-device network | Supported: 7.9% lower RMSE, with the interval excluding zero for all seeds |
+| 4 | On-device gates beat random; the learned gate is no better than the uncertainty gate; realised rates match targets | Supported |
+| 5 | Ramps: no reliable cloud advantage, and no gate helps | Mixed: the cloud tier is reliably better on ramps (refutes the first part); no gate reaches the 0.5 share (the second part holds) |
+
+An exploratory follow-up (split chosen after seeing the results) finds that the disagreement with validation
+is not a seasonal artefact: see [results/analyses/exploratory_halfyear_claims.md](results/analyses/exploratory_halfyear_claims.md).
 
 ## Method in brief
 
@@ -48,6 +73,7 @@ Filled from `results/` after the test-year run. Every number traces to a file th
 
 - One site, so no claim about fleets, virtual power plants or transfer to other sites.
 - On-device cost is reported as model footprint and latency measured on a PC CPU. Nothing was run on a microcontroller.
+- Two development conclusions did not hold on the test year (claims 1 and 2). One validation half-year was too short to estimate the value of satellite and NWP inputs.
 - The cloud tier is trained here; it is not a state-of-the-art forecaster.
 
 ## Layout
