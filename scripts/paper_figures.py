@@ -235,7 +235,10 @@ def paper_table() -> pd.DataFrame:
           "|---|---|---|---|---|---|"]
     for r in t.itertuples():
         rng = "" if r.RMSE_seed_min == r.RMSE_seed_max else f" [{r.RMSE_seed_min:.1f}-{r.RMSE_seed_max:.1f}]"
-        size = f(r.size_kB, ",.1f") + (f" ({r.size_note})" if r.size_note and not pd.isna(r.size_kB) else "")
+        if r.size_kB == 0:   # nothing stored (smart persistence, random): shown as a dash, not 0.0
+            size = "–"
+        else:
+            size = f(r.size_kB, ",.1f") + (f" ({r.size_note})" if r.size_note and not pd.isna(r.size_kB) else "")
         lat = f(r.cpu_latency_median_us, ".1f") + (f" ({r.latency_note})" if r.latency_note else "")
         sup = "<sup>a</sup>" if r.name.startswith("Linear anchor") else ""
         md.append(f"| {r.name}{sup} | {r.RMSE:.2f}{rng} | {f(r.share_kept, '.2f')} | {f(r.realised_rate, '.3f')} | "
@@ -246,7 +249,8 @@ def paper_table() -> pd.DataFrame:
            f"deterministic. Share kept = (RMSE_edge - RMSE) / (RMSE_edge - RMSE_cloud), from the seed-mean RMSEs, "
            f"with the edge tier in fp32; n/a for the anchors. Realised rate is the share of issue times escalated "
            f"(0 for the edge tier, 1 for the cloud tier, n/a where nothing is escalated). The gate rows use a 25% "
-           f"target budget; random is the expected random gate. Size is in kB (1 kB = 1,000 B). The tree sizes "
+           f"target budget; random is the expected random gate. Size is in kB (1 kB = 1,000 B); – means no model "
+           f"is stored (smart persistence and random). The tree sizes "
            f"are of different kinds: the 10x-capped trees are a compiled C object, and trees on all inputs are a "
            f"Python pickle. Cloud-tier size is not stated. Latency is the median single-row, one-thread time on a "
            f"PC CPU (ONNX Runtime or compiled C); nothing ran on a microcontroller. Gate size and latency are in "
