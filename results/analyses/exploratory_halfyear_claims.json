@@ -1,0 +1,257 @@
+{
+  "label": "EXPLORATORY. Not a planned analysis (docs/FREEZE.md section c). The January-June / July-December split was chosen after seeing the 2016 results. Frozen verdict rules applied per half for description only; they do not replace the full-year verdicts.",
+  "halves": {
+    "H1": {
+      "bounds": [
+        "2016-01-01",
+        "2016-06-30"
+      ],
+      "primary_cells": 20901,
+      "issue_times": 3917,
+      "satellite_available_share_of_daylight_issue_times": 0.9614629356897398,
+      "claim1": {
+        "rmse_trees_all": 86.63718571720739,
+        "rmse_trees_ground": 89.12432218904081,
+        "input_effect": 0.02790637180452249,
+        "interval_rmse_ground_minus_all": {
+          "point": 2.4871364718334092,
+          "lo": -0.9346887635692925,
+          "hi": 6.339727531757424,
+          "includes_zero": true,
+          "n_days": 177
+        },
+        "would_count_against": false
+      },
+      "claim2": {
+        "rmse_cap10x": 88.25825949671713,
+        "rmse_cloud_seed_mean": 86.49616863594892,
+        "relative_difference_d": 0.020371894946984513,
+        "seeds_entirely_above_zero": 0,
+        "intervals": [
+          {
+            "cloud_seed": 0,
+            "point": 1.637663962936415,
+            "lo": -1.2923856972622227,
+            "hi": 4.473009849007927,
+            "includes_zero": true,
+            "n_days": 177
+          },
+          {
+            "cloud_seed": 1,
+            "point": 1.7952622283575295,
+            "lo": -1.272280362271471,
+            "hi": 4.6875170639644175,
+            "includes_zero": true,
+            "n_days": 177
+          },
+          {
+            "cloud_seed": 2,
+            "point": 2.4100253833642995,
+            "lo": -0.5239243647270712,
+            "hi": 5.247104342616311,
+            "includes_zero": true,
+            "n_days": 177
+          },
+          {
+            "cloud_seed": 3,
+            "point": 1.7425388160970954,
+            "lo": -1.49948865883497,
+            "hi": 4.8178479540785935,
+            "includes_zero": true,
+            "n_days": 177
+          },
+          {
+            "cloud_seed": 4,
+            "point": 1.2249639130856167,
+            "lo": -1.8749602945887935,
+            "hi": 4.145700156849345,
+            "includes_zero": true,
+            "n_days": 177
+          }
+        ],
+        "verdict_rule_applied": "not distinguishable"
+      },
+      "claim3": {
+        "rmse_edge_seed_mean": 91.60926598040996,
+        "rmse_cloud_seed_mean": 86.49616863594892,
+        "gain_mean_of_seed_rmse": 0.055814194009091156,
+        "gain_per_seed": [
+          0.05066110513966038,
+          0.05207941235871294,
+          0.053759706923220185,
+          0.0819947859585195,
+          0.03959168988503925
+        ],
+        "seeds_including_zero_or_below": 0,
+        "intervals": [
+          {
+            "seed": 0,
+            "point": 4.622474778348206,
+            "lo": 1.5180825260179915,
+            "hi": 7.787263318667209,
+            "includes_zero": false,
+            "n_days": 177
+          },
+          {
+            "seed": 1,
+            "point": 4.750336839622662,
+            "lo": 1.8144118691475897,
+            "hi": 7.907068935777179,
+            "includes_zero": false,
+            "n_days": 177
+          },
+          {
+            "seed": 2,
+            "point": 4.877382562946238,
+            "lo": 2.051829473075621,
+            "hi": 7.771281153451578,
+            "includes_zero": false,
+            "n_days": 177
+          },
+          {
+            "seed": 3,
+            "point": 7.72744848367924,
+            "lo": 4.352341554185084,
+            "hi": 11.381471188675194,
+            "includes_zero": false,
+            "n_days": 177
+          },
+          {
+            "seed": 4,
+            "point": 3.5878440577087787,
+            "lo": 0.42697241546865544,
+            "hi": 6.803248242612115,
+            "includes_zero": false,
+            "n_days": 177
+          }
+        ]
+      }
+    },
+    "H2": {
+      "bounds": [
+        "2016-07-01",
+        "2016-12-31"
+      ],
+      "primary_cells": 18754,
+      "issue_times": 3540,
+      "satellite_available_share_of_daylight_issue_times": 0.9274299187843856,
+      "claim1": {
+        "rmse_trees_all": 47.52090729499809,
+        "rmse_trees_ground": 52.076124693993854,
+        "input_effect": 0.08747228073830038,
+        "interval_rmse_ground_minus_all": {
+          "point": 4.555217398995765,
+          "lo": 2.081369231890124,
+          "hi": 6.8683424024317015,
+          "includes_zero": false,
+          "n_days": 169
+        },
+        "would_count_against": true
+      },
+      "claim2": {
+        "rmse_cap10x": 51.66400656086819,
+        "rmse_cloud_seed_mean": 47.07371967207598,
+        "relative_difference_d": 0.09751272941184531,
+        "seeds_entirely_above_zero": 5,
+        "intervals": [
+          {
+            "cloud_seed": 0,
+            "point": 4.8226009688194225,
+            "lo": 1.8724128126263329,
+            "hi": 7.727658703994248,
+            "includes_zero": false,
+            "n_days": 169
+          },
+          {
+            "cloud_seed": 1,
+            "point": 4.737374354241638,
+            "lo": 1.627577359793988,
+            "hi": 7.826113938588472,
+            "includes_zero": false,
+            "n_days": 169
+          },
+          {
+            "cloud_seed": 2,
+            "point": 4.899991294369038,
+            "lo": 2.059033499462135,
+            "hi": 7.730448150066226,
+            "includes_zero": false,
+            "n_days": 169
+          },
+          {
+            "cloud_seed": 3,
+            "point": 4.318801677635257,
+            "lo": 1.3028233622485061,
+            "hi": 7.2369399611960095,
+            "includes_zero": false,
+            "n_days": 169
+          },
+          {
+            "cloud_seed": 4,
+            "point": 4.172666148895672,
+            "lo": 1.059654545813303,
+            "hi": 7.0733562504943635,
+            "includes_zero": false,
+            "n_days": 169
+          }
+        ],
+        "verdict_rule_applied": "worse"
+      },
+      "claim3": {
+        "rmse_edge_seed_mean": 55.532000026781034,
+        "rmse_cloud_seed_mean": 47.07371967207598,
+        "gain_mean_of_seed_rmse": 0.15231362728923747,
+        "gain_per_seed": [
+          0.1578361021392991,
+          0.13373430633028172,
+          0.14412321863955513,
+          0.2056838345896691,
+          0.1143775518039668
+        ],
+        "seeds_including_zero_or_below": 0,
+        "intervals": [
+          {
+            "seed": 0,
+            "point": 8.778890779046236,
+            "lo": 6.013195803152776,
+            "hi": 11.60269424047089,
+            "includes_zero": false,
+            "n_days": 169
+          },
+          {
+            "seed": 1,
+            "point": 7.24454477700025,
+            "lo": 4.7732244132291095,
+            "hi": 9.675157540860786,
+            "includes_zero": false,
+            "n_days": 169
+          },
+          {
+            "seed": 2,
+            "point": 7.874708770582657,
+            "lo": 5.22773446401126,
+            "hi": 10.58619254052408,
+            "includes_zero": false,
+            "n_days": 169
+          },
+          {
+            "seed": 3,
+            "point": 12.259782330863572,
+            "lo": 9.665939204511826,
+            "hi": 14.814519695208539,
+            "includes_zero": false,
+            "n_days": 169
+          },
+          {
+            "seed": 4,
+            "point": 6.13347511603255,
+            "lo": 3.7688015948312685,
+            "hi": 8.500018056536511,
+            "includes_zero": false,
+            "n_days": 169
+          }
+        ]
+      }
+    }
+  }
+}
