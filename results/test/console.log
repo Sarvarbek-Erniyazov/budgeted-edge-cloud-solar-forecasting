@@ -1,3 +1,4 @@
+# Console log of the single test run. The absolute repository path is replaced by <repo> (6 occurrences); otherwise verbatim.
 == commit: 3c0770372ca9cce502b364a15220429c9ca0eeab
 == tag at HEAD: freeze-2026-10-08
 == uncommitted files: 1
@@ -9,7 +10,7 @@ tests/test_features.py::test_no_frame_newer_than_lag
 tests/test_features.py::test_max_age_and_missing
 tests/test_features.py::test_max_age_and_missing
 tests/test_features.py::test_differences
-  C:\Users\sharg\Desktop\ICONI 2026\Implementation\src\escal\features.py:98: DeprecationWarning: The 'generic' unit for NumPy timedelta is deprecated, and will raise an error in the future. This includes implicit conversion of bare integers (e.g. `+ 1`). Please use a specific unit instead.
+  <repo>\src\escal\features.py:98: DeprecationWarning: The 'generic' unit for NumPy timedelta is deprecated, and will raise an error in the future. This includes implicit conversion of bare integers (e.g. `+ 1`). Please use a specific unit instead.
     stamps = np.full((n, n_frames), np.datetime64("NaT"), dtype="datetime64[ns]")
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
@@ -35,15 +36,15 @@ checkpoints/footprint/edge_seed3.int8.onnx: OK
 checkpoints/footprint/edge_seed4.int8.onnx: OK
 data quality written
 {"mode": "test", "git_head": "3c0770372ca9cce502b364a15220429c9ca0eeab", "ground_stats_recomputed_equal_saved": true, "step3_stats_recomputed_equal_saved": true, "rows_saved": 16145, "parts": {"test": 8068, "gate_fit": 4122, "val": 3955}}
-C:\Users\sharg\Desktop\ICONI 2026\Implementation\scripts\gates.py:102: RuntimeWarning: Mean of empty slice
+<repo>\scripts\gates.py:102: RuntimeWarning: Mean of empty slice
   unc_t = np.nan_to_num(np.nanmean(unc_t, axis=1)) / gc["uncertainty_scale"]
-C:\Users\sharg\Desktop\ICONI 2026\Implementation\scripts\gates.py:102: RuntimeWarning: Mean of empty slice
+<repo>\scripts\gates.py:102: RuntimeWarning: Mean of empty slice
   unc_t = np.nan_to_num(np.nanmean(unc_t, axis=1)) / gc["uncertainty_scale"]
-C:\Users\sharg\Desktop\ICONI 2026\Implementation\scripts\gates.py:102: RuntimeWarning: Mean of empty slice
+<repo>\scripts\gates.py:102: RuntimeWarning: Mean of empty slice
   unc_t = np.nan_to_num(np.nanmean(unc_t, axis=1)) / gc["uncertainty_scale"]
-C:\Users\sharg\Desktop\ICONI 2026\Implementation\scripts\gates.py:102: RuntimeWarning: Mean of empty slice
+<repo>\scripts\gates.py:102: RuntimeWarning: Mean of empty slice
   unc_t = np.nan_to_num(np.nanmean(unc_t, axis=1)) / gc["uncertainty_scale"]
-C:\Users\sharg\Desktop\ICONI 2026\Implementation\scripts\gates.py:102: RuntimeWarning: Mean of empty slice
+<repo>\scripts\gates.py:102: RuntimeWarning: Mean of empty slice
   unc_t = np.nan_to_num(np.nanmean(unc_t, axis=1)) / gc["uncertainty_scale"]
 seed 0 done
 seed 1 done
