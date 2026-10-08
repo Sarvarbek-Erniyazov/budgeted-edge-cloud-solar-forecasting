@@ -1,0 +1,60 @@
+{
+  "decision_check": {
+    "checked": 300,
+    "max_abs_diff_4dp": 0.0,
+    "reproduces_sweep": true
+  },
+  "a6_note": "The planned A6 (cloud tier without satellite, without NWP) needs two extra cloud trainings and was not done: nothing is retrained after the freeze. Ground+satellite and ground+NAM trees were not part of the frozen test run, so they have validation values only.",
+  "a6_input_effect_2016": {
+    "rmse_trees_all": 70.89559118146406,
+    "rmse_trees_ground": 73.97747694364121,
+    "input_effect": 0.04165978470075493,
+    "interval_rmse_ground_minus_all": {
+      "point": 3.08188576217718,
+      "lo": 0.6979959987556468,
+      "hi": 5.5809053337189125,
+      "includes_zero": false,
+      "n_days": 345
+    },
+    "counts_against": true
+  },
+  "a7_spearman_and_fit": {
+    "0": 0.7888391896560966,
+    "0_fit": {
+      "slope": 1.0045529423673991,
+      "intercept": 5.091331835945654
+    },
+    "1": 0.7474969165844336,
+    "1_fit": {
+      "slope": 1.0237800549529552,
+      "intercept": 1.8857370611513207
+    },
+    "2": 0.7618555885012167,
+    "2_fit": {
+      "slope": 1.0057235286809392,
+      "intercept": 1.0000601518219652
+    },
+    "3": 0.7830116009379483,
+    "3_fit": {
+      "slope": 1.0118659472455116,
+      "intercept": -0.6005373158057857
+    },
+    "4": 0.7249931825662235,
+    "4_fit": {
+      "slope": 0.9746758057792627,
+      "intercept": 0.31933515510195665
+    }
+  },
+  "files": [
+    "a1_gate_oracle_gap.csv",
+    "a2_per_horizon.csv",
+    "a3_routing_hour_month.csv",
+    "a3_routing_sky_regime.csv",
+    "a4_link_outage.csv",
+    "a4_link_outage_summary.csv",
+    "a5_gate_differences.csv",
+    "a5_gate_differences_summary.csv",
+    "a6_input_ablation.csv",
+    "a7_uncertainty_calibration.csv"
+  ]
+}

@@ -1,0 +1,33 @@
+# Post-test analyses (Stage 9). Fixed on 2026-10-08 AFTER the test run; none of these settings enters the
+# frozen claims. Everything reads results/test/ and the saved checkpoints; nothing is retrained.
+pred_dir: results/test/predictions
+gates_dir: results/test/gates
+gate_ckpt: checkpoints/gates_test
+thresholds: configs/gate_thresholds_test.yaml
+out_dir: results/analyses
+local_utc_offset_hours: -8          # Pacific standard time, as for the audit's day blocks
+routing:
+  gate: uncertainty                  # best on-device gate on validation (Checkpoint C)
+  budget: 0.25
+sky_regime:                          # daily class from the 30-min block kt (B(ghi_kt|30min)) at daylight issue times
+  clear_min_mean_kt: 0.8             # same thresholds as configs/base.yaml `sky`; computed here at 30-min,
+  overcast_max_mean_kt: 0.5          # not 10-min, resolution, so the variability cut is only indicative
+  low_variability: 0.03
+outage:
+  gates: [uncertainty, learned, variability, random]
+  budgets: [0.10, 0.25, 0.50]
+  fractions: [0.0, 0.10, 0.25, 0.50, 1.0]
+  block_draws: 200                   # whole local days refused, random draws
+  seed: 0
+gate_pairs:                          # A5, RMSE_A - RMSE_B, paired day-block bootstrap
+  - [uncertainty, learned]
+  - [uncertainty, variability]
+  - [learned, variability]
+  - [uncertainty, random]
+  - [learned, random]
+  - [variability, random]
+  - [variability, fixed_interval]
+calibration_bins: 10
+exploratory_halves:                  # exploratory; split chosen after seeing the test results
+  H1: ["2016-01-01", "2016-06-30"]
+  H2: ["2016-07-01", "2016-12-31"]

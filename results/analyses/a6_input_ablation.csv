@@ -1,0 +1,7 @@
+model,rmse_2016,rmse_validation
+trees_ground (edge inputs),73.9775,69.1615
+trees ground+satellite,,69.0413
+trees ground+NAM,,69.5107
+trees all inputs,70.8956,69.3505
+cloud tier (step-4 average),70.6627,68.6563
+edge network fp32,76.7101,73.2825

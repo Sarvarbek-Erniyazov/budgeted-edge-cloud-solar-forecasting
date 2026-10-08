@@ -24,5 +24,6 @@ case "${1:-}" in
   test_predictions) python scripts/test_run.py predictions ;;
   test_gates)  python scripts/test_run.py gates ;;
   test_claims) python scripts/test_run.py claims ;;
-  *) echo "usage: ./run.sh {download|test|audit|anchors|split|tiers|control|footprint|predictions|gates|measure|save_trees|hashes|refit_smoke|dryrun|test_predictions|test_gates|test_claims}"; exit 1 ;;
+  analyses) python scripts/planned_analyses.py ;;
+  *) echo "usage: ./run.sh {download|test|audit|anchors|split|tiers|control|footprint|predictions|gates|measure|save_trees|hashes|refit_smoke|dryrun|test_predictions|test_gates|test_claims|analyses}"; exit 1 ;;
 esac
