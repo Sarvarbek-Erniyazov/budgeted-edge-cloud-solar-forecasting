@@ -43,18 +43,27 @@ def save_paper(fig, name: str) -> list[str]:
     return out
 
 
-def fig_budget_sweep() -> list[str]:
+SHORT_HEIGHT_IN = 2.1   # compact sweep for the 2-page paper: total height cap, legend included
+
+
+def fig_budget_sweep(name: str = "budget_sweep", height: float = 3.1,
+                     gates=("random", "fixed_interval", "variability", "uncertainty", "learned", "oracle"),
+                     ylim: tuple[float, float] | None = None) -> list[str]:
     summ = pd.read_csv("results/test/gates/summary_test.csv")
     s = summ[(summ.escalate_to == "cloud") & (summ.row_set == "primary")]
     cm = pd.read_csv("results/test/claims_models_test.csv")
     cap = cm[(cm.row_set == "primary") & (cm.model == "trees_ground_cap10x")]["RMSE"].iloc[0]
     r0 = s[(s.gate == "random") & (s.budget_target == 0.0)]["RMSE_mean"].iloc[0]
     r1 = s[(s.gate == "random") & (s.budget_target == 1.0)]["RMSE_mean"].iloc[0]
-    fig, ax = plt.subplots(figsize=(WIDTH_IN, 3.1), layout="constrained")
+    if ylim is not None:   # a fixed y-range must not clip any band, line or reference value that is drawn
+        shown = s[s.gate.isin(gates)]
+        lo, hi = min(shown.RMSE_min.min(), cap, r1), max(shown.RMSE_max.max(), cap, r0)
+        assert ylim[0] <= lo and hi <= ylim[1], (ylim, lo, hi)
+    fig, ax = plt.subplots(figsize=(WIDTH_IN, height), layout="constrained")
     ax.axhline(r0, color=S.MUTED, lw=0.8, ls="--", label=f"Edge only ({r0:.1f})")
     ax.axhline(cap, color="#009E73", lw=0.9, ls="-.", label=f"Ground trees, 10x cap ({cap:.1f})")
     ax.axhline(r1, color=S.MUTED, lw=0.8, ls=":", label=f"Cloud only ({r1:.1f})")
-    for g in ["random", "fixed_interval", "variability", "uncertainty", "learned", "oracle"]:
+    for g in gates:
         col, mk, ls = S.GATE_STYLE[g]
         d = s[s.gate == g].sort_values("budget_target")
         x, y = d["realised_rate_mean"].values, d["RMSE_mean"].values
@@ -65,12 +74,21 @@ def fig_budget_sweep() -> list[str]:
     ax.set_xlabel("Realised escalation rate")
     ax.set_ylabel("RMSE (W/m²)")
     ax.set_xlim(-0.02, 1.02)
+    if ylim is not None:
+        ax.set_ylim(*ylim)
     ax.xaxis.set_major_formatter(PercentFormatter(1.0, decimals=0))
     h, lab = ax.get_legend_handles_labels()
-    order = [3, 4, 5, 6, 7, 8, 0, 1, 2]
+    order = list(range(3, len(h))) + [0, 1, 2]   # gates first, then the three reference lines
     fig.legend([h[i] for i in order], [lab[i] for i in order], loc="outside lower center", ncol=2,
                handlelength=1.6, columnspacing=0.5, handletextpad=0.35, labelspacing=0.35)
-    return save_paper(fig, "budget_sweep")
+    return save_paper(fig, name)
+
+
+def fig_budget_sweep_short() -> list[str]:
+    """Compact sweep for the 2-page paper: no oracle curve, y-axis fixed at 70-80 W/m2, 2.1 in tall with the
+    legend inside the figure (constrained layout, no tight bbox, so the saved height is the figure height)."""
+    return fig_budget_sweep("budget_sweep_short", SHORT_HEIGHT_IN,
+                            ("random", "fixed_interval", "variability", "uncertainty", "learned"), (70.0, 80.0))
 
 
 def fig_architecture() -> list[str]:
@@ -243,7 +261,7 @@ def paper_table() -> pd.DataFrame:
 
 def main() -> None:
     apply_paper()
-    files = fig_architecture() + fig_budget_sweep() + fig_routing_map()
+    files = fig_architecture() + fig_budget_sweep() + fig_budget_sweep_short() + fig_routing_map()
     gate_intervals()
     paper_table()
     print("\n".join(files))
