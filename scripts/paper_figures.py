@@ -1,0 +1,127 @@
+"""Stage 9.5: paper versions of the core figures and the paper table. Reads results/ files only (nothing is
+retrained or rerun). Figures are one template column wide (2.7 in), with no text below 7 pt and no in-figure
+titles, saved as SVG and 600 dpi PNG in figures/paper/. The README keeps the figures/core/ versions.
+Run: ./run.sh paper"""
+from __future__ import annotations
+
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import pandas as pd
+from matplotlib.ticker import PercentFormatter
+
+from escal import plotstyle as S
+
+FIG = Path("figures/paper")
+PAPER = Path("results/paper")
+WIDTH_IN, MIN_PT, DPI = 2.7, 7.0, 600
+REPORT_BUDGETS = (0.10, 0.25, 0.50)
+
+
+def apply_paper() -> None:
+    S.apply()
+    plt.rcParams.update({"font.size": 7, "axes.labelsize": 7.5, "xtick.labelsize": 7, "ytick.labelsize": 7,
+                         "legend.fontsize": 7, "lines.linewidth": 1.2, "lines.markersize": 4,
+                         "axes.linewidth": 0.6, "xtick.major.width": 0.6, "ytick.major.width": 0.6})
+
+
+def save_paper(fig, name: str) -> list[str]:
+    """Fixed width (no tight bbox), checked for small or colliding text before writing."""
+    w = fig.get_size_inches()[0]
+    assert abs(w - WIDTH_IN) < 1e-9, w
+    bad = S.layout_problems(fig, min_pt=MIN_PT)
+    assert not bad, bad
+    FIG.mkdir(parents=True, exist_ok=True)
+    out = []
+    for ext in ("svg", "png"):
+        p = FIG / f"{name}.{ext}"
+        fig.savefig(p, dpi=DPI, metadata={"Date": None} if ext == "svg" else None)
+        out.append(p.as_posix())
+    plt.close(fig)
+    return out
+
+
+def fig_budget_sweep() -> list[str]:
+    summ = pd.read_csv("results/test/gates/summary_test.csv")
+    s = summ[(summ.escalate_to == "cloud") & (summ.row_set == "primary")]
+    cm = pd.read_csv("results/test/claims_models_test.csv")
+    cap = cm[(cm.row_set == "primary") & (cm.model == "trees_ground_cap10x")]["RMSE"].iloc[0]
+    r0 = s[(s.gate == "random") & (s.budget_target == 0.0)]["RMSE_mean"].iloc[0]
+    r1 = s[(s.gate == "random") & (s.budget_target == 1.0)]["RMSE_mean"].iloc[0]
+    fig, ax = plt.subplots(figsize=(WIDTH_IN, 3.1), layout="constrained")
+    ax.axhline(r0, color=S.MUTED, lw=0.8, ls="--", label=f"Edge only ({r0:.1f})")
+    ax.axhline(cap, color="#009E73", lw=0.9, ls="-.", label=f"Ground trees, 10x cap ({cap:.1f})")
+    ax.axhline(r1, color=S.MUTED, lw=0.8, ls=":", label=f"Cloud only ({r1:.1f})")
+    for g in ["random", "fixed_interval", "variability", "uncertainty", "learned", "oracle"]:
+        col, mk, ls = S.GATE_STYLE[g]
+        d = s[s.gate == g].sort_values("budget_target")
+        x, y = d["realised_rate_mean"].values, d["RMSE_mean"].values
+        ax.fill_between(x, d["RMSE_min"].values, d["RMSE_max"].values, color=col, alpha=0.12, lw=0)
+        rep = d[d.budget_target.isin(REPORT_BUDGETS)]
+        ax.plot(x, y, color=col, ls=ls, label="Random" if g == "random" else S.GATE_LABEL[g])
+        ax.plot(rep["realised_rate_mean"], rep["RMSE_mean"], mk, color=col, mec="white", mew=0.5)
+    ax.set_xlabel("Realised escalation rate")
+    ax.set_ylabel("RMSE (W/m²)")
+    ax.set_xlim(-0.02, 1.02)
+    ax.xaxis.set_major_formatter(PercentFormatter(1.0, decimals=0))
+    h, lab = ax.get_legend_handles_labels()
+    order = [3, 4, 5, 6, 7, 8, 0, 1, 2]
+    fig.legend([h[i] for i in order], [lab[i] for i in order], loc="outside lower center", ncol=2,
+               handlelength=1.6, columnspacing=0.5, handletextpad=0.35, labelspacing=0.35)
+    return save_paper(fig, "budget_sweep")
+
+
+def gate_intervals() -> pd.DataFrame:
+    """Paired day-block intervals (A5) for uncertainty - random and uncertainty - learned at the report budgets,
+    per seed and summarised, with each gate's realised rate, for citation in the text."""
+    a5 = pd.read_csv("results/analyses/a5_gate_differences.csv")
+    summ = pd.read_csv("results/test/gates/summary_test.csv")
+    s = summ[(summ.escalate_to == "cloud") & (summ.row_set == "primary")].set_index(["gate", "budget_target"])
+    pairs = [("uncertainty", "random"), ("uncertainty", "learned")]
+    rows = []
+    for ga, gb in pairs:
+        for b in REPORT_BUDGETS:
+            d = a5[(a5.gate_a == ga) & (a5.gate_b == gb) & (a5.budget_target.round(4) == b)].sort_values("seed")
+            assert len(d) == 5, (ga, gb, b)
+            base = {"comparison": f"{ga} - {gb}", "budget_target": b,
+                    "rate_a": s.loc[(ga, b), "realised_rate_mean"], "rate_b": s.loc[(gb, b), "realised_rate_mean"]}
+            for r in d.itertuples():
+                rows.append({**base, "seed": str(r.seed), "point": r.point, "lo": r.lo, "hi": r.hi,
+                             "excludes_zero": not r.includes_zero})
+            rows.append({**base, "seed": "mean", "point": d.point.mean(), "lo": d.lo.mean(), "hi": d.hi.mean(),
+                         "excludes_zero": f"{int((~d.includes_zero).sum())} of 5"})
+    t = pd.DataFrame(rows)
+    PAPER.mkdir(parents=True, exist_ok=True)
+    t.to_csv(PAPER / "gate_intervals.csv", index=False, float_format="%.4f")
+    md = ["# Paired gate differences at the report budgets (2016 test year)", "",
+          "Generated by `scripts/paper_figures.py` from `results/analyses/a5_gate_differences.csv` (analysis A5) and "
+          "`results/test/gates/summary_test.csv`. Nothing was recomputed.", "",
+          "Each value is RMSE_A - RMSE_B in W/m2 on the primary rows (39,655 cells), RMSE averaged over the 6 horizons. "
+          "Negative means gate A has the lower RMSE. Intervals are the paired day-block bootstrap 95% percentile "
+          "intervals of `docs/FREEZE.md` (2,000 resamples, bootstrap seed 0), one per model seed. Random is the "
+          "expected random gate (exact share b of issue times). The budget is the target; the realised rates of the "
+          "two gates differ and are given. In the 'mean' row, point, lo and hi are means over the 5 seeds of the "
+          "per-seed values; that row is a summary, not a 95% interval in its own right.", ""]
+    for (cmp_, b), d in t.groupby(["comparison", "budget_target"], sort=False):
+        ga, gb = cmp_.split(" - ")
+        md += [f"## {ga} - {gb}, target {int(b * 100)}% (realised: {ga} {d.rate_a.iloc[0]:.3f}, "
+               f"{gb} {d.rate_b.iloc[0]:.3f})", "",
+               "| seed | difference | 95% interval | excludes zero |", "|---|---|---|---|"]
+        for r in d.itertuples():
+            ex = ("yes" if r.excludes_zero else "no") if isinstance(r.excludes_zero, bool) else r.excludes_zero
+            iv = f"[{r.lo:.2f}, {r.hi:.2f}]" if r.seed != "mean" else f"mean bounds {r.lo:.2f} to {r.hi:.2f}"
+            md.append(f"| {r.seed} | {r.point:.2f} | {iv} | {ex} |")
+        md.append("")
+    (PAPER / "gate_intervals.md").write_text("\n".join(md), encoding="utf-8")
+    return t
+
+
+def main() -> None:
+    apply_paper()
+    files = fig_budget_sweep()
+    gate_intervals()
+    print("\n".join(files))
+
+
+if __name__ == "__main__":
+    main()

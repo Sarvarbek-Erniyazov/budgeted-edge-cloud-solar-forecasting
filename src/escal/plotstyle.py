@@ -55,16 +55,27 @@ def _outline_hits(path, bb, step_px: float = 0.5) -> bool:
 
 
 def layout_problems(fig, min_pt: float = 0.0, pad_px: float = 1.0) -> list[str]:
-    """Text that touches a patch outline (box, border, arrow) or another text, or is smaller than min_pt."""
+    """Text that touches a patch outline (box, border, arrow) or another text, leaves the figure, or is smaller
+    than min_pt."""
     from matplotlib.patches import Patch
     from matplotlib.text import Text
     fig.canvas.draw()
     r = fig.canvas.get_renderer()
-    texts = [t for t in fig.findobj(Text) if t.get_visible() and t.get_text().strip()]
+    hidden = set()   # tick labels of ticks outside the view interval are not drawn
+    for ax in fig.axes:
+        for axis in (ax.xaxis, ax.yaxis):
+            lo, hi = sorted(axis.get_view_interval())
+            for tk in axis.get_major_ticks() + axis.get_minor_ticks():
+                if not lo - 1e-9 <= tk.get_loc() <= hi + 1e-9:
+                    hidden.update((id(tk.label1), id(tk.label2)))
+    texts = [t for t in fig.findobj(Text) if t.get_visible() and t.get_text().strip() and id(t) not in hidden]
     patches = [p for ax in fig.axes for p in ax.patches if isinstance(p, Patch)]
     out = []
     boxes = [(t, t.get_window_extent(r).expanded(1.0, 1.0).padded(pad_px)) for t in texts]
     for t, bb in boxes:
+        fb = fig.bbox
+        if bb.x0 < fb.x0 or bb.y0 < fb.y0 or bb.x1 > fb.x1 or bb.y1 > fb.y1:
+            out.append(f"{t.get_text()!r} extends past the figure edge")
         if t.get_fontsize() < min_pt:
             out.append(f"{t.get_text()!r}: {t.get_fontsize()} pt < {min_pt} pt")
         for p in patches:

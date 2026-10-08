@@ -1,0 +1,3 @@
+# Captions for the paper figures and table
+
+**Budget sweep (`budget_sweep.svg`).** RMSE on the 2016 test year (primary rows, 39,655 cells; RMSE averaged over the 6 horizons) against the realised share of issue times escalated to the cloud tier, for each gate. Lines are the mean over 5 seeds and shaded bands the range over the 5 seeds; markers are at the 10, 25 and 50% target budgets, plotted at the realised rate, which can differ from the target. Random is the expected random gate. Horizontal lines: edge tier only, cloud tier only, and the 10x-capped ground-only tree model (deterministic, no seed range).

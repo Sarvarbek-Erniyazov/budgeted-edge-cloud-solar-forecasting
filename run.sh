@@ -27,6 +27,7 @@ case "${1:-}" in
   analyses) python scripts/planned_analyses.py ;;
   exploratory_halfyear) python scripts/exploratory_halfyear_claims.py ;;
   figures)  python scripts/core_figures.py ;;
+  paper)    python scripts/paper_figures.py ;;
   trace)    python scripts/number_trace.py ;;
-  *) echo "usage: ./run.sh {download|test|audit|anchors|split|tiers|control|footprint|predictions|gates|measure|save_trees|hashes|refit_smoke|dryrun|test_predictions|test_gates|test_claims|analyses|exploratory_halfyear|figures|trace}"; exit 1 ;;
+  *) echo "usage: ./run.sh {download|test|audit|anchors|split|tiers|control|footprint|predictions|gates|measure|save_trees|hashes|refit_smoke|dryrun|test_predictions|test_gates|test_claims|analyses|exploratory_halfyear|figures|paper|trace}"; exit 1 ;;
 esac
