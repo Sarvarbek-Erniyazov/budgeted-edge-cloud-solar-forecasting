@@ -1,12 +1,12 @@
-# Freeze proposal (approved with amendments 2026-10-08): NOT FROZEN
+# Freeze: FROZEN on 2026-10-08 (tag `freeze-2026-10-08`)
 
-The author approved this proposal on 2026-10-08 with seven amendments, which are folded in
-below and listed in `docs/PLAN.md` section 10. The freeze itself has not happened.
-- `protocol.frozen` is false.
-- `ESCAL_UNLOCK_TEST` is not set.
-- No 2016 row has been loaded.
-- **The repository cannot run the test year yet.** Section e lists the work needed before the
-  freeze tag can be created.
+**Frozen on 2026-10-08.** The author (Sarvarbek Erniyazov) approved sections a to d with the
+seven amendments in `docs/PLAN.md` section 10, approved the dry run (Checkpoint E) and chose
+option B for the test change below. The tagged commit sets `protocol.frozen: true`.
+- The test year is run once from this tag, following section c.
+- No 2016 row was loaded before this commit.
+- Section e is complete. The smoke check of the 2015 gate refit is in
+  `results/freeze/refit_smoke.json`.
 
 Sources for every value below:
 - `configs/base.yaml` and `docs/PLAN.md` (sections 6 to 9);

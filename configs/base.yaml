@@ -9,7 +9,7 @@ split:
   test:         ["2016-01-01", "2016-12-31"]
   provisional: false         # frozen on Oct 8 after the data audit; see results/audit/AUDIT.md
 protocol:
-  frozen: false              # set true on Oct 12; only then may the test year be loaded
+  frozen: true               # frozen 2026-10-08 (tag freeze-2026-10-08); test year also needs ESCAL_UNLOCK_TEST=1
 seeds: [0, 1, 2, 3, 4]
 budget:
   targets: [0.0, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.40, 0.50, 0.60, 0.75, 1.0]
