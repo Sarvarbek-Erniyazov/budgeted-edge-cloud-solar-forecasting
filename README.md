@@ -2,7 +2,7 @@
 
 <!-- Badges: add once they are true. Suggested: Python version, PyTorch, License: MIT, tests (GitHub Actions), status: work in progress -->
 
-> **Status:** the protocol was frozen on 2026-10-08 (tag `freeze-2026-10-08`, [docs/FREEZE.md](docs/FREEZE.md)), and the 2016 test year was evaluated once from that tag. **Two of the five pre-specified claims were refuted on the test year.** The paper is in preparation.
+> **Status:** the protocol was frozen on 2026-10-08 (tag `freeze-2026-10-08`, [docs/FREEZE.md](docs/FREEZE.md)), and the 2016 test year was evaluated once from that tag. **Of the five pre-specified claims, two were refuted and one was partly refuted on the test year (claim 5: the cloud tier is reliably better on ramp cells for 4 of 5 seeds).** The paper is in preparation.
 
 ## Summary
 
