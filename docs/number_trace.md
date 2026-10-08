@@ -95,7 +95,7 @@ Every number that may appear in the paper, with the file and field it comes from
 | verdict: against 'gate beats random' | False | `results/test/claims_test.json` | `claim4_gates.against_gate_beats_random` |
 | verdict: against 'learned not better' | False | `results/test/claims_test.json` | `claim4_gates.against_learned_not_better` |
 | verdict: against 'refit fixes shortfall' | False | `results/test/claims_test.json` | `claim4_gates.against_refit_fixes_shortfall` |
-| max |realised - target| over score gates | 0.023 | `results/test/claims_test.json` | `max(abs(claim4_gates.realised_minus_target))` |
+| max abs(realised - target) over score gates | 0.023 | `results/test/claims_test.json` | `max(abs(claim4_gates.realised_minus_target))` |
 
 ## Claim 5, ramps (2016)
 

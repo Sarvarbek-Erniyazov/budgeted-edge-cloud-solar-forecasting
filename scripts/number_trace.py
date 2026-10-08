@@ -85,7 +85,7 @@ def main() -> None:
     add(s, "verdict: against 'learned not better'", c4["against_learned_not_better"], F, "claim4_gates.against_learned_not_better")
     add(s, "verdict: against 'refit fixes shortfall'", c4["against_refit_fixes_shortfall"], F,
         "claim4_gates.against_refit_fixes_shortfall")
-    add(s, "max |realised - target| over score gates", max(abs(v) for v in c4["realised_minus_target"].values()), F,
+    add(s, "max abs(realised - target) over score gates", max(abs(v) for v in c4["realised_minus_target"].values()), F,
         "max(abs(claim4_gates.realised_minus_target))", "{:.3f}")
     c5 = cl["claim5_ramp"]
     s = "Claim 5, ramps (2016)"
