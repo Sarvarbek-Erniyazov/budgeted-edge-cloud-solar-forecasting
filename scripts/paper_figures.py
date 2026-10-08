@@ -8,6 +8,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import pandas as pd
+from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 from matplotlib.ticker import PercentFormatter
 
 from escal import plotstyle as S
@@ -71,6 +72,64 @@ def fig_budget_sweep() -> list[str]:
     return save_paper(fig, "budget_sweep")
 
 
+def fig_architecture() -> list[str]:
+    """Same content as figures/core/architecture, stacked for one column: device group above, cloud below.
+    Coordinates are in inches."""
+    H = 3.2
+    fig = plt.figure(figsize=(WIDTH_IN, H))
+    ax = fig.add_axes((0, 0, 1, 1))
+    ax.set_xlim(0, WIDTH_IN)
+    ax.set_ylim(0, H)
+    ax.axis("off")
+
+    def box(x, y, w, h, text, fc, bold=False):
+        ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.02,rounding_size=0.05", fc=fc, ec=S.MUTED, lw=0.7))
+        ax.text(x + w / 2, y + h / 2, text, ha="center", va="center", fontsize=7, color=S.INK,
+                fontweight="bold" if bold else "normal", linespacing=1.25)
+
+    def arrow(x0, y0, x1, y1):
+        ax.add_patch(FancyArrowPatch((x0, y0), (x1, y1), arrowstyle="-|>", mutation_scale=7, lw=0.7, color=S.MUTED))
+
+    for y, h, label in ((1.42, 1.75, "On device (PV site)"), (0.04, 1.0, "Cloud")):
+        ax.add_patch(FancyBboxPatch((0.04, y), 2.62, h, boxstyle="round,pad=0.02,rounding_size=0.06", fc="none",
+                                    ec=S.MUTED, lw=0.6, ls=(0, (3, 2))))
+        ax.text(0.12, y + h - 0.12, label, va="center", fontsize=7.5, color=S.MUTED, fontweight="bold")
+    box(0.12, 2.2, 0.92, 0.66, "Ground\nsensors: GHI,\nDNI, weather,\nclear-sky", "#f2f2f2")
+    box(1.22, 2.2, 1.36, 0.66, "Edge tier, MLP\n43.8 kB\n(int8: 15.2 kB)", "#cfe3f3", bold=True)
+    box(0.12, 1.52, 1.28, 0.5, "Forecast,\n30 to 180 min", "#f2f2f2")
+    box(1.6, 1.52, 0.98, 0.5, "Gate, int8\n6.1 kB\nescalate?", "#fde2c8", bold=True)
+    box(0.12, 0.13, 0.9, 0.62, "GOES-15 tile\nNAM, 4 nodes", "#f2f2f2")
+    box(1.22, 0.13, 1.36, 0.62, "Cloud tier\ntrees + network\n(averaged in kt)", "#cfe3f3", bold=True)
+    arrow(1.06, 2.53, 1.2, 2.53)      # sensors -> edge
+    arrow(2.09, 2.18, 2.09, 2.04)     # edge -> gate
+    arrow(1.31, 2.18, 1.31, 2.04)     # edge -> forecast
+    arrow(1.04, 0.44, 1.2, 0.44)      # satellite, NAM -> cloud tier
+    arrow(2.3, 1.5, 2.3, 0.77)        # request
+    arrow(1.31, 0.77, 1.31, 1.5)      # cloud forecast
+    # labels sit in the gap between the two groups, clear of every box, border and arrow
+    ax.text(2.24, 1.235, "request", ha="right", va="center", fontsize=7, color=S.MUTED)
+    ax.text(1.25, 1.235, "cloud forecast", ha="right", va="center", fontsize=7, color=S.MUTED)
+    return save_paper(fig, "architecture")
+
+
+def fig_routing_map() -> list[str]:
+    hm = pd.read_csv("results/analyses/a3_routing_hour_month.csv")
+    piv = hm.pivot(index="hour", columns="month", values="share_escalated").sort_index()
+    fig, ax = plt.subplots(figsize=(WIDTH_IN, 2.3), layout="constrained")
+    ax.grid(False)
+    im = ax.imshow(piv.values, aspect="auto", cmap=S.SEQ_CMAP, vmin=0, vmax=1, origin="lower")
+    ax.set_xticks(range(len(piv.columns)), ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"][:len(piv.columns)])
+    yt = [i for i, h in enumerate(piv.index) if h % 2 == 0]
+    ax.set_yticks(yt, [f"{piv.index[i]:02d}" for i in yt])
+    ax.set_xlabel("Month (2016)")
+    ax.set_ylabel("Hour of issue time (PST)")
+    cb = fig.colorbar(im, ax=ax, fraction=0.05, pad=0.03)
+    cb.set_label("Share escalated")
+    cb.outline.set_edgecolor(S.MUTED)
+    cb.ax.tick_params(labelsize=7)
+    return save_paper(fig, "routing_map")
+
+
 def gate_intervals() -> pd.DataFrame:
     """Paired day-block intervals (A5) for uncertainty - random and uncertainty - learned at the report budgets,
     per seed and summarised, with each gate's realised rate, for citation in the text."""
@@ -118,7 +177,7 @@ def gate_intervals() -> pd.DataFrame:
 
 def main() -> None:
     apply_paper()
-    files = fig_budget_sweep()
+    files = fig_architecture() + fig_budget_sweep() + fig_routing_map()
     gate_intervals()
     print("\n".join(files))
 
