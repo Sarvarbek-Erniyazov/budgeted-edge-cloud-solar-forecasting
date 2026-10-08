@@ -1,0 +1,11 @@
+name,RMSE,RMSE_seed_min,RMSE_seed_max,share_kept,realised_rate,size_kB,size_note,cpu_latency_median_us,latency_note
+Smart persistence,89.4271,89.4271,89.4271,,,0.0000,,,
+"Linear anchor, ground (lasso_endo)",88.2063,88.2063,88.2063,,,,,,
+"Edge tier, fp32",76.7101,75.4340,79.7761,0.0000,0.0000,43.8460,ONNX,7.5000,
+"Edge tier, int8",77.2067,75.8403,81.0392,-0.0821,0.0000,15.1770,ONNX,9.6000,
+"Ground-only trees, 10x cap",73.2878,73.2878,73.2878,0.5659,,87.1830,compiled C object,3.5000,
+"Trees, all inputs",70.8956,70.8956,70.8956,0.9615,,5917.3020,Python pickle,,
+Cloud tier (trees + network),70.6627,70.1465,71.1406,1.0000,1.0000,,,,
+Random @ 25%,75.2549,74.4018,77.6011,0.2406,0.2500,0.0000,plus edge tier,,
+Uncertainty gate @ 25%,72.6094,71.8954,74.0614,0.6878,0.2303,6.0670,"int8 ONNX, plus edge tier",8.6000,plus edge tier
+Learned gate @ 25%,72.7926,72.0930,73.7390,0.6493,0.2476,6.0670,"int8 ONNX, plus edge tier",8.5000,plus edge tier
