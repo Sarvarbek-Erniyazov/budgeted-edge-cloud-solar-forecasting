@@ -59,6 +59,8 @@ The other gates, the linear anchors, model sizes and CPU latency are in
 | 4 | On-device gates beat random; the learned gate is no better than the uncertainty gate; realised rates match targets | Supported |
 | 5 | Ramps: no reliable cloud advantage, and no gate helps | Mixed: the cloud tier is reliably better on ramps (refutes the first part); no gate reaches the 0.5 share (the second part holds) |
 
+Note (post-freeze): 'about 85 KB' is the 12-bytes-per-node estimate (85,140 B = 85.1 kB decimal); the compiled object the paper reports is 87,183 B = 87.2 kB decimal; the paper reports decimal kB.
+
 An exploratory follow-up (split chosen after seeing the results) finds that the disagreement with validation
 is not a seasonal artefact: see [results/analyses/exploratory_halfyear_claims.md](results/analyses/exploratory_halfyear_claims.md).
 

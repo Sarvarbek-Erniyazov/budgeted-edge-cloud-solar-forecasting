@@ -178,6 +178,7 @@ seeds" rules) are **proposed here, before 2016 is seen, and need the author's ap
 - *Claim:* a ground-only tree model of about 85 KB (estimated; 87 KB compiled object) matches
   the cloud tier. Validation: 68.78 against 68.66 W/m2; the interval includes zero for 5 of 5
   seeds.
+- Note (post-freeze): 'about 85 KB' is the 12-bytes-per-node estimate (85,140 B = 85.1 kB decimal); the compiled object the paper reports is 87,183 B = 87.2 kB decimal; the paper reports decimal kB.
 - *Metrics:*
   - d = seed-mean (RMSE_cap10x - RMSE_cloud), with RMSE averaged over horizons, as a share of
     the seed-mean cloud RMSE;

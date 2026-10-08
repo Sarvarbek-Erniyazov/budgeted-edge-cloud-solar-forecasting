@@ -28,7 +28,8 @@ def add(section, quantity, value, file, field, fmt="{:.4f}"):
 
 
 def abstract_section() -> list[str]:
-    """The abstract as given (docs/abstract.txt, not edited), each of its numbers against its stored value."""
+    """The abstract (docs/abstract.txt, not edited here): each number and qualitative claim against its stored value,
+    with the denominator of every percentage. A statement that does not match is marked **NO**."""
     T = "results/test/"
     cl = j(T + "claims_test.json")
     cm = pd.read_csv(T + "claims_models_test.csv")
@@ -37,72 +38,102 @@ def abstract_section() -> list[str]:
     s25 = summ[(summ.escalate_to == "cloud") & (summ.row_set == "primary") & (summ.budget_target == 0.25)].set_index("gate")
     a5 = pd.read_csv("results/analyses/a5_gate_differences_summary.csv")
     ce = j("results/tiers/control_effects.json")["primary"]
-    c3, c2, c1 = cl["claim3_edge_vs_cloud_fp32"], cl["claim2_on_device_sufficiency"], cl["claim1_input_effect"]
+    dr5 = j("results/dryrun/claims_validation.json")["claim5_ramp"]
+    ms = j("results/footprint/measured.json")
+    c1, c2, c3, c4, c5 = (cl["claim1_input_effect"], cl["claim2_on_device_sufficiency"], cl["claim3_edge_vs_cloud_fp32"],
+                          cl["claim4_gates"], cl["claim5_ramp"])
     rc = float(np.mean(list(c2["rmse_cloud_per_seed"].values())))
     re_ = float(prim[prim.model == "edge_fp32"]["RMSE"].mean())
-    ri8 = float(prim[prim.model == "edge_int8 (secondary)"]["RMSE"].mean())
     ul = a5[(a5.gate_a == "uncertainty") & (a5.gate_b == "learned") & (a5.budget_target == 0.25)].iloc[0]
-    F, M, S = T + "claims_test.json", T + "claims_models_test.csv", T + "gates/summary_test.csv"
-    # (as written, file, field, stored value, rounding, rounded value as a string, note)
+    obj = ms["trees_ground_cap10x"]["generated_c"]["object_bytes"]
+    better = 1 - c2["rmse_cap10x"] / re_
+    ie_val = ce["input_effect (A = trees_all, B = trees_ground)"]["relative"]["mean"]
+    ramp_dev_zero = sum(i["lo"] <= 0 <= i["hi"] for i in dr5["intervals_rmse_edge_minus_cloud_ramp"])
+    # refuted = counts against in full; partly = claim 5, one of its two parts against
+    refuted = sum(bool(c["counts_against"]) for c in (c1, c2, c3)) + any(c4[k] for k in c4 if k.startswith("against_"))
+    partly = int(c5["against_no_cloud_advantage"] != c5["against_no_gate_helps"])
+    F, M, S, G = T + "claims_test.json", T + "claims_models_test.csv", T + "gates/summary_test.csv", "results/footprint/measured.json"
+    A5, CE, DR = "results/analyses/a5_gate_differences_summary.csv", "results/tiers/control_effects.json", "results/dryrun/claims_validation.json"
+    pct1 = lambda x: f"{100 * x:.1f}%"
+    pct0 = lambda x: f"{100 * x:.0f}%"
+    yes = lambda ok: "yes" if ok else "no"
+    gain = "cloud gain, RMSE_edge - RMSE_cloud (edge fp32)"
+    # (as written, file, field, stored value, rounding, rounded or check result, expected, denominator, note)
     R = [
         ("7.9%", F, "claim3_edge_vs_cloud_fp32.gain_mean_of_seed_rmse", c3["gain_mean_of_seed_rmse"], "x100, 1 dp",
-         f"{100 * c3['gain_mean_of_seed_rmse']:.1f}%",
-         "Recomputing from the rounded 70.7 and 76.7 gives 7.8%; 7.9% is correct from the stored seed means."),
-        ("70.7 W/m2", F, "mean(claim2_on_device_sufficiency.rmse_cloud_per_seed)", rc, "1 dp", f"{rc:.1f}", ""),
-        ("76.7 W/m2", M, "mean(RMSE) where row_set=primary, model=edge_fp32", re_, "1 dp", f"{re_:.1f}", ""),
+         pct1(c3["gain_mean_of_seed_rmse"]), "7.9%", f"edge fp32 seed-mean RMSE ({re_:.2f})", "1 - RMSE_cloud / RMSE_edge."),
+        ("70.66 W/m2", F, "mean(claim2_on_device_sufficiency.rmse_cloud_per_seed)", rc, "2 dp", f"{rc:.2f}", "70.66", "",
+         "Cloud tier, seed mean."),
+        ("76.71 W/m2", M, "mean(RMSE) where row_set=primary, model=edge_fp32", re_, "2 dp", f"{re_:.2f}", "76.71", "",
+         "Edge fp32, seed mean."),
         ("all five seeds", F, "claim3_edge_vs_cloud_fp32.seeds_including_zero_or_below", c3["seeds_including_zero_or_below"],
-         "count (0 including zero = 5 of 5 excluding)", f"{5 - c3['seeds_including_zero_or_below']} of 5", ""),
-        ("4.2%", F, "claim1_input_effect.input_effect", c1["input_effect"], "x100, 1 dp", f"{100 * c1['input_effect']:.1f}%",
-         "Model class held fixed = trees on all inputs vs trees on ground inputs."),
-        ("3.7%", F, "claim2_on_device_sufficiency.relative_difference_d", c2["relative_difference_d"], "x100, 1 dp",
-         f"{100 * c2['relative_difference_d']:.1f}%", "Relative to the cloud tier's seed-mean RMSE; the model is the 10x-capped trees."),
-        ("69%", S, "share_mean [cloud, primary, uncertainty, budget 0.25]", s25.loc["uncertainty", "share_mean"], "x100, 0 dp",
-         f"{100 * s25.loc['uncertainty', 'share_mean']:.0f}%", ""),
-        ("23%", S, "realised_rate_mean [cloud, primary, uncertainty, budget 0.25]", s25.loc["uncertainty", "realised_rate_mean"],
-         "x100, 0 dp", f"{100 * s25.loc['uncertainty', 'realised_rate_mean']:.0f}%", "The target budget was 25%."),
-        ("24%", S, "share_mean [cloud, primary, random, budget 0.25]", s25.loc["random", "share_mean"], "x100, 0 dp",
-         f"{100 * s25.loc['random', 'share_mean']:.0f}%", "Random escalates exactly 25%, not 23% (see flag 1)."),
-        ("0.5 W/m2", M, "mean(RMSE int8) - mean(RMSE fp32), row_set=primary", ri8 - re_, "1 dp", f"{ri8 - re_:.1f}",
-         "Derived: difference of two stored seed means, no single field (see flag 2)."),
-        ("five claims; two refuted, one partly", F, "claim1..claim5 verdict fields", "claims 1, 2 against; claim 5 one of two parts against",
-         "n/a", "2 + 1 partly", ""),
-        ("2014-2015 / 2016", "configs/base.yaml", "split.models_train, gate_fit, validation; split.test", "2014; 2015 H1, H2; 2016",
-         "n/a", "matches", ""),
+         "5 - count", f"{5 - c3['seeds_including_zero_or_below']} of 5", "5 of 5", "",
+         "Day-block bootstrap interval of RMSE_edge - RMSE_cloud."),
+        ("4.2%", F, "claim1_input_effect.input_effect", c1["input_effect"], "x100, 1 dp", pct1(c1["input_effect"]), "4.2%",
+         f"RMSE of trees on ground inputs ({c1['rmse_trees_ground']:.2f})",
+         "1 - RMSE_trees_all / RMSE_trees_ground; model class held fixed = the same tree set-up on both input sets."),
+        ("87 kB", G, "trees_ground_cap10x.generated_c.object_bytes", obj, "/1000, 0 dp", f"{obj / 1000:.0f} kB", "87 kB", "",
+         f"Compiled C object, decimal kB ({obj / 1000:.1f} kB)."),
+        ("4.5% better than the on-device network", F + "`; `" + M,
+         "claim2_on_device_sufficiency.rmse_cap10x; mean(RMSE) where row_set=primary, model=edge_fp32", better, "x100, 1 dp",
+         pct1(better), "4.5%", f"edge fp32 seed-mean RMSE ({re_:.2f})",
+         f"Derived: 1 - {c2['rmse_cap10x']:.2f} / {re_:.2f}; no single stored field."),
+        ("3.7% worse than the cloud forecaster", F, "claim2_on_device_sufficiency.relative_difference_d", c2["relative_difference_d"],
+         "x100, 1 dp", pct1(c2["relative_difference_d"]), "3.7%", f"cloud seed-mean RMSE ({rc:.2f})", "RMSE_cap10x / RMSE_cloud - 1."),
+        ("25% escalation target", S, "budget_target [row selected above]", float(s25["budget_target"].iloc[0]), "x100, 0 dp",
+         pct0(s25["budget_target"].iloc[0]), "25%", "issue times (requests)", ""),
+        ("69% of the cloud gain", S, "share_mean [cloud, primary, uncertainty, budget 0.25]", s25.loc["uncertainty", "share_mean"],
+         "x100, 0 dp", pct0(s25.loc["uncertainty", "share_mean"]), "69%", gain,
+         "Share kept = (RMSE_edge - RMSE_gated) / (RMSE_edge - RMSE_cloud)."),
+        ("escalating 23% of requests", S, "realised_rate_mean [cloud, primary, uncertainty, budget 0.25]",
+         s25.loc["uncertainty", "realised_rate_mean"], "x100, 0 dp", pct0(s25.loc["uncertainty", "realised_rate_mean"]), "23%",
+         "issue times (requests)", "Realised rate; the target was 25%."),
+        ("random escalation of 25%", S, "realised_rate_mean [cloud, primary, random, budget 0.25]",
+         s25.loc["random", "realised_rate_mean"], "x100, 0 dp", pct0(s25.loc["random", "realised_rate_mean"]), "25%",
+         "issue times (requests)", ""),
+        ("random retains 24%", S, "share_mean [cloud, primary, random, budget 0.25]", s25.loc["random", "share_mean"], "x100, 0 dp",
+         pct0(s25.loc["random", "share_mean"]), "24%", gain, "Expected random gate."),
+        ("a learned gate is no better", F + "`; `" + A5,
+         "claim4_gates.against_learned_not_better; seeds_excluding_zero [uncertainty, learned, 0.25]",
+         f"{c4['against_learned_not_better']}; {int(ul['seeds_excluding_zero'])}", "check",
+         yes(not c4["against_learned_not_better"] and int(ul["seeds_excluding_zero"]) == 0), "yes", "",
+         f"At 25%, learned keeps {s25.loc['learned', 'share_mean']:.3f} against uncertainty's "
+         f"{s25.loc['uncertainty', 'share_mean']:.3f}; the paired interval includes zero for 5 of 5 seeds."),
+        ("five claims; two refuted, one partly", F, "claim1/2/3.counts_against; claim4_gates.against_*; claim5_ramp.against_*",
+         f"{refuted} against in full; claim 5: against_no_cloud_advantage {c5['against_no_cloud_advantage']}, "
+         f"against_no_gate_helps {c5['against_no_gate_helps']}", "count", f"{refuted} + {partly} partly", "2 + 1 partly", "",
+         "Claims 1 and 2 refuted; claim 5 refuted in one of its two parts."),
+        ("development: cloud-side inputs appeared to add nothing", CE, "primary.input_effect.relative.mean", ie_val, "check",
+         yes(ie_val <= 0), "yes", "RMSE of trees on ground inputs (validation)", f"Validation input effect {100 * ie_val:+.2f}% (2015 H2)."),
+        ("development: no reliable cloud advantage on ramps", DR,
+         "claim5_ramp.against_no_cloud_advantage; claim5_ramp.intervals_rmse_edge_minus_cloud_ramp",
+         f"{dr5['against_no_cloud_advantage']}; {ramp_dev_zero} of 5 include zero", "check",
+         yes(not dr5["against_no_cloud_advantage"] and ramp_dev_zero == 5), "yes", "",
+         f"Validation ramp RMSE cloud {np.mean(list(dr5['rmse_cloud_ramp'].values())):.1f} against edge "
+         f"{np.mean(list(dr5['rmse_edge_ramp'].values())):.1f} W/m2: slightly better, interval includes zero for all seeds."),
+        ("2014-2015 / held-out 2016", "configs/base.yaml", "split.models_train, gate_fit, validation; split.test; split.frozen",
+         "2014; 2015 H1, H2; 2016; frozen true", "check", "matches", "matches", "", "See docs/FREEZE.md."),
+        ("latency measured on a PC CPU only", G, "note", ms["note"], "check",
+         yes("PC CPU" in ms["note"] and "Nothing ran on a microcontroller" in ms["note"]), "yes", "", ""),
     ]
+    text = Path("docs/abstract.txt").read_text(encoding="utf-8").strip()
     out = ["## Numbers in the abstract", "",
-           "The abstract as given (`docs/abstract.txt`, not edited):", "", "> " + Path("docs/abstract.txt").read_text(encoding="utf-8").strip(), "",
-           "| as written | file | field | stored value | rounding | rounded | matches | note |",
-           "|---|---|---|---|---|---|---|---|"]
-    for w, f, fld, v, rnd, rv, note in R:
+           f"The abstract (`docs/abstract.txt`, {len(text):,} characters, limit 2,000):", "", "> " + text, "",
+           "| as written | file | field | stored value | rounding | rounded / check | matches | denominator | note |",
+           "|---|---|---|---|---|---|---|---|---|"]
+    for w, f, fld, v, rnd, rv, exp, den, note in R:
         stored = repr(float(v)) if isinstance(v, (float, np.floating)) else str(v)
-        written = w.replace(" W/m2", "")
-        ok = "yes" if (rv == written or rv in ("matches", "2 + 1 partly", "5 of 5")) else "**NO**"
-        out.append(f"| {w} | `{f}` | `{fld}` | {stored} | {rnd} | {rv} | {ok} | {note} |")
-    out += ["", "### Flags for the author (the abstract was not edited)", "",
-            f"1. **Uncertainty vs random comparison.** The uncertainty gate escalates 23% (realised) against random's "
-            f"25%, both at a 25% target. The comparison favours random, so the conclusion holds, but 'while escalating "
-            f"23%' next to 'random' can read as an equal-rate comparison.",
-            f"2. **Int8 effect (0.5 W/m2).** This is the 2016 seed-mean difference on primary rows ({ri8:.4f} - "
-            f"{re_:.4f}). It is not stored as a single field. Per seed it ranges from -0.26 to +1.26 W/m2, and one "
-            f"seed improves with int8. On validation the same difference was 0.94 W/m2 "
-            f"(`results/footprint/measured.json`). The abstract does not say which year it refers to.",
-            "3. **'No cloud advantage on ramp events had been found' (development).** The validation ramp RMSE was "
-            "cloud 133.4 against edge 135.3 W/m2, so the cloud tier was slightly better. Its interval included zero "
-            "for all 5 seeds (`results/dryrun/claims_validation.json`, `claim5_ramp`). 'No reliable cloud "
-            "advantage' would match the files; 'no advantage' slightly overstates them.",
-            "4. **'A learned gate is no better'.** This is supported. At 25%, learned keeps 0.649 against uncertainty's "
-            f"0.688, and the paired interval of the difference includes zero for "
-            f"{5 - int(ul['seeds_excluding_zero'])} of 5 seeds (`results/analyses/a5_gate_differences_summary.csv`).",
-            f"5. **'On development data the cloud-side inputs had appeared to add nothing'.** This is supported: the "
-            f"validation input effect is {ce['input_effect (A = trees_all, B = trees_ground)']['relative']['mean']:+.4f} "
-            "(`results/tiers/control_effects.json`).",
-            "6. **Background statements with no result file.** 'Short-term solar irradiance forecasts improve when "
-            "ground measurements are combined with satellite imagery and NWP' and 'such multimodal models run in the "
-            "cloud' are literature or framing claims. No result file here supports them. On validation, the "
-            "satellite and NWP inputs did not help (claim 1); on 2016 they did.",
-            "7. **'All settings ... were fixed on 2014-2015 data before a single evaluation'.** This is consistent "
+        out.append(f"| {w} | `{f}` | `{fld}` | {stored} | {rnd} | {rv} | {'yes' if rv == exp else '**NO**'} | {den} | {note} |")
+    out += ["", "### Notes for the author", "",
+            "1. **Uncertainty vs random.** Both use a 25% target. The uncertainty gate realises 23%, and random "
+            "realises 25%. The abstract states both rates.",
+            "2. **Background statements with no result file.** 'Forecasting can combine ground measurements with "
+            "satellite imagery and NWP' and 'such multimodal models are typically run in the cloud' are literature or "
+            "framing claims. No result file here supports them.",
+            "3. **'All settings ... were fixed on 2014-2015 data before a single evaluation'.** This is consistent "
             "with `docs/FREEZE.md`. The gates were refitted on 2015 inside the frozen protocol. One test-code "
             "change was made before the freeze (FREEZE.md, 'Test change before the freeze'); no setting changed.",
+            "4. **Single site.** The study uses Folsom only (`configs/base.yaml`, `site`).",
             ""]
     return out
 
