@@ -16,3 +16,7 @@ results/tiers/predictions/truth.parquet
 results/tiers/predictions/on_device_inputs.parquet
 # dry-run prediction files (regenerate with ./run.sh dryrun)
 results/dryrun/predictions/
+# test run: dataset-derived files and the unredacted console log stay local
+results/test/predictions/truth.parquet
+results/test/predictions/on_device_inputs.parquet
+results/test/console.raw.log

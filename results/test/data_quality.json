@@ -1,0 +1,78 @@
+{
+  "period": "test",
+  "bounds": [
+    "2016-01-01 00:00:00",
+    "2017-01-01 00:00:00"
+  ],
+  "issue_times": 8068,
+  "daylight_issue_times": 7891,
+  "daylight_cells": 41906,
+  "days_in_period": 366,
+  "local_days_with_issue_times": 363,
+  "largest_gaps_between_issue_times": [
+    {
+      "after": "2016-07-13 02:30:00",
+      "length": "2 days 11:00:00"
+    },
+    {
+      "after": "2016-12-12 00:00:00",
+      "length": "0 days 16:00:00"
+    },
+    {
+      "after": "2016-12-17 00:00:00",
+      "length": "0 days 16:00:00"
+    },
+    {
+      "after": "2016-12-03 00:00:00",
+      "length": "0 days 16:00:00"
+    },
+    {
+      "after": "2016-01-04 00:00:00",
+      "length": "0 days 16:00:00"
+    }
+  ],
+  "irradiance_minutes": {
+    "expected_minutes": 525600,
+    "missing_minutes": 2880,
+    "days_with_missing_minutes": 3,
+    "days_with_over_60_missing": 3,
+    "first": "2016-01-01 08:00:00",
+    "last": "2016-12-31 07:59:00"
+  },
+  "satellite_available_15min_share_of_daylight_issue_times": 0.945000633633253,
+  "satellite_available_0min_share_of_daylight_issue_times": 0.9542516791281206,
+  "benchmark_satellite_feature_share_of_daylight_issue_times": 0.7252566214674946,
+  "primary_cells": 39655,
+  "nam_coverage": {
+    "30min": {
+      "daylight_cells": 7891,
+      "share_missing": 0.06539095171714611,
+      "share_interpolated": 0.14586237485743253
+    },
+    "60min": {
+      "daylight_cells": 7529,
+      "share_missing": 0.05565148094036393,
+      "share_interpolated": 0.1530083676451056
+    },
+    "90min": {
+      "daylight_cells": 7166,
+      "share_missing": 0.054842310912643036,
+      "share_interpolated": 0.1607591403851521
+    },
+    "120min": {
+      "daylight_cells": 6803,
+      "share_missing": 0.05394678818168455,
+      "share_interpolated": 0.1693370571806556
+    },
+    "150min": {
+      "daylight_cells": 6440,
+      "share_missing": 0.05295031055900621,
+      "share_interpolated": 0.17888198757763976
+    },
+    "180min": {
+      "daylight_cells": 6077,
+      "share_missing": 0.051834786901431625,
+      "share_interpolated": 0.1895672206680928
+    }
+  }
+}

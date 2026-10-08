@@ -1,0 +1,87 @@
+{
+  "label": "EXPLORATORY (not a planned analysis; docs/FREEZE.md section c): read-only input checks, 2016 vs validation",
+  "rows_daylight": {
+    "val": 3857,
+    "test": 7891
+  },
+  "nan_share_by_group": {
+    "val": {
+      "intra-day B/V/L": 0.0,
+      "intra-hour B/V/L": 0.0,
+      "weather means": 0.0,
+      "wx_missing flag": 0.0
+    },
+    "test": {
+      "intra-day B/V/L": 0.0,
+      "intra-hour B/V/L": 0.0,
+      "weather means": 0.0,
+      "wx_missing flag": 0.0
+    }
+  },
+  "feature_mean_std": {
+    "val": {
+      "B(ghi_kt|30min)": [
+        0.8868280285195749,
+        0.25483199403068646
+      ],
+      "V(ghi_kt|60min)": [
+        0.03367899533316049,
+        0.04994322644652089
+      ],
+      "ih_B(ghi_kt|5min)": [
+        0.8810790059631839,
+        0.2704617924256936
+      ],
+      "ih_V(ghi_kt|30min)": [
+        0.03138506455794659,
+        0.05192208293432409
+      ],
+      "wx_air_temp": [
+        23.126723187278543,
+        8.967514449009013
+      ],
+      "wx_relhum": [
+        40.45809212686889,
+        20.007986600673778
+      ],
+      "target kt (all horizons)": [
+        0.9178194637455708,
+        0.2526155901985792
+      ]
+    },
+    "test": {
+      "B(ghi_kt|30min)": [
+        0.8758753538208086,
+        0.2775961010999631
+      ],
+      "V(ghi_kt|60min)": [
+        0.03509353960207832,
+        0.053955265259717104
+      ],
+      "ih_B(ghi_kt|5min)": [
+        0.8711809434799137,
+        0.2913527557663641
+      ],
+      "ih_V(ghi_kt|30min)": [
+        0.03301758649093905,
+        0.05603264135733348
+      ],
+      "wx_air_temp": [
+        21.074368943522156,
+        8.493137536441575
+      ],
+      "wx_relhum": [
+        45.281576901955816,
+        21.540632247586924
+      ],
+      "target kt (all horizons)": [
+        0.9051782371478055,
+        0.27542647732963077
+      ]
+    }
+  },
+  "ramp_share_of_primary_cells": {
+    "val": 0.05828571428571429,
+    "test": 0.06432984491236918
+  }
+}

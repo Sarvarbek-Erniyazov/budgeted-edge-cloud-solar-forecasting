@@ -1,0 +1,12 @@
+{
+  "mode": "test",
+  "git_head": "3c0770372ca9cce502b364a15220429c9ca0eeab",
+  "ground_stats_recomputed_equal_saved": true,
+  "step3_stats_recomputed_equal_saved": true,
+  "rows_saved": 16145,
+  "parts": {
+    "test": 8068,
+    "gate_fit": 4122,
+    "val": 3955
+  }
+}

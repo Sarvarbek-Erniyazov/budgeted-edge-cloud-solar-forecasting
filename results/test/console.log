@@ -1,0 +1,57 @@
+== commit: 3c0770372ca9cce502b364a15220429c9ca0eeab
+== tag at HEAD: freeze-2026-10-08
+== uncommitted files: 1
+== started: 2026-10-08T00:39:24Z
+== environment matches requirements.lock.txt
+..............................                                           [100%]
+============================== warnings summary ===============================
+tests/test_features.py::test_no_frame_newer_than_lag
+tests/test_features.py::test_max_age_and_missing
+tests/test_features.py::test_max_age_and_missing
+tests/test_features.py::test_differences
+  C:\Users\sharg\Desktop\ICONI 2026\Implementation\src\escal\features.py:98: DeprecationWarning: The 'generic' unit for NumPy timedelta is deprecated, and will raise an error in the future. This includes implicit conversion of bare integers (e.g. `+ 1`). Please use a specific unit instead.
+    stamps = np.full((n, n_frames), np.datetime64("NaT"), dtype="datetime64[ns]")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+30 passed, 4 warnings in 3.91s
+checkpoints/tiers/base/edge_seed0.pt: OK
+checkpoints/tiers/base/edge_seed1.pt: OK
+checkpoints/tiers/base/edge_seed2.pt: OK
+checkpoints/tiers/base/edge_seed3.pt: OK
+checkpoints/tiers/base/edge_seed4.pt: OK
+checkpoints/tiers/step3/cloud_seed0.pt: OK
+checkpoints/tiers/step3/cloud_seed1.pt: OK
+checkpoints/tiers/step3/cloud_seed2.pt: OK
+checkpoints/tiers/step3/cloud_seed3.pt: OK
+checkpoints/tiers/step3/cloud_seed4.pt: OK
+checkpoints/trees/trees_all.pkl: OK
+checkpoints/trees/trees_ground.pkl: OK
+checkpoints/trees/trees_ground_cap10x.pkl: OK
+checkpoints/trees/norms.npz: OK
+checkpoints/footprint/edge_seed0.int8.onnx: OK
+checkpoints/footprint/edge_seed1.int8.onnx: OK
+checkpoints/footprint/edge_seed2.int8.onnx: OK
+checkpoints/footprint/edge_seed3.int8.onnx: OK
+checkpoints/footprint/edge_seed4.int8.onnx: OK
+data quality written
+{"mode": "test", "git_head": "3c0770372ca9cce502b364a15220429c9ca0eeab", "ground_stats_recomputed_equal_saved": true, "step3_stats_recomputed_equal_saved": true, "rows_saved": 16145, "parts": {"test": 8068, "gate_fit": 4122, "val": 3955}}
+C:\Users\sharg\Desktop\ICONI 2026\Implementation\scripts\gates.py:102: RuntimeWarning: Mean of empty slice
+  unc_t = np.nan_to_num(np.nanmean(unc_t, axis=1)) / gc["uncertainty_scale"]
+C:\Users\sharg\Desktop\ICONI 2026\Implementation\scripts\gates.py:102: RuntimeWarning: Mean of empty slice
+  unc_t = np.nan_to_num(np.nanmean(unc_t, axis=1)) / gc["uncertainty_scale"]
+C:\Users\sharg\Desktop\ICONI 2026\Implementation\scripts\gates.py:102: RuntimeWarning: Mean of empty slice
+  unc_t = np.nan_to_num(np.nanmean(unc_t, axis=1)) / gc["uncertainty_scale"]
+C:\Users\sharg\Desktop\ICONI 2026\Implementation\scripts\gates.py:102: RuntimeWarning: Mean of empty slice
+  unc_t = np.nan_to_num(np.nanmean(unc_t, axis=1)) / gc["uncertainty_scale"]
+C:\Users\sharg\Desktop\ICONI 2026\Implementation\scripts\gates.py:102: RuntimeWarning: Mean of empty slice
+  unc_t = np.nan_to_num(np.nanmean(unc_t, axis=1)) / gc["uncertainty_scale"]
+seed 0 done
+seed 1 done
+seed 2 done
+seed 3 done
+seed 4 done
+{"population": "test issue times with a satellite frame (15-min rule) and >= 1 daylight horizon", "issue_times_test": 7457, "issue_times_gate_fit+val": 7336, "gate_net_train_rows": 6874, "gate_net_es_rows": 462, "ramp_cells_test": 2551, "daylight_cells_test": 39655}
+claims written
+== ESCAL_UNLOCK_TEST after run: <unset>
+== finished: 2026-10-08T00:40:50Z
+SEQUENCE EXIT 0
