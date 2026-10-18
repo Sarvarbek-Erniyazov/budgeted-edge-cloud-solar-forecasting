@@ -64,8 +64,7 @@ Table 1. Pre-specified claims and their 2016 outcome  <!-- style: p1a -->
 
 Fig. 1 shows the two tiers and the gate. Both tiers forecast all six horizons at once.  <!-- style: p1a -->
 
-[INSERT architecture.png HERE]  <!-- style: p1a -->
-
+[image]
 Fig. 1. System overview: edge tier and int8 gate on the device, cloud tier with satellite and NAM inputs.  <!-- style: p1a -->
 
 ## 4.1 Edge tier
@@ -113,16 +112,14 @@ Two comparisons separate the cloud-side inputs from the model class. With the tr
 
 Fig. 2 shows RMSE against the realised escalation rate. At a 25% target, the uncertainty gate keeps 69% of the cloud gain at a realised rate of 23.0%, the learned gate 65% at 24.8%, the variability rule 40%, random escalation 24% and fixed-interval escalation 23%. The uncertainty gate beats random at all three report budgets: the paired RMSE difference is −2.23, −2.64 and −2.50 W/m2 at the 10, 25 and 50% targets, with the interval excluding zero for all five seeds. Against the learned gate the differences are −0.27, −0.18 and −0.27 W/m2, and the interval includes zero for every seed except one at 50%. All realised rates are within 0.023 of their targets. The ranking stated in claim 4 had no decision rule; the observed order agrees with it.  <!-- style: p1a -->
 
-[INSERT budget_sweep_compact.png HERE]  <!-- style: p1a -->
-
+[image]
 Fig. 2. RMSE against realised escalation rate (2016; bands: seed range over five seeds).  <!-- style: p1a -->
 
 ## 5.4 Where the gate escalates
 
 Fig. 3 shows where the uncertainty gate spends a 25% budget. Escalation is concentrated in the mornings and middays of January to May and October, and is rare from July to September and in the late afternoon. A post hoc split by the measured clear-sky index at issue time gives the same picture: the gate escalates 56-69% of issue times with an index below 0.8 and about 10% of those above 0.8. The cloud tier is better than the edge tier in every bin, by about 4.3 W/m2 under clear skies and by up to 11.4 W/m2 for indices between 0.2 and 0.8, so the gate spends most of its budget where the gain is largest but leaves a smaller gain under clear skies unused. Gate scores for this split were recomputed from the saved test gates and reproduce the stored decisions exactly.  <!-- style: p1a -->
 
-[INSERT routing_map.png HERE]  <!-- style: p1a -->
-
+[image]
 Fig. 3. Share of issue times escalated by the uncertainty gate (25% target, 2016, mean of five seeds); blank cells have no decided issue times.  <!-- style: p1a -->
 
 ## 5.5 Ramp events

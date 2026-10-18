@@ -4,9 +4,9 @@ Every number that may appear in the paper, with the file and field it comes from
 
 ## Numbers in the abstract
 
-The abstract (`docs/abstract.txt`, 1,593 characters, limit 2,000):
+The abstract (`docs/abstract.txt`, 1,672 characters, limit 2,000):
 
-> Short-term solar irradiance forecasting can combine ground measurements with satellite imagery and numerical weather prediction (NWP), but such multimodal models are typically run in the cloud, while a low-power device at a photovoltaic site sees only its own measurements. We ask how often such a device needs the cloud for intra-day global horizontal irradiance forecasting on the public Folsom benchmark. A compact on-device network using ground-sensor history is compared with a cloud forecaster that adds GOES-15 satellite patches and NWP forecasts available at issue time, and an on-device gate decides when to escalate a request. All settings and five claims were fixed on 2014-2015 data before a single evaluation on the held-out year 2016. There, the cloud forecaster lowers RMSE by 7.9% relative to the on-device network (70.66 versus 76.71 W/m2), and a day-block bootstrap interval excludes zero for all five seeds. With the model class held fixed, the cloud-side inputs lower RMSE by 4.2%. A size-capped ground-only tree model (87 kB) is 4.5% better than the on-device network but 3.7% worse than the cloud forecaster. At a 25% escalation target, an uncertainty-based gate retains 69% of the cloud gain while escalating 23% of requests, whereas random escalation of 25% retains 24%; a learned gate is no better. Of the five claims, two were refuted and one partly: on development data the cloud-side inputs had appeared to add nothing, and no reliable cloud advantage on ramp events had been found. The study is a single-site measurement, and latency was measured on a PC CPU only.
+> Short-term solar irradiance forecasting can combine ground measurements with satellite imagery and numerical weather prediction (NWP), but such multimodal models are typically run in the cloud, while a low-power device at a photovoltaic site sees only its own measurements. We ask how often such a device needs the cloud for intra-day global horizontal irradiance forecasting on the public Folsom benchmark. A compact on-device network using ground-sensor history is compared with a cloud forecaster that adds GOES-15 satellite patches and NWP forecasts available at issue time, and an on-device gate decides when to escalate a request. All settings and five claims were fixed on 2014-2015 data before a single evaluation on the held-out year 2016. There, the cloud forecaster lowers RMSE by 7.9% relative to the on-device network (70.66 versus 76.71 W/m2), and a day-block bootstrap interval excludes zero for all five seeds. With the model class held fixed, the cloud-side inputs lower RMSE by 4.2%. A size-capped ground-only tree model (87 kB) is 4.5% better than the on-device network but 3.7% worse than the cloud forecaster. At a 25% escalation target, an uncertainty-based gate retains 69% of the cloud gain while escalating 23% of requests, whereas random escalation of 25% retains 24%; a learned gate is no better. Of the five claims, two were refuted and one partly: we had expected the cloud-side inputs to add nothing and the size-capped tree model to match the cloud forecaster, and neither held; an expected absence of a cloud advantage on ramp events was also not confirmed. The study is a single-site measurement, and latency was measured on a PC CPU only.
 
 | as written | file | field | stored value | rounding | rounded / check | matches | denominator | note |
 |---|---|---|---|---|---|---|---|---|
@@ -25,8 +25,10 @@ The abstract (`docs/abstract.txt`, 1,593 characters, limit 2,000):
 | random retains 24% | `results/test/gates/summary_test.csv` | `share_mean [cloud, primary, random, budget 0.25]` | 0.2406 | x100, 0 dp | 24% | yes | cloud gain, RMSE_edge - RMSE_cloud (edge fp32) | Expected random gate. |
 | a learned gate is no better | `results/test/claims_test.json`; `results/analyses/a5_gate_differences_summary.csv` | `claim4_gates.against_learned_not_better; seeds_excluding_zero [uncertainty, learned, 0.25]` | False; 0 | check | yes | yes |  | At 25%, learned keeps 0.649 against uncertainty's 0.688; the paired interval includes zero for 5 of 5 seeds. |
 | five claims; two refuted, one partly | `results/test/claims_test.json` | `claim1/2/3.counts_against; claim4_gates.against_*; claim5_ramp.against_*` | 2 against in full; claim 5: against_no_cloud_advantage True, against_no_gate_helps False | count | 2 + 1 partly | yes |  | Claims 1 and 2 refuted; claim 5 refuted in one of its two parts. |
-| development: cloud-side inputs appeared to add nothing | `results/tiers/control_effects.json` | `primary.input_effect.relative.mean` | -0.0027337325644152255 | check | yes | yes | RMSE of trees on ground inputs (validation) | Validation input effect -0.27% (2015 H2). |
-| development: no reliable cloud advantage on ramps | `results/dryrun/claims_validation.json` | `claim5_ramp.against_no_cloud_advantage; claim5_ramp.intervals_rmse_edge_minus_cloud_ramp` | False; 5 of 5 include zero | check | yes | yes |  | Validation ramp RMSE cloud 133.4 against edge 135.3 W/m2: slightly better, interval includes zero for all seeds. |
+| we had expected the cloud-side inputs to add nothing | `results/tiers/control_effects.json` | `primary.input_effect.relative.mean` | -0.0027337325644152255 | check | yes | yes | RMSE of trees on ground inputs (validation) | The expectation (claim 1) came from validation: input effect -0.27% (2015 H2). |
+| and the size-capped tree model to match the cloud forecaster | `docs/FREEZE.md`; `results/dryrun/claims_validation.json` | `claim 2 text; claim2_on_device_sufficiency.verdict (validation)` | matches | check | yes | yes |  | Claim 2 ('matches the cloud tier'); on validation the verdict rule gave 'matches'. |
+| and neither held | `results/test/claims_test.json` | `claim1_input_effect.counts_against; claim2_on_device_sufficiency.counts_against` | True; True | check | yes | yes |  | Claim 2 verdict on 2016: 'worse'. |
+| an expected absence of a cloud advantage on ramp events was also not confirmed | `results/test/claims_test.json`; `results/dryrun/claims_validation.json` | `claim5_ramp.against_no_cloud_advantage (2016; validation)` | True; validation False, 5 of 5 include zero | check | yes | yes |  | Validation ramp RMSE cloud 133.4 against edge 135.3 W/m2 (interval includes zero for all seeds); on 2016 the interval is above zero for 4 of 5 seeds. |
 | 2014-2015 / held-out 2016 | `configs/base.yaml` | `split.models_train, gate_fit, validation; split.test; split.frozen` | 2014; 2015 H1, H2; 2016; frozen true | check | matches | yes |  | See docs/FREEZE.md. |
 | latency measured on a PC CPU only | `results/footprint/measured.json` | `note` | Latency: single row, one thread, ONNX Runtime or compiled C on a PC CPU (CPU provider CPU). Nothing ran on a microcontroller. | check | yes | yes |  |  |
 
@@ -44,7 +46,7 @@ Source: `docs/paper_full.md`, extracted read-only from `ICONI2026_Erniyazov_Lim_
 
 | section | as written | paper value | file | field | stored value | rounded / check | matches | note |
 |---|---|---|---|---|---|---|---|---|
-| Abstract | Of the five claims, two were refuted and one partly | same numbers | `docs/abstract.txt` | `numbers in the text` | docx abstract vs abstract.txt | same numbers | yes | Numbers are traced in 'Numbers in the abstract'. The docx abstract rewords one sentence ('we had expected ... neither held; an expected absence of a cloud advantage on ramp events was also not confirmed'); docs/abstract.txt is the older wording. |
+| Abstract | Of the five claims, two were refuted and one partly | identical | `docs/abstract.txt` | `whole text` | docx abstract vs abstract.txt | identical | yes | Every number and claim of the abstract is traced in 'Numbers in the abstract'. |
 | Abstract | neither held | yes | `results/test/claims_test.json` | `claim1.counts_against; claim2.counts_against; claim5_ramp.against_no_cloud_advantage` | True; True; True | yes | yes |  |
 | 1 Introduction | 43.8 kB on-device network | 43.8 kB | `results/footprint/measured.json` | `edge_network.per_seed[0].fp32_onnx_bytes` | 43846 | 43.8 kB | yes | fp32 ONNX file, decimal kB. |
 | 1 Introduction | five gates and an oracle | 5 | `results/test/gates/summary_test.csv` | `gates other than oracle` | fixed_interval, learned, random, uncertainty, variability | 5 | yes |  |
@@ -157,33 +159,33 @@ Source: `docs/paper_full.md`, extracted read-only from `ICONI2026_Erniyazov_Lim_
 
 | item | first mention (line) | caption (line) | mentioned before caption | picture |
 |---|---|---|---|---|
-| Fig. 1 | 65 | 69 | yes | placeholder: [INSERT architecture.png HERE] |
-| Fig. 2 | 114 | 118 | yes | placeholder: [INSERT budget_sweep_compact.png HERE] |
-| Fig. 3 | 122 | 126 | yes | placeholder: [INSERT routing_map.png HERE] |
+| Fig. 1 | 65 | 68 | yes | image above caption |
+| Fig. 2 | 113 | 116 | yes | image above caption |
+| Fig. 3 | 120 | 123 | yes | image above caption |
 | Table 1 | 51 | 53 | yes | table |
-| Table 2 | 93 | 95 | yes | table |
+| Table 2 | 92 | 94 | yes | table |
 
 ### (c) Terms and units (whole-word counts in the body, references excluded)
 
 | term | count | lines |
 |---|---|---|
-| edge tier | 10 | 59, 69, 71, 73, 77, 93, 100, 122, 130 |
-| edge network | 4 | 77, 110, 134 |
-| on-device network | 6 | 22, 33, 146 |
-| cloud tier | 13 | 51, 58, 59, 69, 75, 77, 93, 103, 110, 122, 130, 146 |
-| cloud forecaster | 6 | 22, 33, 146 |
-| share kept | 2 | 60, 87 |
-| keeps / kept (of the gain) | 3 | 51, 114, 146 |
-| retains / retained | 3 | 22, 87 |
-| Kept (table column) | 1 | 97 |
-| realised rate | 6 | 51, 81, 114, 118 |
+| edge tier | 10 | 59, 68, 70, 72, 76, 92, 99, 120, 127 |
+| edge network | 4 | 76, 109, 131 |
+| on-device network | 6 | 22, 33, 143 |
+| cloud tier | 13 | 51, 58, 59, 68, 74, 76, 92, 102, 109, 120, 127, 143 |
+| cloud forecaster | 6 | 22, 33, 143 |
+| share kept | 2 | 60, 86 |
+| keeps / kept (of the gain) | 3 | 51, 113, 143 |
+| retains / retained | 3 | 22, 86 |
+| Kept (table column) | 1 | 96 |
+| realised rate | 6 | 51, 80, 113, 116 |
 | realized (US spelling) | 0 | - |
-| Rate (table column) | 1 | 97 |
-| W/m2 | 18 | 22, 57, 93, 95, 110, 114, 122, 130, 134 |
+| Rate (table column) | 1 | 96 |
+| W/m2 | 18 | 22, 57, 92, 94, 109, 113, 120, 127, 131 |
 | W/m² | 0 | - |
-| kB | 12 | 22, 33, 58, 73, 77, 97, 110, 134, 146 |
+| kB | 12 | 22, 33, 58, 72, 76, 96, 109, 131, 143 |
 | KB (upper case) | 0 | - |
-| µs | 5 | 134 |
+| µs | 5 | 131 |
 | ms (milliseconds) | 0 | - |
 
 

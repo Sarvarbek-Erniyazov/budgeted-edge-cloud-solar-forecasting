@@ -103,14 +103,23 @@ def abstract_section() -> list[str]:
          f"{refuted} against in full; claim 5: against_no_cloud_advantage {c5['against_no_cloud_advantage']}, "
          f"against_no_gate_helps {c5['against_no_gate_helps']}", "count", f"{refuted} + {partly} partly", "2 + 1 partly", "",
          "Claims 1 and 2 refuted; claim 5 refuted in one of its two parts."),
-        ("development: cloud-side inputs appeared to add nothing", CE, "primary.input_effect.relative.mean", ie_val, "check",
-         yes(ie_val <= 0), "yes", "RMSE of trees on ground inputs (validation)", f"Validation input effect {100 * ie_val:+.2f}% (2015 H2)."),
-        ("development: no reliable cloud advantage on ramps", DR,
-         "claim5_ramp.against_no_cloud_advantage; claim5_ramp.intervals_rmse_edge_minus_cloud_ramp",
-         f"{dr5['against_no_cloud_advantage']}; {ramp_dev_zero} of 5 include zero", "check",
-         yes(not dr5["against_no_cloud_advantage"] and ramp_dev_zero == 5), "yes", "",
+        ("we had expected the cloud-side inputs to add nothing", CE, "primary.input_effect.relative.mean", ie_val, "check",
+         yes(ie_val <= 0), "yes", "RMSE of trees on ground inputs (validation)",
+         f"The expectation (claim 1) came from validation: input effect {100 * ie_val:+.2f}% (2015 H2)."),
+        ("and the size-capped tree model to match the cloud forecaster", "docs/FREEZE.md`; `" + DR,
+         "claim 2 text; claim2_on_device_sufficiency.verdict (validation)", j(DR)["claim2_on_device_sufficiency"]["verdict"], "check",
+         yes(j(DR)["claim2_on_device_sufficiency"]["verdict"] == "matches"), "yes", "",
+         "Claim 2 ('matches the cloud tier'); on validation the verdict rule gave 'matches'."),
+        ("and neither held", F, "claim1_input_effect.counts_against; claim2_on_device_sufficiency.counts_against",
+         f"{c1['counts_against']}; {c2['counts_against']}", "check", yes(c1["counts_against"] and c2["counts_against"]), "yes", "",
+         f"Claim 2 verdict on 2016: '{c2['verdict']}'."),
+        ("an expected absence of a cloud advantage on ramp events was also not confirmed", F + "`; `" + DR,
+         "claim5_ramp.against_no_cloud_advantage (2016; validation)",
+         f"{c5['against_no_cloud_advantage']}; validation {dr5['against_no_cloud_advantage']}, {ramp_dev_zero} of 5 include zero",
+         "check", yes(c5["against_no_cloud_advantage"] and not dr5["against_no_cloud_advantage"] and ramp_dev_zero == 5), "yes", "",
          f"Validation ramp RMSE cloud {np.mean(list(dr5['rmse_cloud_ramp'].values())):.1f} against edge "
-         f"{np.mean(list(dr5['rmse_edge_ramp'].values())):.1f} W/m2: slightly better, interval includes zero for all seeds."),
+         f"{np.mean(list(dr5['rmse_edge_ramp'].values())):.1f} W/m2 (interval includes zero for all seeds); on 2016 the "
+         f"interval is above zero for {sum(i['lo'] > 0 for i in c5['intervals_rmse_edge_minus_cloud_ramp'])} of 5 seeds."),
         ("2014-2015 / held-out 2016", "configs/base.yaml", "split.models_train, gate_fit, validation; split.test; split.frozen",
          "2014; 2015 H1, H2; 2016; frozen true", "check", "matches", "matches", "", "See docs/FREEZE.md."),
         ("latency measured on a PC CPU only", G, "note", ms["note"], "check",
@@ -205,7 +214,7 @@ def paper_full_section() -> list[str]:
     hm = pd.read_csv(A + "a3_routing_hour_month.csv")
     mon = (hm.share_escalated * hm.issue_times).groupby(hm.month).sum() / hm.issue_times.groupby(hm.month).sum()
     lock_src = Path("src/escal/splits.py").read_text(encoding="utf-8")
-    abs_docx = flat.split("Abstract", 1)[1].split("Keywords:")[0]
+    abs_docx = flat.split("Abstract", 1)[1].split("Keywords:")[0].split("<!--")[0]
     abs_txt = Path("docs/abstract.txt").read_text(encoding="utf-8")
     num = lambda t: sorted(re.findall(r"\d+(?:[.,]\d+)?", t))  # noqa: E731
     CC, MF, FZ, BY = "docs/claim_criteria.md", "docs/method_facts.md", "docs/FREEZE.md", "configs/base.yaml"
@@ -213,11 +222,11 @@ def paper_full_section() -> list[str]:
                           PH + "a9_escalation_by_kt.csv", A + "a4_link_outage_summary.csv")
     # (section, as written, expected, file, field, stored value, rounded / check, note)
     R = [
-        ("Abstract", "Of the five claims, two were refuted and one partly", "same numbers", "docs/abstract.txt", "numbers in the text",
-         "docx abstract vs abstract.txt", "same numbers" if num(abs_docx) == num(abs_txt) else "different numbers",
-         "Numbers are traced in 'Numbers in the abstract'. The docx abstract rewords one sentence ('we had expected ... "
-         "neither held; an expected absence of a cloud advantage on ramp events was also not confirmed'); docs/abstract.txt "
-         "is the older wording."),
+        ("Abstract", "Of the five claims, two were refuted and one partly", "identical", "docs/abstract.txt", "whole text",
+         "docx abstract vs abstract.txt",
+         "identical" if " ".join(abs_docx.split()) == " ".join(abs_txt.split()) else
+         ("same numbers, different wording" if num(abs_docx) == num(abs_txt) else "different numbers"),
+         "Every number and claim of the abstract is traced in 'Numbers in the abstract'."),
         ("Abstract", "neither held", "yes", F, "claim1.counts_against; claim2.counts_against; claim5_ramp.against_no_cloud_advantage",
          f"{c1['counts_against']}; {c2['counts_against']}; {c5['against_no_cloud_advantage']}",
          yn(c1["counts_against"] and c2["counts_against"] and c5["against_no_cloud_advantage"]), ""),
@@ -534,9 +543,10 @@ def paper_full_section() -> list[str]:
     for item in ("Fig. 1", "Fig. 2", "Fig. 3", "Table 1", "Table 2"):
         cap = next(i for i, ln in enumerate(lines, 1) if ln.startswith(item + "."))
         men = next((i for i, ln in enumerate(lines, 1) if item in ln and not ln.startswith(item + ".")), None)
-        near = lines[cap - 3] if cap >= 3 else ""
-        pic = "table" if item.startswith("Table") else ("placeholder: " + near.split("<!--")[0].strip()
-                                                       if "[INSERT" in near else ("image" if "[image]" in near else "none"))
+        near = " ".join(lines[max(0, cap - 4):cap - 1])   # the three lines above the caption
+        ins = re.search(r"\[INSERT[^\]]*\]", near)
+        pic = "table" if item.startswith("Table") else ("placeholder: " + ins.group(0) if ins else
+                                                       ("image above caption" if "[image]" in near else "none"))
         out.append(f"| {item} | {men} | {cap} | {'yes' if men and men < cap else '**no**'} | {pic} |")
     out += ["", "### (c) Terms and units (whole-word counts in the body, references excluded)", "",
             "| term | count | lines |", "|---|---|---|"]
