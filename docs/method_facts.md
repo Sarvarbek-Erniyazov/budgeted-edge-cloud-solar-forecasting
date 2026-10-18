@@ -121,3 +121,36 @@ All sizes are file sizes on disk in bytes; the paper uses decimal kB (1 kB = 1,0
 | metric | share kept = (RMSE_edge - RMSE) / (RMSE_edge - RMSE_cloud) per seed; summary = mean over 5 seeds | `scripts/planned_analyses.py:124-125`, `:128` |
 | the 0.514 | uncertainty gate, 25% target, 25% of days down: `share_kept_day_block` = 0.5143 (independent outages: 0.5122; no outage: 0.6878; 100% outage: 0) | `results/analyses/a4_link_outage_summary.csv` (row uncertainty, 0.25, 0.25); `docs/number_trace.md:198` |
 | status | planned analysis A1-A7, fixed after the test run; not part of the frozen claims | `configs/analyses.yaml:1-2`; `results/analyses/PLANNED.md` |
+
+## 10. Ramp cell (claim 5)
+
+| item | fact | source |
+|---|---|---|
+| definition (frozen) | "**ramp:** cells with \|kt(t,h) - kt(t,h-30 min)\| >= 0.25, where kt(t,0) is `B(ghi_kt\|30min)` (`ramp.delta_kt`)." | `docs/FREEZE.md:140-141` |
+| variable | the benchmark clear-sky index of the **target** (observed), `kt_{h}` for each horizon, from the truth file; not a forecast | `scripts/test_run.py:223`; `src/escal/features.py:180` |
+| window / step | the change between consecutive horizons 30 min apart (each kt is the mean over its 30-min target window). For h = 30 min the previous value is `B(ghi_kt\|30min)`, the measured mean kt over the 30 min before the issue time | `scripts/test_run.py:224`; `configs/base.yaml:106`; `docs/FREEZE.md:25` |
+| threshold | absolute change >= 0.25 in kt | `configs/base.yaml:106`; `scripts/test_run.py:225` |
+| which cells | primary cells only (daylight cells at the 7,457 issue times with a satellite frame): `ramp = prim & (...)` | `scripts/test_run.py:220-221`, `:225`; same rule in `scripts/gates.py:72-74` |
+| count | 2,551 ramp cells in 2016 | `results/test/claims_test.json` (`ramp_cells`); `results/test/gates/meta.json:7` |
+
+## 11. Was the A4 link-outage analysis pre-specified?
+
+- **Listed before the test run, as a name only.** At tag `freeze-2026-10-08`, `docs/FREEZE.md:274` (current file: `:275`)
+  says: "**Analyses after the run.** Only A1 to A7 in `docs/PLAN.md` section 3 count as planned." At the same tag,
+  `docs/PLAN.md:57` lists: "| A4 | Link-outage test | Graceful degradation when escalation is refused | post-hoc on saved
+  predictions |". The A4 row has been in `docs/PLAN.md` since `ad925df` (2026-10-07 21:38:47 +0900), before the
+  freeze commit `3c07703` (2026-10-08 09:38:55 +0900) and the run (2026-10-08 00:39:24 UTC).
+- **Setup fixed after the run.** The gates, budgets, outage fractions (0, 0.10, 0.25, 0.50, 1.0), day-block draws (200)
+  and seed are in `configs/analyses.yaml:16-21`, whose header says "Fixed on 2026-10-08 AFTER the test run; none of
+  these settings enters the frozen claims." (`configs/analyses.yaml:1-2`). FREEZE.md does not describe the A4 setup
+  (no "outage" or "link" in the file).
+- So A4 counts as planned under FREEZE.md's rule, but its design (and so the 0.514) was fixed after 2016 was seen.
+
+## 12. CPU model
+
+**Not recorded.** Searched `results/footprint/measured.json`, `results/tiers/footprint_trees.json`,
+`results/tiers/FOOTPRINT.md`, `logs/footprint/run.log`, `logs/tiers/footprint.log`, `results/test/console.log` and
+all of `logs/` and `results/` for CPU, processor, Intel, AMD, Ryzen, Core(TM) and GHz. The only record is
+`measured.json` `note`: "Latency: single row, one thread, ONNX Runtime or compiled C on a PC CPU (CPU provider
+CPU)." The "cpu" hits in `logs/footprint/run.log` are ONNX Runtime warning URLs; the others are byte matches inside
+parquet files. `logs/` is not in git (only `logs/.gitkeep` is tracked).
