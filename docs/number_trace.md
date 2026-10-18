@@ -38,6 +38,155 @@ The abstract (`docs/abstract.txt`, 1,593 characters, limit 2,000):
 4. **Single site.** The study uses Folsom only (`configs/base.yaml`, `site`).
 
 
+## Numbers and statements in the full paper
+
+Source: `docs/paper_full.md`, extracted read-only from `ICONI2026_Erniyazov_Lim_full.docx` (python-docx; body, tables and captions). Each 'as written' snippet occurs verbatim in that file. 'matches' compares the stored value, rounded as the paper rounds it, with the paper's value, or records a check against `docs/claim_criteria.md` / `docs/method_facts.md`. Literature statements (Sections 1-2) are not traced.
+
+| section | as written | paper value | file | field | stored value | rounded / check | matches | note |
+|---|---|---|---|---|---|---|---|---|
+| Abstract | Of the five claims, two were refuted and one partly | same numbers | `docs/abstract.txt` | `numbers in the text` | docx abstract vs abstract.txt | same numbers | yes | Numbers are traced in 'Numbers in the abstract'. The docx abstract rewords one sentence ('we had expected ... neither held; an expected absence of a cloud advantage on ramp events was also not confirmed'); docs/abstract.txt is the older wording. |
+| Abstract | neither held | yes | `results/test/claims_test.json` | `claim1.counts_against; claim2.counts_against; claim5_ramp.against_no_cloud_advantage` | True; True; True | yes | yes |  |
+| 1 Introduction | 43.8 kB on-device network | 43.8 kB | `results/footprint/measured.json` | `edge_network.per_seed[0].fp32_onnx_bytes` | 43846 | 43.8 kB | yes | fp32 ONNX file, decimal kB. |
+| 1 Introduction | five gates and an oracle | 5 | `results/test/gates/summary_test.csv` | `gates other than oracle` | fixed_interval, learned, random, uncertainty, variability | 5 | yes |  |
+| 3 Task | six horizons, 30 to 180 min in 30-min steps | 30min..180min, 6 | `results/paper/horizon_table.csv` | `horizon` | 30min, 60min, 90min, 120min, 150min, 180min | 30min..180min, 6 | yes |  |
+| 3 Task | at least 5° | 5.0 | `configs/base.yaml` | `clearsky.daylight_min_elevation` | 5.0 | 5.0 | yes |  |
+| 3 Task | the test year has 39,655 scored cells | 39,655 | `results/test/data_quality.json` | `primary_cells` | 39655 | 39,655 | yes |  |
+| 3 Task | a cell (issue time, horizon) is scored when the solar elevation at the target time is at least 5°; the test year has 39,655 scored cells | 39,655 | `results/test/claims_models_test.csv` | `cells [row_set = all_daylight]` | 41906 | 41,906 | **NO** | **Condition incomplete.** Elevation >= 5° alone gives 41,906 cells (all daylight); 39,655 are the primary cells, which also need a satellite frame at the issue time (Section 4.3 says this later). |
+| 3 Task | assumed 15-min availability lag | 15 | `configs/base.yaml` | `satellite.availability_lag_minutes` | 15 | 15 | yes | Unverified assumption (FREEZE.md d.1). |
+| 3 Task | 6 h after its reference time | 6 | `configs/base.yaml` | `nam.availability_lag_hours` | 6 | 6 | yes | Newest run with reftime + 6 h <= t (method_facts.md item 3). |
+| 3 Splits | Models are trained on 2014. Gates are fitted on the first half of 2015 and validated on the second half; for the test, gates and their thresholds were refitted on all of 2015. | yes | `configs/base.yaml`; `docs/FREEZE.md` | `split; FREEZE.md 'Gate refit for the test run'` | {'models_train': ['2014-01-01', '2014-12-31'], 'gate_fit': ['2015-01-01', '2015-06-30'], 'validation': ['2015-07-01', '2015-12-31'], 'test': ['2016-01-01', '2016-12-31'], 'provisional': False} | yes | yes |  |
+| 3 Lock | The data loader refuses 2016 rows unless the protocol is marked frozen and an explicit flag is set, which unit tests check. | yes | `src/escal/splits.py`; `tests/test_splits.py`; `tests/test_test_path.py` | `test_unlocked()` | frozen and ESCAL_UNLOCK_TEST=1 | yes | yes |  |
+| 3 Lock | committed and tagged before the test year was loaded, and the test was run once | yes | `docs/claim_criteria.md` | `Provenance of the claim-5b logic` | b706593 < 3c07703 (tag) < run 00:39:24Z | yes | yes | FREEZE.md header: 'No 2016 row was loaded before this commit'. |
+| 3 Claims and rules | claim 1, if the input effect is at least +2% with its interval above zero | yes | `docs/claim_criteria.md` | `claim 1 rule` | +2% and interval entirely above zero | yes | yes |  |
+| 3 Claims and rules | claim 2 holds only if the capped trees are within 2% of the cloud tier and the interval is not above zero for three or more seeds | yes | `docs/claim_criteria.md` | `claim 2 'matches'` | \|d\| <= 2% and not entirely above zero for >= 3 of 5 seeds | yes | yes |  |
+| 3 Claims and rules | claim 3, if the interval includes zero for three or more seeds | yes | `docs/claim_criteria.md` | `claim 3 rule` | includes zero **or lies below zero** for >= 3 of 5 seeds | omits 'or lies below zero' | **NO** | Wording: the frozen rule also counts intervals below zero. |
+| 3 Claims and rules | if a realised rate misses its target by more than 0.05 | yes | `docs/claim_criteria.md` | `claim 4c rule` | the **seed-mean** realised rate of any **score-based** gate differs by > 0.05 at 10, 25 or 50% | omits seed-mean and score-based | **NO** | Wording: random and fixed-interval are not covered by the rule. |
+| 3 Claims and rules | or if a gate keeps half of the ramp gain at 25% | yes | `docs/claim_criteria.md` | `claim 5b rule` | share >= 0.5 at 25% **with a positive share for all 5 seeds** | omits 'positive share for all 5 seeds' | **NO** | Wording; seed mean and oracle exclusion are not stated in FREEZE.md (claim_criteria.md). |
+| 3 Claims and rules | this naming was applied after the run | yes | `results/test/claims_test.json` | `no verdict words stored` | counts_against flags only | yes | yes | Verdict names derived in results/paper/claims_table.md. |
+| 3 Claims and rules | On validation data the input effect had been −0.27% | -0.27% | `results/tiers/control_effects.json` | `primary.input_effect.relative.mean` | -0.0027337325644152255 | -0.27% | yes |  |
+| 3 Claims and rules | the cloud gain 6.3% | 6.3% | `results/go_no_go.json` | `variants[step4_gbt_plus_net].gain_avg` | 0.06312768725031048 | 6.3% | yes |  |
+| Table 1 | +4.2% | 4.2% | `results/test/claims_test.json` | `claim1_input_effect.input_effect` | 0.04165978470075493 | 4.2% | yes |  |
+| Table 1 | interval 0.7 to 5.6 W/m2 | 0.7 to 5.6 | `results/test/claims_test.json` | `claim1_input_effect.interval_rmse_ground_minus_all.lo/hi` | 0.6979959987556468; 5.5809053337189125 | 0.7 to 5.6 | yes |  |
+| Table 1 | 3.7% worse (87.2 kB model) | 3.7%; 87.2 kB | `results/test/claims_test.json`; `results/footprint/measured.json` | `relative_difference_d; generated_c.object_bytes` | 0.03715024782552957; 87183 | 3.7%; 87.2 kB | yes |  |
+| Table 1 | 3.7% worse (87.2 kB model); 4 of 5 seeds | 4 | `results/test/claims_test.json` | `claim2.seeds_entirely_above_zero` | 4 | 4 | yes |  |
+| Table 1 | 7.9% better; 5 of 5 seeds | 7.9%; 5 | `results/test/claims_test.json` | `claim3.gain_mean_of_seed_rmse; intervals lo > 0` | 0.07883446709498676; 5 | 7.9%; 5 | yes |  |
+| Table 1 | +0.38 to +0.52 share kept | 0.38 to 0.52 | `results/test/claims_test.json` | `claim4_gates.uncertainty_minus_random_share_at_25pct_per_seed` | [0.3827, 0.5177, 0.4361, 0.3926, 0.507] | 0.38 to 0.52 | yes |  |
+| Table 1 | max rate gap 0.023 | 0.023 | `results/test/claims_test.json` | `max \|claim4_gates.realised_minus_target\|` | 0.02300000000000002 | 0.023 | yes | Score-based gates at 10/25/50%. |
+| Table 1 | advantage in 4 of 5 seeds; best gate 0.48 | 4; 0.48 | `results/test/claims_test.json` | `claim5 intervals lo > 0; max gate_share_at_25pct_ramp` | 4; 0.47519999999999996 | 4; 0.48 | yes |  |
+| Table 1 | Refuted / Refuted / Supported / Supported / Partly | matches | `results/paper/claims_table.md` | `verdict` | refuted, refuted, supported, supported, partly supported | matches | yes |  |
+| 4.1 Edge tier | 96-64-64-6 (10,758 parameters) | 96-64-64-6; 10,758 | `configs/base.yaml`; `results/tiers/params.json` | `tiers.edge.hidden; edge` | [64, 64]; 10758 | 96-64-64-6; 10,758 | yes |  |
+| 4.1 Edge tier | summary statistics of GHI and DNI over the day so far and over the last hour at 5-min resolution (72 features) | yes | `results/test/predictions/on_device_inputs.parquet` | `column names` | B/V/L(ghi_kt, dni_kt \| 30..180min) = 36; ih_B/V/L(ghi_kt, dni_kt \| 5..30min) = 36 | no | **NO** | **Windows misdescribed.** The 72 features are statistics of the GHI and DNI clear-sky index over backward windows of 30 to 180 min (intra-day, 36) and 5 to 30 min (intra-hour, 36); not 'the day so far' or 'the last hour'. The count 72 is right. |
+| 4.1 Edge tier | means of the site weather sensors over the last 30 min (7) with a missing-data flag, solar elevation and clear-sky GHI at each target time (12), and the sine and cosine of day of year and hour of day (4) | yes | `docs/FREEZE.md` | `Edge inputs (96 columns)` | 7 + flag; 6 + 6; 4 | yes | yes | 36 + 36 + 7 + 1 + 12 + 4 = 96. |
+| 4.1 Edge tier | at 43.8 kB in 32-bit floating point and 15.2 kB with 8-bit integer weights | 43.8 kB; 15.2 kB | `results/footprint/measured.json` | `fp32_onnx_bytes; int8_onnx_bytes` | 43846; 15177 | 43.8 kB; 15.2 kB | yes | int8 also has uint8 activations (method_facts.md 1). |
+| 4.1 Edge tier | clear-sky index (clipped to [0, 1.2]) with ReLU hidden layers, mean squared error, AdamW and early stopping on the last 30 days of 2014; the int8 version uses static quantisation in ONNX Runtime | yes | `docs/method_facts.md` | `items 1` | kt_clip [0.0, 1.2]; early_stop_days 30 | yes | yes |  |
+| 4.2 Cloud tier | two 3x3 convolution layers (16 and 32 channels) encode the 10x10 satellite tile | [16, 32] | `configs/base.yaml` | `tiers.cloud.cnn_channels` | [16, 32] | [16, 32] | yes | 3x3, 10x10: method_facts.md item 2. |
+| 4.2 Cloud tier | averages, with equal weights and in clear-sky index | yes | `docs/method_facts.md` | `item 2 averaging` | (trees + net) / 2 in kt | yes | yes |  |
+| 4.2 Cloud tier | NAM forecasts at four nearby grid nodes | yes | `docs/FREEZE.md` | `NAM: the four node files` | 4 nodes | yes | yes |  |
+| 4.2 Cloud tier | cap 112 kB | 112 kB | `results/tiers/footprint_trees.json` | `trees.trees_ground_cap10x.cap_bytes` | 112080 | 112 kB | yes | = 10 x int8 estimate 11,208 B. |
+| 4.2 Cloud tier | compiled model 87.2 kB | 87.2 kB | `results/footprint/measured.json` | `generated_c.object_bytes` | 87183 | 87.2 kB | yes |  |
+| 4.3 Gates | Gates decide on the 7,457 test issue times | 7,457 | `results/test/gates/meta.json` | `issue_times_test` | 7457 | 7,457 | yes |  |
+| 4.3 Gates | the other 434 daytime issue times | 434 | `results/test/data_quality.json`; `results/test/gates/meta.json` | `daylight_issue_times - issue_times_test` | 7891 - 7457 | 434 | yes |  |
+| 4.3 Gates | a 102-32-1 network on the 96 edge inputs and the six edge forecasts | 102-32-1 | `results/test/gates/meta.json`; `configs/base.yaml` | `len(gate_input_columns); gates.net_hidden` | 102; [32] | 102-32-1 | yes |  |
+| 4.3 Gates | the variability rule scores the 30-min variability of the measured clear-sky index | ih_V(ghi_kt\|30min) | `configs/base.yaml` | `gates.variability_feature` | ih_V(ghi_kt\|30min) | ih_V(ghi_kt\|30min) | yes | V(ghi_kt\|w) is undefined in the benchmark (FREEZE.md d.3). |
+| 4.3 Gates | Score-based gates escalate when the score reaches the (1−b) quantile of its 2015 scores | yes | `docs/method_facts.md` | `item 4 thresholds` | (1-b) quantile on gate_fit + val | yes | yes |  |
+| 4.4 Footprint | runtime libraries excluded | yes | `docs/method_facts.md` | `item 7` | model files only | yes | yes | True by construction (file sizes of the model files); not stated in any source. |
+| 4.4 Footprint | median of 5,000 single-row calls after 200 warm-up calls with one thread, using ONNX Runtime 1.30.0 or C compiled at -O2 | 5,000; 200; 1; 1.30.0; -O2 | `configs/base.yaml`; `requirements.lock.txt` | `quantise.latency_runs, latency_warmup, threads; onnxruntime; c_compiler` | 5000; 200; 1 | 5,000; 200; 1; 1.30.0; -O2 | yes |  |
+| 4.4 Footprint | on a PC CPU ([CPU MODEL]) | a CPU model | `docs/method_facts.md` | `item 12` | not recorded | not recorded | **NO** | **Placeholder.** No CPU model is recorded anywhere; write 'a PC CPU (model not recorded)' or measure again. |
+| 4.4 Footprint | The gate size and latency were measured on development gates of the same architecture. | yes | `docs/method_facts.md` | `items 6, 7` | checkpoints/gates (gate_fit versions), seed 0 | yes | yes |  |
+| 4.4 Evaluation | on the 39,655 primary test cells | 39,655 | `results/test/data_quality.json` | `primary_cells` | 39655 | 39,655 | yes |  |
+| 4.4 Evaluation | local days are resampled 2,000 times with the same weights for both forecasts, and the 95% percentile interval | 2,000; 0.95 | `configs/base.yaml` | `bootstrap.n_resamples; ci` | 2000; 0.95 | 2,000; 0.95 | yes | Paired: method_facts.md item 8. |
+| 5.1 | 76.71 versus 89.43 W/m2 | 76.71; 89.43 | `results/test/claims_models_test.csv` | `mean RMSE [edge_fp32]; [smart_persistence]` | 76.7101; 89.4271 | 76.71; 89.43 | yes |  |
+| 5.1 | lowers RMSE by a further 7.9% relative to the edge tier, to 70.66 W/m2 | 7.9%; 70.66 | `results/test/claims_test.json`; `results/test/claims_models_test.csv` | `claim3.gain_mean_of_seed_rmse; mean RMSE [cloud]` | 0.07883446709498676; 70.66274000000001 | 7.9%; 70.66 | yes |  |
+| 5.1 | the edge RMSE ranges from 75.4 to 79.8 W/m2 and the cloud RMSE from 70.1 to 71.1 W/m2 | 75.4-79.8; 70.1-71.1 | `results/test/claims_models_test.csv` | `min/max RMSE [edge_fp32]; [cloud]` | 75.434-79.7761; 70.1465-71.1406 | 75.4-79.8; 70.1-71.1 | yes |  |
+| 5.1 | largest at 30 min (10.1%; 56.25 versus 50.54 W/m2) | 10.1%; 56.25; 50.54 | `results/paper/horizon_table.csv` | `cloud_gain_vs_edge_pct, edge_fp32, cloud [30min]` | 10.1451; 56.2478; 50.5414 | 10.1%; 56.25; 50.54 | yes | Post hoc (A8). |
+| 5.1 | between 6.6% and 8.1% from 60 to 180 min | 6.6%-8.1% | `results/paper/horizon_table.csv` | `cloud_gain_vs_edge_pct [60..180min]` | [8.0919, 6.646, 7.484, 7.9079, 7.7058] | 6.6%-8.1% | yes |  |
+| Table 2 | Smart persistence \| 89.43 | 89.43 | `results/paper/paper_table.csv` | `RMSE, share_kept, realised_rate, size_kB [Smart persistence]` | 89.4271; nan; nan; 0.0 | 89.43 | yes |  |
+| Table 2 | Edge tier (fp32) \| 76.71 \| 0.00 \| 0 \| 43.8 | 76.71; 0.00; 0; 43.8 | `results/paper/paper_table.csv` | `RMSE, share_kept, realised_rate, size_kB [Edge tier, fp32]` | 76.7101; 0.0; 0.0; 43.846 | 76.71; 0.00; 0; 43.8 | yes |  |
+| Table 2 | Ground trees, capped \| 73.29 \| 0.57 \| 87.2 | 73.29; 0.57; 87.2 | `results/paper/paper_table.csv` | `RMSE, share_kept, realised_rate, size_kB [Ground-only trees, 10x cap]` | 73.2878; 0.5659; nan; 87.183 | 73.29; 0.57; 87.2 | yes |  |
+| Table 2 | Trees, all inputs \| 70.90 \| 0.96 | 70.90; 0.96 | `results/paper/paper_table.csv` | `RMSE, share_kept, realised_rate, size_kB [Trees, all inputs]` | 70.8956; 0.9615; nan; 5917.302 | 70.90; 0.96 | yes |  |
+| Table 2 | Cloud tier \| 70.66 \| 1.00 \| 1 | 70.66; 1.00; 1 | `results/paper/paper_table.csv` | `RMSE, share_kept, realised_rate, size_kB [Cloud tier (trees + network)]` | 70.6627; 1.0; 1.0; nan | 70.66; 1.00; 1 | yes |  |
+| Table 2 | Random, 25% \| 75.25 \| 0.24 \| 0.250 | 75.25; 0.24; 0.250 | `results/paper/paper_table.csv` | `RMSE, share_kept, realised_rate, size_kB [Random @ 25%]` | 75.2549; 0.2406; 0.25; 0.0 | 75.25; 0.24; 0.250 | yes |  |
+| Table 2 | Uncertainty, 25% \| 72.61 \| 0.69 \| 0.230 \| +6.1 | 72.61; 0.69; 0.230; +6.1 | `results/paper/paper_table.csv` | `RMSE, share_kept, realised_rate, size_kB [Uncertainty gate @ 25%]` | 72.6094; 0.6878; 0.2303; 6.067 | 72.61; 0.69; 0.230; +6.1 | yes |  |
+| Table 2 | Learned, 25% \| 72.79 \| 0.65 \| 0.248 \| +6.1 | 72.79; 0.65; 0.248; +6.1 | `results/paper/paper_table.csv` | `RMSE, share_kept, realised_rate, size_kB [Learned gate @ 25%]` | 72.7926; 0.6493; 0.2476; 6.067 | 72.79; 0.65; 0.248; +6.1 | yes |  |
+| 5.2 | lowers RMSE from 73.98 to 70.90 W/m2 (4.2%; interval of the difference 0.7 to 5.6 W/m2) | 73.98; 70.90; 4.2%; 0.7-5.6 | `results/test/claims_test.json` | `claim1: rmse_trees_ground, rmse_trees_all, input_effect, interval` | 73.97747694364121; 70.89559118146406; 0.04165978470075493 | 73.98; 70.90; 4.2%; 0.7-5.6 | yes |  |
+| 5.2 | the size-capped trees (87.2 kB) are 4.5% better than the edge network (73.29 versus 76.71 W/m2) but remain 3.7% worse | 87.2 kB; 4.5%; 73.29; 76.71; 3.7% | `results/test/claims_test.json`; `results/footprint/measured.json`; `results/test/claims_models_test.csv` | `object_bytes; 1 - rmse_cap10x / edge; rmse_cap10x; edge; d` | 87183; 73.28784982402063; 76.7101; 0.03715024782552957 | 87.2 kB; 4.5%; 73.29; 76.71; 3.7% | yes |  |
+| 5.2 | with the interval above zero for four of five seeds, so claim 2 is refuted | 4 | `results/test/claims_test.json` | `claim2.seeds_entirely_above_zero` | 4 | 4 | yes |  |
+| 5.3 | the uncertainty gate keeps 69% of the cloud gain at a realised rate of 23.0% | 69%; 23.0% | `results/test/gates/summary_test.csv` | `share_mean, realised_rate_mean [uncertainty, 0.25]` | 0.6878; 0.2303 | 69%; 23.0% | yes |  |
+| 5.3 | the learned gate 65% at 24.8% | 65%; 24.8% | `results/test/gates/summary_test.csv` | `share_mean, realised_rate_mean [learned, 0.25]` | 0.6493; 0.2476 | 65%; 24.8% | yes |  |
+| 5.3 | the variability rule 40% | 40% | `results/test/gates/summary_test.csv` | `share_mean [variability, 0.25]` | 0.3948 | 39% | **NO** | **0.3948 rounds to 39%.** |
+| 5.3 | random escalation 24% and fixed-interval escalation 23% | 24%; 23% | `results/test/gates/summary_test.csv` | `share_mean [random, fixed_interval, 0.25]` | 0.2406; 0.2297 | 24%; 23% | yes |  |
+| 5.3 | the paired RMSE difference is −2.23, −2.64 and −2.50 W/m2 at the 10, 25 and 50% targets, with the interval excluding zero for all five seeds | -2.23, -2.64, -2.50; 5, 5, 5 | `results/paper/gate_intervals.csv` | `point, excludes_zero ['mean' rows, uncertainty - random]` | -2.2295, -2.6387, -2.4952 | -2.23, -2.64, -2.50; 5, 5, 5 | yes |  |
+| 5.3 | Against the learned gate the differences are −0.27, −0.18 and −0.27 W/m2, and the interval includes zero for every seed except one at 50% | -0.27, -0.18, -0.27; 0, 0, 1 | `results/paper/gate_intervals.csv` | `point, excludes_zero ['mean' rows, uncertainty - learned]` | -0.2705, -0.1833, -0.2656 | -0.27, -0.18, -0.27; 0, 0, 1 | yes |  |
+| 5.3 | All realised rates are within 0.023 of their targets. | 0.023 | `results/test/gates/summary_test.csv` | `max \|realised_rate_mean - budget_target\|, score-based gates` | report budgets 0.0230; all 12 targets 0.0337 | 0.023 (10/25/50% only) | **NO** | **Scope.** True at the 10, 25 and 50% report budgets; over all targets the uncertainty gate is 0.034 off at 75% (0.7163). Say 'at the report budgets'. |
+| 5.3 | The ranking stated in claim 4 had no decision rule; the observed order agrees with it. | yes | `results/test/gates/summary_test.csv`; `docs/claim_criteria.md` | `share_mean at 10/25/50%` | uncertainty >= learned > variability > random, fixed at all three | yes | yes |  |
+| 5.4 | Escalation is concentrated in the mornings and middays of January to May and October, and is rare from July to September | yes | `results/analyses/a3_routing_hour_month.csv` | `share_escalated weighted by issue_times, per month` | 1:0.45, 2:0.29, 3:0.43, 4:0.33, 5:0.37, 6:0.16, 7:0.02, 8:0.03, 9:0.05, 10:0.32, 11:0.21, 12:0.18 | yes | yes | June 0.16, November 0.21, December 0.18 lie between. |
+| 5.4 | the gate escalates 56-69% of issue times with an index below 0.8 and about 10% of those above 0.8 | 56-69%; ~10% | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_escalated_mean by kt_bin` | [0.5613, 0.6649, 0.6898, 0.6004]; [0.1094, 0.0944] | 56-69%; ~10% | yes | Post hoc (A9); above 0.8: 0.094 and 0.109. |
+| 5.4 | by about 4.3 W/m2 under clear skies and by up to 11.4 W/m2 for indices between 0.2 and 0.8 | 4.3; 11.4 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cloud_minus_edge_mean [0.8-1.0, >1.0]; min over 0.2-0.8 bins` | -4.3083; -4.6238; -11.4384 | 4.3; 11.4 | yes | The >1.0 bin is 4.6 W/m2; 'about 4.3' fits the 0.8-1.0 bin. |
+| 5.4 | the gate spends most of its budget where the gain is largest | yes | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_of_escalations_mean, kt < 0.8` | 0.665 | yes | yes |  |
+| 5.4 | reproduce the stored decisions exactly | True | `results/analyses/posthoc/posthoc_summary.json` | `decision_check.reproduces_sweep` | True | True | yes |  |
+| 5.5 | changes by at least 0.25 from the previous horizon, 30 min earlier (2,551 in 2016) | 0.25; 2,551 | `configs/base.yaml`; `results/test/claims_test.json` | `ramp.delta_kt; ramp_cells` | 0.25; 2551 | 0.25; 2,551 | yes |  |
+| 5.5 | 140.1 versus 145.9 W/m2, seed means | 140.1; 145.9 | `results/test/claims_test.json` | `mean(claim5_ramp.rmse_cloud_ramp); mean(rmse_edge_ramp)` | 140.06289685241865; 145.92540464687175 | 140.1; 145.9 | yes |  |
+| 5.5 | with the interval above zero for four of five seeds | 4 | `results/test/claims_test.json` | `claim5 intervals lo > 0` | 4 | 4 | yes |  |
+| 5.5 | The best gate keeps 0.48 of the ramp gain at 25% (uncertainty gate, seed mean) | 0.48 | `results/test/claims_test.json` | `claim5_ramp.gate_share_at_25pct_ramp.uncertainty.share_mean` | 0.47519999999999996 | 0.48 | yes |  |
+| 5.5 | the uncertainty gate reaches 0.5 in two of five seeds and the learned gate in one | 2; 1 | `results/test/gates/sweep_test.csv` | `share_retained >= 0.5 [ramp, cloud, 0.25]` | 2; 1 | 2; 1 | yes |  |
+| 5.5 | the code committed before the test used the seed mean and excluded the oracle | yes | `docs/claim_criteria.md` | `Provenance of the claim-5b logic` | b706593, before tag 3c07703 | yes | yes |  |
+| 5.6 | its RMSE rises from 76.71 to 77.21 W/m2 (seed range 75.8 to 81.0 W/m2) | 76.71; 77.21; 75.8-81.0 | `results/test/claims_models_test.csv` | `RMSE [edge_fp32]; [edge_int8 (secondary)] mean, min, max` | 76.7101; 77.2067 | 76.71; 77.21; 75.8-81.0 | yes |  |
+| 5.6 | a loss of 8% of the edge-to-cloud gain | 8% | `results/test/claims_models_test.csv` | `(RMSE_int8 - RMSE_fp32) / (RMSE_edge - RMSE_cloud)` | 0.0821184781458359 | 8% | yes | Derived. |
+| 5.6 | 7.5 µs for the fp32 edge network, 9.6 µs for the int8 version, 8.6 µs for the uncertainty gate, 8.5 µs for the learned gate and 3.5 µs for the compiled capped trees | 7.5; 9.6; 8.6; 8.5; 3.5 | `results/footprint/measured.json` | `latency_*.median_us` |  | 7.5; 9.6; 8.6; 8.5; 3.5 | yes |  |
+| 5.6 | With whole days offline at random with probability 0.25 (200 draws), the uncertainty gate at a 25% target keeps 0.514 | 0.514 | `results/analyses/a4_link_outage_summary.csv` | `share_kept_day_block [uncertainty, 0.25, 0.25]` | 0.5143 | 0.514 | yes | 200 draws: configs/analyses.yaml outage.block_draws. |
+| 5.6 | against 0.688 with the link always available; independent refusals with the same probability give 0.512 | 0.688; 0.512 | `results/analyses/a4_link_outage_summary.csv` | `share_kept_day_block [.., 0.0]; share_kept_independent [.., 0.25]` | 0.6878; 0.5122 | 0.688; 0.512 | yes |  |
+| 5.6 | This analysis was named in the plan before the test run, but its setup was fixed after it. | yes | `docs/method_facts.md` | `item 11` | PLAN.md:57 at tag; configs/analyses.yaml fixed after the run | yes | yes |  |
+| 6 | The input effect changed from −0.27% on the 2015 validation half-year to 4.2% on 2016 | -0.27%; 4.2% | `results/tiers/control_effects.json`; `results/test/claims_test.json` | `input effect validation; test` | -0.0027337325644152255; 0.04165978470075493 | -0.27%; 4.2% | yes |  |
+| 6 | an exploratory split of 2016 did not explain why | both halves positive | `results/analyses/exploratory_halfyear_claims.json` | `halves.H1/H2.claim1.input_effect` | 0.02790637180452249; 0.08747228073830038 | both halves positive | yes | Interpretation; both halves show a positive input effect (2.8%, 8.8%), so the split does not reproduce -0.27%. |
+| 6 | The 434 daytime issue times without a satellite frame are outside the primary evaluation. | 434 | `results/test/data_quality.json`; `results/test/gates/meta.json` | `daylight_issue_times - issue_times_test` | 434 | 434 | yes |  |
+| 7 | a 43.8 kB on-device network with a 6.1 kB gate kept 69% of the gain | 43.8 kB; 6.1 kB; 69% | `results/footprint/measured.json`; `results/test/gates/summary_test.csv` | `fp32_onnx_bytes; gates int8_onnx_bytes; share_mean [uncertainty, 0.25]` | 43846; 6067; 0.6878 | 43.8 kB; 6.1 kB; 69% | yes |  |
+| 7 | while escalating 23% of requests | 23% | `results/test/gates/summary_test.csv` | `realised_rate_mean [uncertainty, 0.25]` | 0.2303 | 23% | yes |  |
+| 7 | size-capped ground-only trees were 4.5% better than the on-device network | 4.5% | `results/test/claims_test.json`; `results/test/claims_models_test.csv` | `1 - rmse_cap10x / edge` | 0.04461277166865085 | 4.5% | yes |  |
+| Fig. 2 caption | bands: seed range over five seeds | yes | `scripts/paper_figures.py` | `fig_budget_sweep fill_between RMSE_min..RMSE_max` | seed min..max | yes | yes |  |
+| Fig. 3 caption | mean of five seeds | yes | `scripts/planned_analyses.py` | `A3 esc_share = mean over seeds` | mean over 5 seeds | yes | yes |  |
+
+**92 of 100 rows match; 8 do not.**
+
+### (a) In-text citations
+
+- Reference list: 17 entries (numbers restored from Word list order).
+- Order of first appearance: [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12], [13], [14], [15], [16], [17].
+- In order 1 to 17: yes; every reference cited: yes.
+
+### (b) Figures and tables
+
+| item | first mention (line) | caption (line) | mentioned before caption | picture |
+|---|---|---|---|---|
+| Fig. 1 | 65 | 69 | yes | placeholder: [INSERT architecture.png HERE] |
+| Fig. 2 | 114 | 118 | yes | placeholder: [INSERT budget_sweep_compact.png HERE] |
+| Fig. 3 | 122 | 126 | yes | placeholder: [INSERT routing_map.png HERE] |
+| Table 1 | 51 | 53 | yes | table |
+| Table 2 | 93 | 95 | yes | table |
+
+### (c) Terms and units (whole-word counts in the body, references excluded)
+
+| term | count | lines |
+|---|---|---|
+| edge tier | 10 | 59, 69, 71, 73, 77, 93, 100, 122, 130 |
+| edge network | 4 | 77, 110, 134 |
+| on-device network | 6 | 22, 33, 146 |
+| cloud tier | 13 | 51, 58, 59, 69, 75, 77, 93, 103, 110, 122, 130, 146 |
+| cloud forecaster | 6 | 22, 33, 146 |
+| share kept | 2 | 60, 87 |
+| keeps / kept (of the gain) | 3 | 51, 114, 146 |
+| retains / retained | 3 | 22, 87 |
+| Kept (table column) | 1 | 97 |
+| realised rate | 6 | 51, 81, 114, 118 |
+| realized (US spelling) | 0 | - |
+| Rate (table column) | 1 | 97 |
+| W/m2 | 18 | 22, 57, 93, 95, 110, 114, 122, 130, 134 |
+| W/m² | 0 | - |
+| kB | 12 | 22, 33, 58, 73, 77, 97, 110, 134, 146 |
+| KB (upper case) | 0 | - |
+| µs | 5 | 134 |
+| ms (milliseconds) | 0 | - |
+
+
 ## Data quality (2016)
 
 | quantity | value | file | field |
