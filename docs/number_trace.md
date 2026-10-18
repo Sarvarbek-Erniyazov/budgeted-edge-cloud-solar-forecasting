@@ -459,6 +459,12 @@ The abstract (`docs/abstract.txt`, 1,593 characters, limit 2,000):
 | A10 [variability, 0.50] realised_rate_min | 0.4986 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_min [variability, 0.50]` |
 | A10 [variability, 0.50] realised_rate_max | 0.4986 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_max [variability, 0.50]` |
 | A10 [variability, 0.50] realised_minus_target_mean | -0.0014 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_minus_target_mean [variability, 0.50]` |
+| horizon table [30min] cloud gain vs edge (%) | 10.1 | `results/paper/horizon_table.csv` | `cloud_gain_vs_edge_pct [30min] = (1 - cloud_mean / edge_fp32_mean) * 100 from A8` |
+| horizon table [60min] cloud gain vs edge (%) | 8.1 | `results/paper/horizon_table.csv` | `cloud_gain_vs_edge_pct [60min] = (1 - cloud_mean / edge_fp32_mean) * 100 from A8` |
+| horizon table [90min] cloud gain vs edge (%) | 6.6 | `results/paper/horizon_table.csv` | `cloud_gain_vs_edge_pct [90min] = (1 - cloud_mean / edge_fp32_mean) * 100 from A8` |
+| horizon table [120min] cloud gain vs edge (%) | 7.5 | `results/paper/horizon_table.csv` | `cloud_gain_vs_edge_pct [120min] = (1 - cloud_mean / edge_fp32_mean) * 100 from A8` |
+| horizon table [150min] cloud gain vs edge (%) | 7.9 | `results/paper/horizon_table.csv` | `cloud_gain_vs_edge_pct [150min] = (1 - cloud_mean / edge_fp32_mean) * 100 from A8` |
+| horizon table [180min] cloud gain vs edge (%) | 7.7 | `results/paper/horizon_table.csv` | `cloud_gain_vs_edge_pct [180min] = (1 - cloud_mean / edge_fp32_mean) * 100 from A8` |
 | A9 recomputed decisions reproduce sweep_test.csv | True | `results/analyses/posthoc/posthoc_summary.json` | `decision_check.reproduces_sweep` |
 | A11 int8 vs fp32 gate agreement @25% | not available | `results/analyses/posthoc/posthoc_summary.json` | `a11` |
 

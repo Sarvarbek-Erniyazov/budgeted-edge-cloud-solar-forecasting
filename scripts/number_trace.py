@@ -293,6 +293,11 @@ def main() -> None:
                     continue
                 add(s, f"{tag} [{rk}] {c}", r[c] if c not in ("issue_times", "cells") else int(r[c]),
                     P + stem + ".csv", f"{c} [{rk}]")
+    ht = pd.read_csv("results/paper/horizon_table.csv", comment="#")
+    for r in ht.itertuples():
+        add(s, f"horizon table [{r.horizon}] cloud gain vs edge (%)", r.cloud_gain_vs_edge_pct,
+            "results/paper/horizon_table.csv", f"cloud_gain_vs_edge_pct [{r.horizon}] = (1 - cloud_mean / edge_fp32_mean) * 100 from A8",
+            "{:.1f}")
     ph = j(P + "posthoc_summary.json")
     add(s, "A9 recomputed decisions reproduce sweep_test.csv", ph["decision_check"]["reproduces_sweep"],
         P + "posthoc_summary.json", "decision_check.reproduces_sweep")
