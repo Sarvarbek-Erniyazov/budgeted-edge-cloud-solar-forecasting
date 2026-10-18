@@ -207,6 +207,8 @@ def paper_full_section() -> list[str]:
         c = [x for x in inp_cols if x.startswith(tuple(prefixes)) and ("ghi_kt" in x or "dni_kt" in x)]
         m = sorted({int(x.split("|")[1].rstrip("min)")) for x in c})
         return f"{m[0]}-{m[-1]} min: {len(c)}"
+    cors = [r[g]["score_corr_fp32_int8_validation"] for r in ms["gates"]["per_seed"] for g in ("uncertainty", "learned")]
+    corr_min, corr_max = min(cors), max(cors)
     win_day, win_hour = wins(["B(", "V(", "L("]), wins(["ih_"])
     rank_ok = all(d.loc["uncertainty", "share_mean"] >= d.loc["learned", "share_mean"] > d.loc["variability", "share_mean"]
                   > max(d.loc["random", "share_mean"], d.loc["fixed_interval", "share_mean"]) for d in sb.values())
@@ -261,7 +263,7 @@ def paper_full_section() -> list[str]:
         ("3 Splits", "Models are trained on 2014. Gates are fitted on the first half of 2015 and validated on the second half; for the "
          "test, gates and their thresholds were refitted on all of 2015.", "yes", BY + "`; `" + FZ,
          "split; FREEZE.md 'Gate refit for the test run'", str(cfg["split"]), "yes", ""),
-        ("3 Lock", "The data loader refuses 2016 rows unless the protocol is marked frozen and an explicit flag is set, which unit tests check.",
+        ("3 Lock", "The data loader refuses 2016 rows unless the protocol is marked frozen and an explicit flag is set.",
          "yes", "src/escal/splits.py`; `tests/test_splits.py`; `tests/test_test_path.py", "test_unlocked()",
          "frozen and ESCAL_UNLOCK_TEST=1", yn("frozen" in lock_src and "ESCAL_UNLOCK_TEST" in lock_src
                                                 and Path("tests/test_splits.py").exists()), ""),
@@ -317,10 +319,11 @@ def paper_full_section() -> list[str]:
         ("4.1 Edge tier", "at 43.8 kB in 32-bit floating point and 15.2 kB with 8-bit integer weights", "43.8 kB; 15.2 kB", G,
          "fp32_onnx_bytes; int8_onnx_bytes", f"{ed['fp32_onnx_bytes']}; {ed['int8_onnx_bytes']}",
          f"{kb(ed['fp32_onnx_bytes'])}; {kb(ed['int8_onnx_bytes'])}", "int8 also has uint8 activations (method_facts.md 1)."),
-        ("4.1 Edge tier", "clear-sky index (clipped to [0, 1.2]) with ReLU hidden layers, mean squared error, AdamW and early stopping "
-         "on the last 30 days of 2014; the int8 version uses static quantisation in ONNX Runtime", "yes", MF, "items 1",
+        ("4.1 Edge tier", "It has ReLU hidden layers, predicts the clear-sky index (clipped to [0, 1.2]) and is trained with mean squared "
+         "error, AdamW and early stopping on the last 30 days of 2014; the int8 version uses static quantisation in ONNX Runtime",
+         "yes", MF, "items 1",
          f"kt_clip {cfg['tiers']['kt_clip']}; early_stop_days {cfg['tiers']['early_stop_days']}", "yes", ""),
-        ("4.2 Cloud tier", "two 3x3 convolution layers (16 and 32 channels) encode the 10x10 satellite tile", "[16, 32]", BY,
+        ("4.2 Cloud tier", "two 3×3 convolution layers (16 and 32 channels) encode the 10×10 satellite tile", "[16, 32]", BY,
          "tiers.cloud.cnn_channels", str(cfg["tiers"]["cloud"]["cnn_channels"]), str(cfg["tiers"]["cloud"]["cnn_channels"]),
          "3x3, 10x10: method_facts.md item 2."),
         ("4.2 Cloud tier", "averages, with equal weights and in clear-sky index", "yes", MF, "item 2 averaging", "(trees + net) / 2 in kt",
@@ -350,8 +353,17 @@ def paper_full_section() -> list[str]:
          f"{cfg['quantise']['latency_runs']}; {cfg['quantise']['latency_warmup']}; {cfg['quantise']['threads']}",
          f"{cfg['quantise']['latency_runs']:,}; {cfg['quantise']['latency_warmup']}; {cfg['quantise']['threads']}; 1.30.0; -O2", ""),
         ("4.4 Footprint", "on a PC CPU (model not recorded)", "not recorded", MF, "item 12", "not recorded", "not recorded", ""),
-        ("4.4 Footprint", "The gate size and latency were measured on development gates of the same architecture.", "yes", MF,
-         "items 6, 7", "checkpoints/gates (gate_fit versions), seed 0", "yes", ""),
+        ("4.4 Footprint", "Gate size and latency were measured on int8 development gates of the same architecture", "yes", MF,
+         "items 6, 7", "checkpoints/footprint/gate_*_seed0.int8.onnx from checkpoints/gates (gate_fit versions), seed 0", "yes", ""),
+        ("4.4 Footprint", "the 2016 decisions come from the refitted full-precision gates", "yes", MF, "item 13",
+         "checkpoints/gates_test/seed*/{uncertainty,learned}.pt, fp32", "yes", ""),
+        ("4.4 Footprint", "int8 and fp32 gates were compared only on 2015 validation data, with the development gates", "yes", MF,
+         "item 13", "measured.json gates.per_seed (validation)", "yes", "No int8 gate was run on 2016."),
+        ("4.4 Footprint", "(score correlation 0.997 or more)", "0.997 or more", G,
+         "min(gates.per_seed[*].{uncertainty,learned}.score_corr_fp32_int8_validation)", corr_min,
+         "0.997 or more" if corr_min >= 0.997 else f"minimum {corr_min:.4f}",
+         f"**Lower bound rounded up.** The 10 gate-seed correlations range {corr_min:.4f} to {corr_max:.4f}; 'or more' needs "
+         f"0.996 (or say 'about 0.997' / '0.997 to 1.000')." if corr_min < 0.997 else ""),
         ("4.4 Evaluation", "on the 39,655 primary test cells", "39,655", T + "data_quality.json", "primary_cells", dq["primary_cells"],
          f"{dq['primary_cells']:,}", ""),
         ("4.4 Evaluation", "local days are resampled 2,000 times with the same weights for both forecasts, and the 95% percentile interval",
@@ -362,9 +374,6 @@ def paper_full_section() -> list[str]:
         ("5.1", "lowers RMSE by a further 7.9% relative to the edge tier, to 70.66 W/m2", "7.9%; 70.66", F + "`; `" + M,
          "claim3.gain_mean_of_seed_rmse; mean RMSE [cloud]", f"{c3['gain_mean_of_seed_rmse']}; {rc}",
          f"{p1(c3['gain_mean_of_seed_rmse'])}; {f2(rc)}", ""),
-        ("5.1", "the edge RMSE ranges from 75.4 to 79.8 W/m2 and the cloud RMSE from 70.1 to 71.1 W/m2", "75.4-79.8; 70.1-71.1", M,
-         "min/max RMSE [edge_fp32]; [cloud]", f"{rm.loc['edge_fp32', 'min']}-{rm.loc['edge_fp32', 'max']}; {rm.loc['cloud', 'min']}-{rm.loc['cloud', 'max']}",
-         f"{f1(rm.loc['edge_fp32', 'min'])}-{f1(rm.loc['edge_fp32', 'max'])}; {f1(rm.loc['cloud', 'min'])}-{f1(rm.loc['cloud', 'max'])}", ""),
         ("5.1", "largest at 30 min (10.1%; 56.25 versus 50.54 W/m2)", "10.1%; 56.25; 50.54", HT, "cloud_gain_vs_edge_pct, edge_fp32, cloud [30min]",
          f"{ht.loc['30min', 'cloud_gain_vs_edge_pct']}; {ht.loc['30min', 'edge_fp32']}; {ht.loc['30min', 'cloud']}",
          f"{ht.loc['30min', 'cloud_gain_vs_edge_pct']:.1f}%; {f2(ht.loc['30min', 'edge_fp32'])}; {f2(ht.loc['30min', 'cloud'])}", "Post hoc (A8)."),
@@ -397,10 +406,13 @@ def paper_full_section() -> list[str]:
          "claim1: rmse_trees_ground, rmse_trees_all, input_effect, interval",
          f"{c1['rmse_trees_ground']}; {c1['rmse_trees_all']}; {c1['input_effect']}",
          f"{f2(c1['rmse_trees_ground'])}; {f2(c1['rmse_trees_all'])}; {p1(c1['input_effect'])}; {iv1['lo']:.1f}-{iv1['hi']:.1f}", ""),
-        ("5.2", "the size-capped trees (87.2 kB) are 4.5% better than the edge network (73.29 versus 76.71 W/m2) but remain 3.7% worse",
-         "87.2 kB; 4.5%; 73.29; 76.71; 3.7%", F + "`; `" + G + "`; `" + M, "object_bytes; 1 - rmse_cap10x / edge; rmse_cap10x; edge; d",
-         f"{obj}; {c2['rmse_cap10x']}; {re_}; {c2['relative_difference_d']}",
-         f"{kb(obj)}; {p1(1 - c2['rmse_cap10x'] / re_)}; {f2(c2['rmse_cap10x'])}; {f2(re_)}; {p1(c2['relative_difference_d'])}", ""),
+        ("5.2", "the size-capped trees (87.2 kB; 73.29 W/m2, slightly better than without the cap) are 4.5% better than the edge "
+         "network but remain 3.7% worse", "87.2 kB; 73.29; 4.5%; 3.7%", F + "`; `" + G + "`; `" + M,
+         "object_bytes; rmse_cap10x; 1 - rmse_cap10x / edge; d", f"{obj}; {c2['rmse_cap10x']}; {re_}; {c2['relative_difference_d']}",
+         f"{kb(obj)}; {f2(c2['rmse_cap10x'])}; {p1(1 - c2['rmse_cap10x'] / re_)}; {p1(c2['relative_difference_d'])}", ""),
+        ("5.2", "slightly better than without the cap", "yes", F, "claim2.rmse_cap10x < claim1.rmse_trees_ground",
+         f"{c2['rmse_cap10x']:.4f} < {c1['rmse_trees_ground']:.4f}", yn(c2["rmse_cap10x"] < c1["rmse_trees_ground"]),
+         f"Difference {c1['rmse_trees_ground'] - c2['rmse_cap10x']:.2f} W/m2 (method_facts.md item 14)."),
         ("5.2", "with the interval above zero for four of five seeds, so claim 2 is refuted", "4", F, "claim2.seeds_entirely_above_zero",
          c2["seeds_entirely_above_zero"], str(c2["seeds_entirely_above_zero"]), ""),
         ("5.3", "the uncertainty gate keeps 69% of the cloud gain at a realised rate of 23.0%", "69%; 23.0%", S,
@@ -488,9 +500,8 @@ def paper_full_section() -> list[str]:
          "halves.H1/H2.claim1.input_effect", f"{ex['H1']['claim1']['input_effect']}; {ex['H2']['claim1']['input_effect']}",
          "both halves positive" if min(ex["H1"]["claim1"]["input_effect"], ex["H2"]["claim1"]["input_effect"]) > 0 else "mixed",
          "Interpretation; both halves show a positive input effect (2.8%, 8.8%), so the split does not reproduce -0.27%."),
-        ("6", "The 434 daytime issue times without a satellite frame are outside the primary evaluation.", "434", T + "data_quality.json`; `"
-         + T + "gates/meta.json", "daylight_issue_times - issue_times_test", n_day - n_dec, str(n_day - n_dec), ""),
-        ("7", "a 43.8 kB on-device network with a 6.1 kB gate kept 69% of the gain", "43.8 kB; 6.1 kB; 69%", G + "`; `" + S,
+        ("7", "a 43.8 kB on-device network with a small gate network (6.1 kB in int8) kept 69% of the gain", "43.8 kB; 6.1 kB; 69%",
+         G + "`; `" + S,
          "fp32_onnx_bytes; gates int8_onnx_bytes; share_mean [uncertainty, 0.25]",
          f"{ed['fp32_onnx_bytes']}; {ei['uncertainty']['int8_onnx_bytes']}; {sb[0.25].loc['uncertainty', 'share_mean']}",
          f"{kb(ed['fp32_onnx_bytes'])}; {kb(ei['uncertainty']['int8_onnx_bytes'])}; {p0(sb[0.25].loc['uncertainty', 'share_mean'])}", ""),
@@ -504,11 +515,14 @@ def paper_full_section() -> list[str]:
     ]
     # each quoted snippet must be in the extracted paper (Table 2 rows are checked cell by cell)
     norm = lambda t: " ".join(t.replace("–", "-").split())  # noqa: E731
+    missing = []
     for sec, w, *_ in R:
         if sec.startswith("Table"):   # table rows: each cell separately
-            assert all(norm(c) in norm(text) for c in re.split(r" \| | / ", w)), w
-        elif sec != "Abstract" or w != "Of the five claims, two were refuted and one partly":
-            assert norm(w) in norm(text), w
+            if not all(norm(c) in norm(text) for c in re.split(r" \| | / ", w)):
+                missing.append(f"{sec}: {w}")
+        elif norm(w) not in norm(text):
+            missing.append(f"{sec}: {w}")
+    assert not missing, "snippets not in the paper text:\n" + "\n".join(missing)
     yes_vals = {"yes", "True", "matches", "same numbers"}
     out = ["", "## Numbers and statements in the full paper", "",
            f"Source: `{P}`, extracted read-only from `ICONI2026_Erniyazov_Lim_full.docx` (python-docx; body, tables and "

@@ -171,7 +171,7 @@ So the proposed 4.4 sentence "the 2016 decisions come from the refitted full-pre
 decisions was not tested" is right about 2016, but "not tested" is too broad: int8 against fp32 was measured on 2015
 validation with the development gates (scores, realised rates and share kept, not decision agreement). A wording that
 matches the record: "the 2016 decisions come from the refitted full-precision gates; int8 gates were compared with fp32
-only on 2015 validation data, with the development gates (score correlation 0.997 or more)."
+only on 2015 validation data, with the development gates (score correlation 0.9967 to 0.9997)." (Correction: an earlier version of this note suggested "0.997 or more", which rounds the lowest correlation, 0.9967, up; "0.996 or more" is also correct.)
 
 Note: `checkpoints/` is not tracked in git, so the `.pt` and `.onnx` files are local; their roles are documented by the
 code paths above.
