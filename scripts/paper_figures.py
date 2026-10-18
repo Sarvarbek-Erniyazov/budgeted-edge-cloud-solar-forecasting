@@ -92,10 +92,37 @@ def fig_budget_sweep_short() -> list[str]:
                             ("random", "fixed_interval", "variability", "uncertainty", "learned"), (70.0, 80.0))
 
 
-def fig_architecture() -> list[str]:
+# Architecture geometry in inches: figure height, line spacing, the two dashed groups (y, h, label), the six boxes
+# (x, y, w, h), the six arrows and the two gap labels (x, y). Box and label texts are shared by both versions.
+ARCH_FULL = dict(
+    H=3.2, ls=1.25, label_dy=0.12,
+    groups=((1.42, 1.75, "On device (PV site)"), (0.04, 1.0, "Cloud")),
+    boxes=((0.12, 2.2, 0.92, 0.66), (1.22, 2.2, 1.36, 0.66), (0.12, 1.52, 1.28, 0.5), (1.6, 1.52, 0.98, 0.5),
+           (0.12, 0.13, 0.9, 0.62), (1.22, 0.13, 1.36, 0.62)),
+    arrows=((1.06, 2.53, 1.2, 2.53), (2.09, 2.18, 2.09, 2.04), (1.31, 2.18, 1.31, 2.04), (1.04, 0.44, 1.2, 0.44),
+            (2.3, 1.5, 2.3, 0.77), (1.31, 0.77, 1.31, 1.5)),
+    gap_labels=((2.24, 1.235), (1.25, 1.235)))
+ARCH_COMPACT = dict(   # 6-page paper: same boxes and labels, tighter gaps and line spacing, height <= 2.3 in
+    H=2.3, ls=1.1, label_dy=0.09,
+    groups=((1.06, 1.2, "On device (PV site)"), (0.04, 0.72, "Cloud")),
+    boxes=((0.12, 1.6, 0.92, 0.48), (1.22, 1.6, 1.36, 0.48), (0.12, 1.12, 1.28, 0.32), (1.6, 1.12, 0.98, 0.32),
+           (0.12, 0.1, 0.9, 0.44), (1.22, 0.1, 1.36, 0.44)),
+    arrows=((1.06, 1.84, 1.2, 1.84), (2.09, 1.58, 2.09, 1.46), (1.31, 1.58, 1.31, 1.46), (1.04, 0.32, 1.2, 0.32),
+            (2.3, 1.1, 2.3, 0.56), (1.31, 0.56, 1.31, 1.1)),
+    gap_labels=((2.24, 0.91), (1.25, 0.91)))
+ARCH_BOXES = (("Ground\nsensors: GHI,\nDNI, weather,\nclear-sky", "#f2f2f2", False),
+              ("Edge tier, MLP\n43.8 kB\n(int8: 15.2 kB)", "#cfe3f3", True),
+              ("Forecast,\n30 to 180 min", "#f2f2f2", False),
+              ("Gate, int8\n6.1 kB\nescalate?", "#fde2c8", True),
+              ("GOES-15 tile\nNAM, 4 nodes", "#f2f2f2", False),
+              ("Cloud tier\ntrees + network\n(averaged in kt)", "#cfe3f3", True))
+
+
+def fig_architecture(name: str = "architecture", L: dict = ARCH_FULL) -> list[str]:
     """Same content as figures/core/architecture, stacked for one column: device group above, cloud below.
-    Coordinates are in inches."""
-    H = 3.2
+    Coordinates are in inches. Arrows: sensors -> edge, edge -> gate, edge -> forecast, satellite/NAM -> cloud tier,
+    request (gate -> cloud), cloud forecast (cloud -> device)."""
+    H = L["H"]
     fig = plt.figure(figsize=(WIDTH_IN, H))
     ax = fig.add_axes((0, 0, 1, 1))
     ax.set_xlim(0, WIDTH_IN)
@@ -105,37 +132,33 @@ def fig_architecture() -> list[str]:
     def box(x, y, w, h, text, fc, bold=False):
         ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.02,rounding_size=0.05", fc=fc, ec=S.MUTED, lw=0.7))
         ax.text(x + w / 2, y + h / 2, text, ha="center", va="center", fontsize=7, color=S.INK,
-                fontweight="bold" if bold else "normal", linespacing=1.25)
+                fontweight="bold" if bold else "normal", linespacing=L["ls"])
 
     def arrow(x0, y0, x1, y1):
         ax.add_patch(FancyArrowPatch((x0, y0), (x1, y1), arrowstyle="-|>", mutation_scale=7, lw=0.7, color=S.MUTED))
 
-    for y, h, label in ((1.42, 1.75, "On device (PV site)"), (0.04, 1.0, "Cloud")):
+    for y, h, label in L["groups"]:
         ax.add_patch(FancyBboxPatch((0.04, y), 2.62, h, boxstyle="round,pad=0.02,rounding_size=0.06", fc="none",
                                     ec=S.MUTED, lw=0.6, ls=(0, (3, 2))))
-        ax.text(0.12, y + h - 0.12, label, va="center", fontsize=7.5, color=S.MUTED, fontweight="bold")
-    box(0.12, 2.2, 0.92, 0.66, "Ground\nsensors: GHI,\nDNI, weather,\nclear-sky", "#f2f2f2")
-    box(1.22, 2.2, 1.36, 0.66, "Edge tier, MLP\n43.8 kB\n(int8: 15.2 kB)", "#cfe3f3", bold=True)
-    box(0.12, 1.52, 1.28, 0.5, "Forecast,\n30 to 180 min", "#f2f2f2")
-    box(1.6, 1.52, 0.98, 0.5, "Gate, int8\n6.1 kB\nescalate?", "#fde2c8", bold=True)
-    box(0.12, 0.13, 0.9, 0.62, "GOES-15 tile\nNAM, 4 nodes", "#f2f2f2")
-    box(1.22, 0.13, 1.36, 0.62, "Cloud tier\ntrees + network\n(averaged in kt)", "#cfe3f3", bold=True)
-    arrow(1.06, 2.53, 1.2, 2.53)      # sensors -> edge
-    arrow(2.09, 2.18, 2.09, 2.04)     # edge -> gate
-    arrow(1.31, 2.18, 1.31, 2.04)     # edge -> forecast
-    arrow(1.04, 0.44, 1.2, 0.44)      # satellite, NAM -> cloud tier
-    arrow(2.3, 1.5, 2.3, 0.77)        # request
-    arrow(1.31, 0.77, 1.31, 1.5)      # cloud forecast
+        ax.text(0.12, y + h - L["label_dy"], label, va="center", fontsize=7.5, color=S.MUTED, fontweight="bold")
+    for geom, (text, fc, bold) in zip(L["boxes"], ARCH_BOXES):
+        box(*geom, text, fc, bold)
+    for a in L["arrows"]:
+        arrow(*a)
     # labels sit in the gap between the two groups, clear of every box, border and arrow
-    ax.text(2.24, 1.235, "request", ha="right", va="center", fontsize=7, color=S.MUTED)
-    ax.text(1.25, 1.235, "cloud forecast", ha="right", va="center", fontsize=7, color=S.MUTED)
-    return save_paper(fig, "architecture")
+    for (x, y), text in zip(L["gap_labels"], ("request", "cloud forecast")):
+        ax.text(x, y, text, ha="right", va="center", fontsize=7, color=S.MUTED)
+    return save_paper(fig, name)
 
 
-def fig_routing_map() -> list[str]:
+def fig_architecture_compact() -> list[str]:
+    return fig_architecture("architecture_compact", ARCH_COMPACT)
+
+
+def fig_routing_map(name: str = "routing_map", height: float = 2.3) -> list[str]:
     hm = pd.read_csv("results/analyses/a3_routing_hour_month.csv")
     piv = hm.pivot(index="hour", columns="month", values="share_escalated").sort_index()
-    fig, ax = plt.subplots(figsize=(WIDTH_IN, 2.3), layout="constrained")
+    fig, ax = plt.subplots(figsize=(WIDTH_IN, height), layout="constrained")
     ax.grid(False)
     im = ax.imshow(piv.values, aspect="auto", cmap=S.SEQ_CMAP, vmin=0, vmax=1, origin="lower")
     ax.set_xticks(range(len(piv.columns)), ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"][:len(piv.columns)])
@@ -147,7 +170,12 @@ def fig_routing_map() -> list[str]:
     cb.set_label("Share escalated")
     cb.outline.set_edgecolor(S.MUTED)
     cb.ax.tick_params(labelsize=7)
-    return save_paper(fig, "routing_map")
+    return save_paper(fig, name)
+
+
+def fig_routing_map_compact() -> list[str]:
+    """6-page paper: same data and colour bar, 1.9 in tall."""
+    return fig_routing_map("routing_map_compact", 1.9)
 
 
 def gate_intervals() -> pd.DataFrame:
@@ -353,7 +381,8 @@ def horizon_table() -> list[str]:
 
 def main() -> None:
     apply_paper()
-    files = fig_architecture() + fig_budget_sweep() + fig_budget_sweep_short() + fig_routing_map()
+    files = (fig_architecture() + fig_architecture_compact() + fig_budget_sweep() + fig_budget_sweep_short()
+             + fig_routing_map() + fig_routing_map_compact())
     gate_intervals()
     paper_table()
     claims_table()
