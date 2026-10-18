@@ -63,3 +63,53 @@ written: claim 1 `eff >= 0.02 and lo > 0`; claim 2 `"worse" if above >= 3`, else
 `"not distinguishable"`; claim 3 `incl >= 3`; claim 4a `sum(x < 0.10) >= 3`; claim 4b `sum(v >= 0.10) >= 2`; claim 4c
 `any(|v| > 0.05)`; claim 5a `sum(lo > 0) >= 3`; claim 5b `share_mean >= 0.5 and all_seeds_positive` over non-oracle
 gates. The only choices beyond the text are the two marked "not stated" under claim 5b.
+
+## Provenance of the claim-5b logic (read-only check)
+
+**Same logic at the tag.** `git show freeze-2026-10-08:scripts/test_run.py` is identical to `scripts/test_run.py`
+at HEAD, apart from line endings (`diff --strip-trailing-cr`: no difference; `git diff --stat freeze-2026-10-08 HEAD
+-- scripts/test_run.py`: empty). At the tag, line 52 is
+`REPORT_GATES = ["random", "fixed_interval", "variability", "uncertainty", "learned", "oracle"]`. Lines 326 to 334
+contain `for g in [x for x in REPORT_GATES if x != "oracle"]:` (oracle exclusion),
+`"share_mean": float(v.mean()), "all_seeds_positive": bool((v > 0).all())` (seed-mean share), and
+`"against_no_gate_helps": bool(any(v["share_mean"] >= 0.5 and v["all_seeds_positive"] ...))` with
+`"note": "oracle excluded (headroom only)"`.
+
+**Commit that introduced it.** `scripts/test_run.py` has one commit in its history, and `git blame` gives every line
+of 320 to 334 to that commit:
+
+| event | commit | time (+0900) | time (UTC) |
+|---|---|---|---|
+| claim-5b logic written (with all of `test_run.py`): "Freeze prep (FREEZE.md section e, items 1-4): guarded test loader path, saved tree models, test-run stages" | `b706593` | 2026-10-08 08:20:26 | 2026-10-07 23:20:26 |
+| freeze commit, tag `freeze-2026-10-08` (tag object `6b1db5d`) | `3c07703` | 2026-10-08 09:38:55 | 2026-10-08 00:38:55 |
+| single test run, from `results/test/console.log` | at `3c07703` | 09:39:24 to 09:40:50 | 00:39:24 to 00:40:50 |
+| test-run results committed | `f7f307f` | 2026-10-08 09:43:04 | 2026-10-08 00:43:04 |
+
+So the logic was committed 1 h 18 min before the freeze commit and 1 h 19 min before the run started, and
+`b706593` is an ancestor of the tag (`git merge-base --is-ancestor`). `claims_test.json` records `git_head`
+`3c07703`, the tagged commit. The FREEZE.md text of the 5b rule is the same at `035fba8` (freeze proposal,
+08:00:29 +0900), at the tag, and at HEAD. So both the rule text and the code that applies it were fixed before 2016
+was evaluated, and the two choices the text leaves open (seed mean, oracle excluded) were made in code at that time,
+not after the results.
+
+One caveat: the console log reports "uncommitted files: 1" at the start of the run and does not name the file.
+The repository cannot show whether the working-tree `test_run.py` at run time differed from the tag. The stored
+5b values are consistent with the tagged logic: each `share_mean` equals the mean of the per-seed `share_retained`
+values below.
+
+**Per-seed share kept on ramp cells at the 25% target** (`results/test/gates/sweep_test.csv`, `escalate_to = cloud`,
+`row_set = ramp`, `budget_target = 0.25`, column `share_retained`; realised rate on all evaluation issue times
+in brackets):
+
+| seed | uncertainty | learned |
+|---|---|---|
+| 0 | 0.5146 (0.2277) | 0.3856 (0.2497) |
+| 1 | 0.4570 (0.2313) | 0.4247 (0.2396) |
+| 2 | 0.6402 (0.2324) | 0.6441 (0.2602) |
+| 3 | 0.3659 (0.2312) | 0.3689 (0.2488) |
+| 4 | 0.3983 (0.2288) | 0.3739 (0.2396) |
+| mean (`claims_test.json`, `gate_share_at_25pct_ramp`) | 0.4752 | 0.4394 |
+| seeds >= 0.5 | 2 of 5 | 1 of 5 |
+
+All ten values are positive (`all_seeds_positive` = True for both gates). Under the seed-mean reading coded at the
+tag, neither gate reaches 0.5, so `against_no_gate_helps` = False.
