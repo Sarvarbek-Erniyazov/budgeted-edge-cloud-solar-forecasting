@@ -128,7 +128,7 @@ All sizes are file sizes on disk in bytes; the paper uses decimal kB (1 kB = 1,0
 |---|---|---|
 | definition (frozen) | "**ramp:** cells with \|kt(t,h) - kt(t,h-30 min)\| >= 0.25, where kt(t,0) is `B(ghi_kt\|30min)` (`ramp.delta_kt`)." | `docs/FREEZE.md:140-141` |
 | variable | the benchmark clear-sky index of the **target** (observed), `kt_{h}` for each horizon, from the truth file; not a forecast | `scripts/test_run.py:223`; `src/escal/features.py:180` |
-| window / step | the change between consecutive horizons 30 min apart (each kt is the mean over its 30-min target window). For h = 30 min the previous value is `B(ghi_kt\|30min)`, the measured mean kt over the 30 min before the issue time | `scripts/test_run.py:224`; `configs/base.yaml:106`; `docs/FREEZE.md:25` |
+| window / step | the change between consecutive horizons 30 min apart (each kt is the mean over its 30-min target window). For h = 30 min the previous value is `B(ghi_kt\|30min)`, the measured mean kt over the 30 min before the issue time | `scripts/test_run.py:224`; `configs/base.yaml:106`; `docs/FREEZE.md:26` |
 | threshold | absolute change >= 0.25 in kt | `configs/base.yaml:106`; `scripts/test_run.py:225` |
 | which cells | primary cells only (daylight cells at the 7,457 issue times with a satellite frame): `ramp = prim & (...)` | `scripts/test_run.py:220-221`, `:225`; same rule in `scripts/gates.py:72-74` |
 | count | 2,551 ramp cells in 2016 | `results/test/claims_test.json` (`ramp_cells`); `results/test/gates/meta.json:7` |
