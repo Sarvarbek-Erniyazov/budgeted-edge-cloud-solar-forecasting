@@ -118,6 +118,12 @@ ARCH_BOXES = (("Ground\nsensors: GHI,\nDNI, weather,\nclear-sky", "#f2f2f2", Fal
               ("Cloud tier\ntrees + network\n(averaged in kt)", "#cfe3f3", True))
 
 
+def fig_budget_sweep_compact() -> list[str]:
+    """6-page paper: all six gates (oracle included), bands, markers and the three reference lines, 2.4 in tall with
+    the 2-column legend below; y-axis fixed at 63-80 W/m2 (asserted not to clip any drawn band or line)."""
+    return fig_budget_sweep("budget_sweep_compact", 2.4, ylim=(63.0, 80.0))
+
+
 def fig_architecture(name: str = "architecture", L: dict = ARCH_FULL) -> list[str]:
     """Same content as figures/core/architecture, stacked for one column: device group above, cloud below.
     Coordinates are in inches. Arrows: sensors -> edge, edge -> gate, edge -> forecast, satellite/NAM -> cloud tier,
@@ -382,6 +388,7 @@ def horizon_table() -> list[str]:
 def main() -> None:
     apply_paper()
     files = (fig_architecture() + fig_architecture_compact() + fig_budget_sweep() + fig_budget_sweep_short()
+             + fig_budget_sweep_compact()
              + fig_routing_map() + fig_routing_map_compact())
     gate_intervals()
     paper_table()
