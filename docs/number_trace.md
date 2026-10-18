@@ -52,8 +52,8 @@ Source: `docs/paper_full.md`, extracted read-only from `ICONI2026_Erniyazov_Lim_
 | 1 Introduction | five gates and an oracle | 5 | `results/test/gates/summary_test.csv` | `gates other than oracle` | fixed_interval, learned, random, uncertainty, variability | 5 | yes |  |
 | 3 Task | six horizons, 30 to 180 min in 30-min steps | 30min..180min, 6 | `results/paper/horizon_table.csv` | `horizon` | 30min, 60min, 90min, 120min, 150min, 180min | 30min..180min, 6 | yes |  |
 | 3 Task | at least 5° | 5.0 | `configs/base.yaml` | `clearsky.daylight_min_elevation` | 5.0 | 5.0 | yes |  |
-| 3 Task | the test year has 39,655 scored cells | 39,655 | `results/test/data_quality.json` | `primary_cells` | 39655 | 39,655 | yes |  |
-| 3 Task | a cell (issue time, horizon) is scored when the solar elevation at the target time is at least 5°; the test year has 39,655 scored cells | 39,655 | `results/test/claims_models_test.csv` | `cells [row_set = all_daylight]` | 41906 | 41,906 | **NO** | **Condition incomplete.** Elevation >= 5° alone gives 41,906 cells (all daylight); 39,655 are the primary cells, which also need a satellite frame at the issue time (Section 4.3 says this later). |
+| 3 Task | the test year has 39,655 such cells | 39,655 | `results/test/data_quality.json` | `primary_cells` | 39655 | 39,655 | yes |  |
+| 3 Task | a cell (issue time, horizon) is scored when the issue time has a satellite frame and the solar elevation at the target time is at least 5°; the test year has 39,655 such cells | 39,655 | `results/test/claims_models_test.csv` | `cells [row_set = primary]` | 39655 | 39,655 | yes | Primary = frame (15-min rule) and elevation >= 5° (FREEZE.md 'primary'); elevation alone would give 41,906. |
 | 3 Task | assumed 15-min availability lag | 15 | `configs/base.yaml` | `satellite.availability_lag_minutes` | 15 | 15 | yes | Unverified assumption (FREEZE.md d.1). |
 | 3 Task | 6 h after its reference time | 6 | `configs/base.yaml` | `nam.availability_lag_hours` | 6 | 6 | yes | Newest run with reftime + 6 h <= t (method_facts.md item 3). |
 | 3 Splits | Models are trained on 2014. Gates are fitted on the first half of 2015 and validated on the second half; for the test, gates and their thresholds were refitted on all of 2015. | yes | `configs/base.yaml`; `docs/FREEZE.md` | `split; FREEZE.md 'Gate refit for the test run'` | {'models_train': ['2014-01-01', '2014-12-31'], 'gate_fit': ['2015-01-01', '2015-06-30'], 'validation': ['2015-07-01', '2015-12-31'], 'test': ['2016-01-01', '2016-12-31'], 'provisional': False} | yes | yes |  |
@@ -61,9 +61,9 @@ Source: `docs/paper_full.md`, extracted read-only from `ICONI2026_Erniyazov_Lim_
 | 3 Lock | committed and tagged before the test year was loaded, and the test was run once | yes | `docs/claim_criteria.md` | `Provenance of the claim-5b logic` | b706593 < 3c07703 (tag) < run 00:39:24Z | yes | yes | FREEZE.md header: 'No 2016 row was loaded before this commit'. |
 | 3 Claims and rules | claim 1, if the input effect is at least +2% with its interval above zero | yes | `docs/claim_criteria.md` | `claim 1 rule` | +2% and interval entirely above zero | yes | yes |  |
 | 3 Claims and rules | claim 2 holds only if the capped trees are within 2% of the cloud tier and the interval is not above zero for three or more seeds | yes | `docs/claim_criteria.md` | `claim 2 'matches'` | \|d\| <= 2% and not entirely above zero for >= 3 of 5 seeds | yes | yes |  |
-| 3 Claims and rules | claim 3, if the interval includes zero for three or more seeds | yes | `docs/claim_criteria.md` | `claim 3 rule` | includes zero **or lies below zero** for >= 3 of 5 seeds | omits 'or lies below zero' | **NO** | Wording: the frozen rule also counts intervals below zero. |
-| 3 Claims and rules | if a realised rate misses its target by more than 0.05 | yes | `docs/claim_criteria.md` | `claim 4c rule` | the **seed-mean** realised rate of any **score-based** gate differs by > 0.05 at 10, 25 or 50% | omits seed-mean and score-based | **NO** | Wording: random and fixed-interval are not covered by the rule. |
-| 3 Claims and rules | or if a gate keeps half of the ramp gain at 25% | yes | `docs/claim_criteria.md` | `claim 5b rule` | share >= 0.5 at 25% **with a positive share for all 5 seeds** | omits 'positive share for all 5 seeds' | **NO** | Wording; seed mean and oracle exclusion are not stated in FREEZE.md (claim_criteria.md). |
+| 3 Claims and rules | claim 3, if the interval includes zero or lies below it for three or more seeds | yes | `docs/claim_criteria.md` | `claim 3 rule` | includes zero or lies below zero for >= 3 of 5 seeds | yes | yes |  |
+| 3 Claims and rules | or if the seed-mean realised rate of a score-based gate misses its target by more than 0.05 | yes | `docs/claim_criteria.md` | `claim 4c rule` | the seed-mean realised rate of any score-based gate differs by > 0.05 at 10, 25 or 50% | yes | yes |  |
+| 3 Claims and rules | or if a gate keeps half of the ramp gain at 25% with a positive share for all five seeds | yes | `docs/claim_criteria.md` | `claim 5b rule` | share >= 0.5 at 25% with a positive share for all 5 seeds | yes | yes | Seed mean and oracle exclusion are not stated in FREEZE.md; Section 5.5 says so (claim_criteria.md). |
 | 3 Claims and rules | this naming was applied after the run | yes | `results/test/claims_test.json` | `no verdict words stored` | counts_against flags only | yes | yes | Verdict names derived in results/paper/claims_table.md. |
 | 3 Claims and rules | On validation data the input effect had been −0.27% | -0.27% | `results/tiers/control_effects.json` | `primary.input_effect.relative.mean` | -0.0027337325644152255 | -0.27% | yes |  |
 | 3 Claims and rules | the cloud gain 6.3% | 6.3% | `results/go_no_go.json` | `variants[step4_gbt_plus_net].gain_avg` | 0.06312768725031048 | 6.3% | yes |  |
@@ -77,7 +77,7 @@ Source: `docs/paper_full.md`, extracted read-only from `ICONI2026_Erniyazov_Lim_
 | Table 1 | advantage in 4 of 5 seeds; best gate 0.48 | 4; 0.48 | `results/test/claims_test.json` | `claim5 intervals lo > 0; max gate_share_at_25pct_ramp` | 4; 0.47519999999999996 | 4; 0.48 | yes |  |
 | Table 1 | Refuted / Refuted / Supported / Supported / Partly | matches | `results/paper/claims_table.md` | `verdict` | refuted, refuted, supported, supported, partly supported | matches | yes |  |
 | 4.1 Edge tier | 96-64-64-6 (10,758 parameters) | 96-64-64-6; 10,758 | `configs/base.yaml`; `results/tiers/params.json` | `tiers.edge.hidden; edge` | [64, 64]; 10758 | 96-64-64-6; 10,758 | yes |  |
-| 4.1 Edge tier | summary statistics of GHI and DNI over the day so far and over the last hour at 5-min resolution (72 features) | yes | `results/test/predictions/on_device_inputs.parquet` | `column names` | B/V/L(ghi_kt, dni_kt \| 30..180min) = 36; ih_B/V/L(ghi_kt, dni_kt \| 5..30min) = 36 | no | **NO** | **Windows misdescribed.** The 72 features are statistics of the GHI and DNI clear-sky index over backward windows of 30 to 180 min (intra-day, 36) and 5 to 30 min (intra-hour, 36); not 'the day so far' or 'the last hour'. The count 72 is right. |
+| 4.1 Edge tier | summary statistics of the clear-sky index of GHI and DNI over the last 30-180 min (36 features) and the last 5-30 min (36) | 30-180 min: 36; 5-30 min: 36 | `results/test/predictions/on_device_inputs.parquet` | `column names` | B/V/L(ghi_kt, dni_kt \| 30..180min); ih_B/V/L(ghi_kt, dni_kt \| 5..30min) | 30-180 min: 36; 5-30 min: 36 | yes | Backward windows ending at the issue time (FREEZE.md 'Edge inputs'). |
 | 4.1 Edge tier | means of the site weather sensors over the last 30 min (7) with a missing-data flag, solar elevation and clear-sky GHI at each target time (12), and the sine and cosine of day of year and hour of day (4) | yes | `docs/FREEZE.md` | `Edge inputs (96 columns)` | 7 + flag; 6 + 6; 4 | yes | yes | 36 + 36 + 7 + 1 + 12 + 4 = 96. |
 | 4.1 Edge tier | at 43.8 kB in 32-bit floating point and 15.2 kB with 8-bit integer weights | 43.8 kB; 15.2 kB | `results/footprint/measured.json` | `fp32_onnx_bytes; int8_onnx_bytes` | 43846; 15177 | 43.8 kB; 15.2 kB | yes | int8 also has uint8 activations (method_facts.md 1). |
 | 4.1 Edge tier | clear-sky index (clipped to [0, 1.2]) with ReLU hidden layers, mean squared error, AdamW and early stopping on the last 30 days of 2014; the int8 version uses static quantisation in ONNX Runtime | yes | `docs/method_facts.md` | `items 1` | kt_clip [0.0, 1.2]; early_stop_days 30 | yes | yes |  |
@@ -93,7 +93,7 @@ Source: `docs/paper_full.md`, extracted read-only from `ICONI2026_Erniyazov_Lim_
 | 4.3 Gates | Score-based gates escalate when the score reaches the (1−b) quantile of its 2015 scores | yes | `docs/method_facts.md` | `item 4 thresholds` | (1-b) quantile on gate_fit + val | yes | yes |  |
 | 4.4 Footprint | runtime libraries excluded | yes | `docs/method_facts.md` | `item 7` | model files only | yes | yes | True by construction (file sizes of the model files); not stated in any source. |
 | 4.4 Footprint | median of 5,000 single-row calls after 200 warm-up calls with one thread, using ONNX Runtime 1.30.0 or C compiled at -O2 | 5,000; 200; 1; 1.30.0; -O2 | `configs/base.yaml`; `requirements.lock.txt` | `quantise.latency_runs, latency_warmup, threads; onnxruntime; c_compiler` | 5000; 200; 1 | 5,000; 200; 1; 1.30.0; -O2 | yes |  |
-| 4.4 Footprint | on a PC CPU ([CPU MODEL]) | a CPU model | `docs/method_facts.md` | `item 12` | not recorded | not recorded | **NO** | **Placeholder.** No CPU model is recorded anywhere; write 'a PC CPU (model not recorded)' or measure again. |
+| 4.4 Footprint | on a PC CPU (model not recorded) | not recorded | `docs/method_facts.md` | `item 12` | not recorded | not recorded | yes |  |
 | 4.4 Footprint | The gate size and latency were measured on development gates of the same architecture. | yes | `docs/method_facts.md` | `items 6, 7` | checkpoints/gates (gate_fit versions), seed 0 | yes | yes |  |
 | 4.4 Evaluation | on the 39,655 primary test cells | 39,655 | `results/test/data_quality.json` | `primary_cells` | 39655 | 39,655 | yes |  |
 | 4.4 Evaluation | local days are resampled 2,000 times with the same weights for both forecasts, and the 95% percentile interval | 2,000; 0.95 | `configs/base.yaml` | `bootstrap.n_resamples; ci` | 2000; 0.95 | 2,000; 0.95 | yes | Paired: method_facts.md item 8. |
@@ -115,11 +115,11 @@ Source: `docs/paper_full.md`, extracted read-only from `ICONI2026_Erniyazov_Lim_
 | 5.2 | with the interval above zero for four of five seeds, so claim 2 is refuted | 4 | `results/test/claims_test.json` | `claim2.seeds_entirely_above_zero` | 4 | 4 | yes |  |
 | 5.3 | the uncertainty gate keeps 69% of the cloud gain at a realised rate of 23.0% | 69%; 23.0% | `results/test/gates/summary_test.csv` | `share_mean, realised_rate_mean [uncertainty, 0.25]` | 0.6878; 0.2303 | 69%; 23.0% | yes |  |
 | 5.3 | the learned gate 65% at 24.8% | 65%; 24.8% | `results/test/gates/summary_test.csv` | `share_mean, realised_rate_mean [learned, 0.25]` | 0.6493; 0.2476 | 65%; 24.8% | yes |  |
-| 5.3 | the variability rule 40% | 40% | `results/test/gates/summary_test.csv` | `share_mean [variability, 0.25]` | 0.3948 | 39% | **NO** | **0.3948 rounds to 39%.** |
+| 5.3 | the variability rule 39% | 39% | `results/test/gates/summary_test.csv` | `share_mean [variability, 0.25]` | 0.3948 | 39% | yes |  |
 | 5.3 | random escalation 24% and fixed-interval escalation 23% | 24%; 23% | `results/test/gates/summary_test.csv` | `share_mean [random, fixed_interval, 0.25]` | 0.2406; 0.2297 | 24%; 23% | yes |  |
 | 5.3 | the paired RMSE difference is −2.23, −2.64 and −2.50 W/m2 at the 10, 25 and 50% targets, with the interval excluding zero for all five seeds | -2.23, -2.64, -2.50; 5, 5, 5 | `results/paper/gate_intervals.csv` | `point, excludes_zero ['mean' rows, uncertainty - random]` | -2.2295, -2.6387, -2.4952 | -2.23, -2.64, -2.50; 5, 5, 5 | yes |  |
 | 5.3 | Against the learned gate the differences are −0.27, −0.18 and −0.27 W/m2, and the interval includes zero for every seed except one at 50% | -0.27, -0.18, -0.27; 0, 0, 1 | `results/paper/gate_intervals.csv` | `point, excludes_zero ['mean' rows, uncertainty - learned]` | -0.2705, -0.1833, -0.2656 | -0.27, -0.18, -0.27; 0, 0, 1 | yes |  |
-| 5.3 | All realised rates are within 0.023 of their targets. | 0.023 | `results/test/gates/summary_test.csv` | `max \|realised_rate_mean - budget_target\|, score-based gates` | report budgets 0.0230; all 12 targets 0.0337 | 0.023 (10/25/50% only) | **NO** | **Scope.** True at the 10, 25 and 50% report budgets; over all targets the uncertainty gate is 0.034 off at 75% (0.7163). Say 'at the report budgets'. |
+| 5.3 | At the report budgets, all realised rates are within 0.023 of their targets. | 0.023 | `results/test/gates/summary_test.csv` | `max \|realised_rate_mean - budget_target\| over all gates at 10/25/50%` | 0.02300000000000002 | 0.023 | yes | Score-based gates only: 0.0230; over all 12 targets: 0.0337 (outside the stated scope). |
 | 5.3 | The ranking stated in claim 4 had no decision rule; the observed order agrees with it. | yes | `results/test/gates/summary_test.csv`; `docs/claim_criteria.md` | `share_mean at 10/25/50%` | uncertainty >= learned > variability > random, fixed at all three | yes | yes |  |
 | 5.4 | Escalation is concentrated in the mornings and middays of January to May and October, and is rare from July to September | yes | `results/analyses/a3_routing_hour_month.csv` | `share_escalated weighted by issue_times, per month` | 1:0.45, 2:0.29, 3:0.43, 4:0.33, 5:0.37, 6:0.16, 7:0.02, 8:0.03, 9:0.05, 10:0.32, 11:0.21, 12:0.18 | yes | yes | June 0.16, November 0.21, December 0.18 lie between. |
 | 5.4 | the gate escalates 56-69% of issue times with an index below 0.8 and about 10% of those above 0.8 | 56-69%; ~10% | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_escalated_mean by kt_bin` | [0.5613, 0.6649, 0.6898, 0.6004]; [0.1094, 0.0944] | 56-69%; ~10% | yes | Post hoc (A9); above 0.8: 0.094 and 0.109. |
@@ -147,7 +147,7 @@ Source: `docs/paper_full.md`, extracted read-only from `ICONI2026_Erniyazov_Lim_
 | Fig. 2 caption | bands: seed range over five seeds | yes | `scripts/paper_figures.py` | `fig_budget_sweep fill_between RMSE_min..RMSE_max` | seed min..max | yes | yes |  |
 | Fig. 3 caption | mean of five seeds | yes | `scripts/planned_analyses.py` | `A3 esc_share = mean over seeds` | mean over 5 seeds | yes | yes |  |
 
-**92 of 100 rows match; 8 do not.**
+**100 of 100 rows match; 0 do not.**
 
 ### (a) In-text citations
 
@@ -171,9 +171,9 @@ Source: `docs/paper_full.md`, extracted read-only from `ICONI2026_Erniyazov_Lim_
 |---|---|---|
 | edge tier | 10 | 59, 68, 70, 72, 76, 92, 99, 120, 127 |
 | edge network | 4 | 76, 109, 131 |
-| on-device network | 6 | 22, 33, 143 |
+| on-device network | 7 | 22, 33, 72, 143 |
 | cloud tier | 13 | 51, 58, 59, 68, 74, 76, 92, 102, 109, 120, 127, 143 |
-| cloud forecaster | 6 | 22, 33, 143 |
+| cloud forecaster | 7 | 22, 33, 76, 143 |
 | share kept | 2 | 60, 86 |
 | keeps / kept (of the gain) | 3 | 51, 113, 143 |
 | retains / retained | 3 | 22, 86 |

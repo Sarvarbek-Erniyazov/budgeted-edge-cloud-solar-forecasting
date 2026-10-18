@@ -198,6 +198,16 @@ def paper_full_section() -> list[str]:
     gap_rep = max(abs(v) for v in c4["realised_minus_target"].values())
     gap_all = (s[s.gate.isin(["variability", "uncertainty", "learned"])].realised_rate_mean
                - s[s.gate.isin(["variability", "uncertainty", "learned"])].budget_target).abs().max()
+    rep = s[s.budget_target.isin([0.10, 0.25, 0.50])]
+    gap_rep_all = float((rep.realised_rate_mean - rep.budget_target).abs().max())
+    inp_cols = list(pd.read_parquet(T + "predictions/on_device_inputs.parquet").columns[1:])
+
+    def wins(prefixes) -> str:
+        """Backward-window range and column count of the GHI/DNI clear-sky-index statistics with these prefixes."""
+        c = [x for x in inp_cols if x.startswith(tuple(prefixes)) and ("ghi_kt" in x or "dni_kt" in x)]
+        m = sorted({int(x.split("|")[1].rstrip("min)")) for x in c})
+        return f"{m[0]}-{m[-1]} min: {len(c)}"
+    win_day, win_hour = wins(["B(", "V(", "L("]), wins(["ih_"])
     rank_ok = all(d.loc["uncertainty", "share_mean"] >= d.loc["learned", "share_mean"] > d.loc["variability", "share_mean"]
                   > max(d.loc["random", "share_mean"], d.loc["fixed_interval", "share_mean"]) for d in sb.values())
     ex_inc = lambda c, b: int(gim.loc[(c, b), "excludes_zero"].split(" of ")[0])  # noqa: E731
@@ -238,12 +248,12 @@ def paper_full_section() -> list[str]:
          f"{ht.index[0]}..{ht.index[-1]}, {len(ht)}", ""),
         ("3 Task", "at least 5°", "5.0", BY, "clearsky.daylight_min_elevation", cfg["clearsky"]["daylight_min_elevation"],
          str(cfg["clearsky"]["daylight_min_elevation"]), ""),
-        ("3 Task", "the test year has 39,655 scored cells", "39,655", T + "data_quality.json", "primary_cells", dq["primary_cells"],
+        ("3 Task", "the test year has 39,655 such cells", "39,655", T + "data_quality.json", "primary_cells", dq["primary_cells"],
          f"{dq['primary_cells']:,}", ""),
-        ("3 Task", "a cell (issue time, horizon) is scored when the solar elevation at the target time is at least 5°; the test "
-         "year has 39,655 scored cells", "39,655", M, "cells [row_set = all_daylight]", alld, f"{alld:,}",
-         "**Condition incomplete.** Elevation >= 5° alone gives 41,906 cells (all daylight); 39,655 are the primary cells, "
-         "which also need a satellite frame at the issue time (Section 4.3 says this later)."),
+        ("3 Task", "a cell (issue time, horizon) is scored when the issue time has a satellite frame and the solar elevation at the "
+         "target time is at least 5°; the test year has 39,655 such cells", "39,655", M, "cells [row_set = primary]",
+         int(prim["cells"].iloc[0]), f"{int(prim['cells'].iloc[0]):,}",
+         f"Primary = frame (15-min rule) and elevation >= 5° (FREEZE.md 'primary'); elevation alone would give {alld:,}."),
         ("3 Task", "assumed 15-min availability lag", "15", BY, "satellite.availability_lag_minutes",
          cfg["satellite"]["availability_lag_minutes"], str(cfg["satellite"]["availability_lag_minutes"]), "Unverified assumption (FREEZE.md d.1)."),
         ("3 Task", "6 h after its reference time", "6", BY, "nam.availability_lag_hours", cfg["nam"]["availability_lag_hours"],
@@ -262,15 +272,13 @@ def paper_full_section() -> list[str]:
          "+2% and interval entirely above zero", "yes", ""),
         ("3 Claims and rules", "claim 2 holds only if the capped trees are within 2% of the cloud tier and the interval is not above zero "
          "for three or more seeds", "yes", CC, "claim 2 'matches'", "|d| <= 2% and not entirely above zero for >= 3 of 5 seeds", "yes", ""),
-        ("3 Claims and rules", "claim 3, if the interval includes zero for three or more seeds", "yes", CC, "claim 3 rule",
-         "includes zero **or lies below zero** for >= 3 of 5 seeds", "omits 'or lies below zero'",
-         "Wording: the frozen rule also counts intervals below zero."),
-        ("3 Claims and rules", "if a realised rate misses its target by more than 0.05", "yes", CC, "claim 4c rule",
-         "the **seed-mean** realised rate of any **score-based** gate differs by > 0.05 at 10, 25 or 50%",
-         "omits seed-mean and score-based", "Wording: random and fixed-interval are not covered by the rule."),
-        ("3 Claims and rules", "or if a gate keeps half of the ramp gain at 25%", "yes", CC, "claim 5b rule",
-         "share >= 0.5 at 25% **with a positive share for all 5 seeds**", "omits 'positive share for all 5 seeds'",
-         "Wording; seed mean and oracle exclusion are not stated in FREEZE.md (claim_criteria.md)."),
+        ("3 Claims and rules", "claim 3, if the interval includes zero or lies below it for three or more seeds", "yes", CC,
+         "claim 3 rule", "includes zero or lies below zero for >= 3 of 5 seeds", "yes", ""),
+        ("3 Claims and rules", "or if the seed-mean realised rate of a score-based gate misses its target by more than 0.05", "yes", CC,
+         "claim 4c rule", "the seed-mean realised rate of any score-based gate differs by > 0.05 at 10, 25 or 50%", "yes", ""),
+        ("3 Claims and rules", "or if a gate keeps half of the ramp gain at 25% with a positive share for all five seeds", "yes", CC,
+         "claim 5b rule", "share >= 0.5 at 25% with a positive share for all 5 seeds", "yes",
+         "Seed mean and oracle exclusion are not stated in FREEZE.md; Section 5.5 says so (claim_criteria.md)."),
         ("3 Claims and rules", "this naming was applied after the run", "yes", F, "no verdict words stored", "counts_against flags only",
          "yes", "Verdict names derived in results/paper/claims_table.md."),
         ("3 Claims and rules", "On validation data the input effect had been −0.27%", "-0.27%", "results/tiers/control_effects.json",
@@ -299,12 +307,10 @@ def paper_full_section() -> list[str]:
         ("4.1 Edge tier", "96-64-64-6 (10,758 parameters)", "96-64-64-6; 10,758", BY + "`; `results/tiers/params.json",
          "tiers.edge.hidden; edge", f"{cfg['tiers']['edge']['hidden']}; {j('results/tiers/params.json')['edge']}",
          f"96-{'-'.join(map(str, cfg['tiers']['edge']['hidden']))}-6; {j('results/tiers/params.json')['edge']:,}", ""),
-        ("4.1 Edge tier", "summary statistics of GHI and DNI over the day so far and over the last hour at 5-min resolution (72 features)",
-         "yes", T + "predictions/on_device_inputs.parquet", "column names",
-         "B/V/L(ghi_kt, dni_kt | 30..180min) = 36; ih_B/V/L(ghi_kt, dni_kt | 5..30min) = 36", "no",
-         "**Windows misdescribed.** The 72 features are statistics of the GHI and DNI clear-sky index over backward windows "
-         "of 30 to 180 min (intra-day, 36) and 5 to 30 min (intra-hour, 36); not 'the day so far' or 'the last hour'. "
-         "The count 72 is right."),
+        ("4.1 Edge tier", "summary statistics of the clear-sky index of GHI and DNI over the last 30-180 min (36 features) and the "
+         "last 5-30 min (36)", "30-180 min: 36; 5-30 min: 36", T + "predictions/on_device_inputs.parquet", "column names",
+         "B/V/L(ghi_kt, dni_kt | 30..180min); ih_B/V/L(ghi_kt, dni_kt | 5..30min)",
+         f"{win_day}; {win_hour}", "Backward windows ending at the issue time (FREEZE.md 'Edge inputs')."),
         ("4.1 Edge tier", "means of the site weather sensors over the last 30 min (7) with a missing-data flag, solar elevation and "
          "clear-sky GHI at each target time (12), and the sine and cosine of day of year and hour of day (4)", "yes", FZ,
          "Edge inputs (96 columns)", "7 + flag; 6 + 6; 4", "yes", "36 + 36 + 7 + 1 + 12 + 4 = 96."),
@@ -343,8 +349,7 @@ def paper_full_section() -> list[str]:
          "quantise.latency_runs, latency_warmup, threads; onnxruntime; c_compiler",
          f"{cfg['quantise']['latency_runs']}; {cfg['quantise']['latency_warmup']}; {cfg['quantise']['threads']}",
          f"{cfg['quantise']['latency_runs']:,}; {cfg['quantise']['latency_warmup']}; {cfg['quantise']['threads']}; 1.30.0; -O2", ""),
-        ("4.4 Footprint", "on a PC CPU ([CPU MODEL])", "a CPU model", MF, "item 12", "not recorded", "not recorded",
-         "**Placeholder.** No CPU model is recorded anywhere; write 'a PC CPU (model not recorded)' or measure again."),
+        ("4.4 Footprint", "on a PC CPU (model not recorded)", "not recorded", MF, "item 12", "not recorded", "not recorded", ""),
         ("4.4 Footprint", "The gate size and latency were measured on development gates of the same architecture.", "yes", MF,
          "items 6, 7", "checkpoints/gates (gate_fit versions), seed 0", "yes", ""),
         ("4.4 Evaluation", "on the 39,655 primary test cells", "39,655", T + "data_quality.json", "primary_cells", dq["primary_cells"],
@@ -405,8 +410,8 @@ def paper_full_section() -> list[str]:
         ("5.3", "the learned gate 65% at 24.8%", "65%; 24.8%", S, "share_mean, realised_rate_mean [learned, 0.25]",
          f"{sb[0.25].loc['learned', 'share_mean']}; {sb[0.25].loc['learned', 'realised_rate_mean']}",
          f"{p0(sb[0.25].loc['learned', 'share_mean'])}; {p1(sb[0.25].loc['learned', 'realised_rate_mean'])}", ""),
-        ("5.3", "the variability rule 40%", "40%", S, "share_mean [variability, 0.25]", sb[0.25].loc["variability", "share_mean"],
-         p0(sb[0.25].loc["variability", "share_mean"]), "**0.3948 rounds to 39%.**"),
+        ("5.3", "the variability rule 39%", "39%", S, "share_mean [variability, 0.25]", sb[0.25].loc["variability", "share_mean"],
+         p0(sb[0.25].loc["variability", "share_mean"]), ""),
         ("5.3", "random escalation 24% and fixed-interval escalation 23%", "24%; 23%", S, "share_mean [random, fixed_interval, 0.25]",
          f"{sb[0.25].loc['random', 'share_mean']}; {sb[0.25].loc['fixed_interval', 'share_mean']}",
          f"{p0(sb[0.25].loc['random', 'share_mean'])}; {p0(sb[0.25].loc['fixed_interval', 'share_mean'])}", ""),
@@ -420,11 +425,9 @@ def paper_full_section() -> list[str]:
          ", ".join(str(gim.loc[("uncertainty - learned", b), "point"]) for b in (0.10, 0.25, 0.50)),
          ", ".join(f2(float(gim.loc[("uncertainty - learned", b), "point"])) for b in (0.10, 0.25, 0.50)) + "; "
          + ", ".join(str(ex_inc("uncertainty - learned", b)) for b in (0.10, 0.25, 0.50)), ""),
-        ("5.3", "All realised rates are within 0.023 of their targets.", "0.023", S,
-         "max |realised_rate_mean - budget_target|, score-based gates", f"report budgets {gap_rep:.4f}; all 12 targets {gap_all:.4f}",
-         f"{gap_rep:.3f}" if gap_all <= 0.0235 else f"{gap_rep:.3f} (10/25/50% only)",
-         "**Scope.** True at the 10, 25 and 50% report budgets; over all targets the uncertainty gate is 0.034 off at 75% "
-         "(0.7163). Say 'at the report budgets'."),
+        ("5.3", "At the report budgets, all realised rates are within 0.023 of their targets.", "0.023", S,
+         "max |realised_rate_mean - budget_target| over all gates at 10/25/50%", gap_rep_all, f"{gap_rep_all:.3f}",
+         f"Score-based gates only: {gap_rep:.4f}; over all 12 targets: {gap_all:.4f} (outside the stated scope)."),
         ("5.3", "The ranking stated in claim 4 had no decision rule; the observed order agrees with it.", "yes", S + "`; `" + CC,
          "share_mean at 10/25/50%", "uncertainty >= learned > variability > random, fixed at all three", yn(rank_ok), ""),
         ("5.4", "Escalation is concentrated in the mornings and middays of January to May and October, and is rare from July to September",

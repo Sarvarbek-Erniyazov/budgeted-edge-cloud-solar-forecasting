@@ -154,3 +154,34 @@ all of `logs/` and `results/` for CPU, processor, Intel, AMD, Ryzen, Core(TM) an
 `measured.json` `note`: "Latency: single row, one thread, ONNX Runtime or compiled C on a PC CPU (CPU provider
 CPU)." The "cpu" hits in `logs/footprint/run.log` are ONNX Runtime warning URLs; the others are byte matches inside
 parquet files. `logs/` is not in git (only `logs/.gitkeep` is tracked).
+
+## 13. Precision of the gates behind the 2016 decisions
+
+| item | fact | source |
+|---|---|---|
+| which gates decided 2016 | the 2015-refit uncertainty and learned gates, written by the test run to `checkpoints/gates_test/seed{0..4}/{uncertainty,learned}.pt` with thresholds in `configs/gate_thresholds_test.yaml` | `scripts/test_run.py:47-49`, `:203-206`; `scripts/gates.py:44-52`, `:107-116` |
+| precision | **fp32**: PyTorch `EdgeNet` trained and run on `float32` arrays (`X.astype(np.float32)`), scores from `predict()` on the `.pt` model; decisions `G.decide(scores, tau)` | `scripts/gates.py:46-52`, `:155`; `src/escal/train.py:78-86` |
+| gate inputs | the 96 on-device inputs plus the **fp32** edge forecast (`tiers["edge"]`), not the int8 edge forecast | `scripts/gates.py:92-97` |
+| int8 gates in the test run | none: `scripts/test_run.py` loads an int8 ONNX file only for the edge row (`edge_seed{s}.int8.onnx`), never a gate | `scripts/test_run.py:138-142` |
+| where the int8 gates come from | `checkpoints/footprint/gate_{g}_seed{s}.int8.onnx`, exported from the **gate_fit** (development) gates in `checkpoints/gates/`, not from `checkpoints/gates_test/` | `scripts/measure_footprint.py:34`, `:268-273` |
+| int8 vs fp32 gates, what was measured | on **2015 validation** with the development gates only: score correlation fp32 vs int8 0.9967 to 0.9997 (10 gate-seed pairs); realised-rate difference at most 0.0168; share-kept difference at most 0.0699 (10/25/50%, thresholds recomputed per version). A decision agreement rate was **not** computed | `results/footprint/measured.json` (`gates.per_seed[*].{uncertainty,learned}.score_corr_fp32_int8_validation`, `.fp32/.int8[budget]`); `scripts/measure_footprint.py:276-286` |
+| post hoc check | the A9 decisions were recomputed from the same fp32 `.pt` files and reproduce `sweep_test.csv` exactly | `scripts/analysis_common.py:57-74`; `results/analyses/posthoc/posthoc_summary.json` (`decision_check`) |
+
+So the proposed 4.4 sentence "the 2016 decisions come from the refitted full-precision gates, so the effect of int8 on gate
+decisions was not tested" is right about 2016, but "not tested" is too broad: int8 against fp32 was measured on 2015
+validation with the development gates (scores, realised rates and share kept, not decision agreement). A wording that
+matches the record: "the 2016 decisions come from the refitted full-precision gates; int8 gates were compared with fp32
+only on 2015 validation data, with the development gates (score correlation 0.997 or more)."
+
+Note: `checkpoints/` is not tracked in git, so the `.pt` and `.onnx` files are local; their roles are documented by the
+code paths above.
+
+## 14. Capped against uncapped ground-only trees (2016, as stored)
+
+| model | RMSE (W/m2) | source |
+|---|---|---|
+| ground-only trees, 10x cap (`trees_ground_cap10x`) | 73.2878 | `results/test/claims_models_test.csv:6` (primary row); `results/test/claims_test.json:21` (`claim2_on_device_sufficiency.rmse_cap10x` = 73.28784982402063) |
+| ground-only trees, uncapped (`trees_ground`) | 73.9775 | `results/test/claims_models_test.csv:4` (primary row); `results/test/claims_test.json:9` (`claim1_input_effect.rmse_trees_ground` = 73.97747694364121) |
+
+Confirmed: 73.29 < 73.98 W/m2 on the 39,655 primary cells; the capped model is 0.69 W/m2 better on 2016. (On 2015
+validation the capped model had 68.78 W/m2, `results/footprint/measured.json` `trees_ground_cap10x.generated_c.rmse_c`.)
