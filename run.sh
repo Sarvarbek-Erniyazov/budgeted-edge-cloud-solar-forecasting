@@ -25,9 +25,10 @@ case "${1:-}" in
   test_gates)  python scripts/test_run.py gates ;;
   test_claims) python scripts/test_run.py claims ;;
   analyses) python scripts/planned_analyses.py ;;
+  posthoc)  python scripts/posthoc_analyses.py ;;
   exploratory_halfyear) python scripts/exploratory_halfyear_claims.py ;;
   figures)  python scripts/core_figures.py ;;
   paper)    python scripts/paper_figures.py ;;
   trace)    python scripts/number_trace.py ;;
-  *) echo "usage: ./run.sh {download|test|audit|anchors|split|tiers|control|footprint|predictions|gates|measure|save_trees|hashes|refit_smoke|dryrun|test_predictions|test_gates|test_claims|analyses|exploratory_halfyear|figures|paper|trace}"; exit 1 ;;
+  *) echo "usage: ./run.sh {download|test|audit|anchors|split|tiers|control|footprint|predictions|gates|measure|save_trees|hashes|refit_smoke|dryrun|test_predictions|test_gates|test_claims|analyses|posthoc|exploratory_halfyear|figures|paper|trace}"; exit 1 ;;
 esac

@@ -279,6 +279,24 @@ def main() -> None:
     a2 = pd.read_csv(A + "a2_per_horizon.csv")
     add(s, "A2 edge-to-cloud gain at 30 min", a2.loc[a2.horizon == "30min", "edge_to_cloud_gain"].iloc[0], A + "a2_per_horizon.csv", "edge_to_cloud_gain [30min]", "{:.3f}")
     add(s, "A2 edge-to-cloud gain at 180 min", a2.loc[a2.horizon == "180min", "edge_to_cloud_gain"].iloc[0], A + "a2_per_horizon.csv", "edge_to_cloud_gain [180min]", "{:.3f}")
+    # post hoc A8-A11: every value in every file
+    P = A + "posthoc/"
+    s = "POST HOC, not pre-specified: A8-A11 (2016)"
+    for stem, key in (("a8_per_horizon_rmse", "horizon"), ("a9_escalation_by_kt", "kt_bin"),
+                      ("a10_target_vs_realised_rate", None)):
+        d = pd.read_csv(P + stem + ".csv", comment="#")
+        tag = stem.split("_")[0].upper()
+        for _, r in d.iterrows():
+            rk = r[key] if key else f"{r['gate']}, {r['budget_target']:.2f}"
+            for c in d.columns:
+                if c in (key, "gate", "budget_target"):
+                    continue
+                add(s, f"{tag} [{rk}] {c}", r[c] if c not in ("issue_times", "cells") else int(r[c]),
+                    P + stem + ".csv", f"{c} [{rk}]")
+    ph = j(P + "posthoc_summary.json")
+    add(s, "A9 recomputed decisions reproduce sweep_test.csv", ph["decision_check"]["reproduces_sweep"],
+        P + "posthoc_summary.json", "decision_check.reproduces_sweep")
+    add(s, "A11 int8 vs fp32 gate agreement @25%", "not available", P + "posthoc_summary.json", "a11")
     # exploratory
     X = A + "exploratory_halfyear_claims.json"
     ex = j(X)["halves"]

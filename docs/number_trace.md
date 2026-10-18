@@ -203,6 +203,265 @@ The abstract (`docs/abstract.txt`, 1,593 characters, limit 2,000):
 | A2 edge-to-cloud gain at 30 min | 0.102 | `results/analyses/a2_per_horizon.csv` | `edge_to_cloud_gain [30min]` |
 | A2 edge-to-cloud gain at 180 min | 0.077 | `results/analyses/a2_per_horizon.csv` | `edge_to_cloud_gain [180min]` |
 
+## POST HOC, not pre-specified: A8-A11 (2016)
+
+| quantity | value | file | field |
+|---|---|---|---|
+| A8 [30min] smart_persistence_mean | 57.8120 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `smart_persistence_mean [30min]` |
+| A8 [30min] edge_fp32_mean | 56.2478 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `edge_fp32_mean [30min]` |
+| A8 [30min] edge_fp32_min | 54.6111 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `edge_fp32_min [30min]` |
+| A8 [30min] edge_fp32_max | 60.1982 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `edge_fp32_max [30min]` |
+| A8 [30min] cloud_mean | 50.5414 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `cloud_mean [30min]` |
+| A8 [30min] cloud_min | 49.8946 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `cloud_min [30min]` |
+| A8 [30min] cloud_max | 51.4022 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `cloud_max [30min]` |
+| A8 [30min] uncertainty_25pct_mean | 53.0265 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `uncertainty_25pct_mean [30min]` |
+| A8 [30min] uncertainty_25pct_min | 51.3829 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `uncertainty_25pct_min [30min]` |
+| A8 [30min] uncertainty_25pct_max | 54.9993 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `uncertainty_25pct_max [30min]` |
+| A8 [30min] learned_25pct_mean | 52.6603 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `learned_25pct_mean [30min]` |
+| A8 [30min] learned_25pct_min | 51.4721 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `learned_25pct_min [30min]` |
+| A8 [30min] learned_25pct_max | 53.9977 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `learned_25pct_max [30min]` |
+| A8 [60min] smart_persistence_mean | 76.1669 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `smart_persistence_mean [60min]` |
+| A8 [60min] edge_fp32_mean | 69.5773 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `edge_fp32_mean [60min]` |
+| A8 [60min] edge_fp32_min | 67.8427 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `edge_fp32_min [60min]` |
+| A8 [60min] edge_fp32_max | 71.4232 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `edge_fp32_max [60min]` |
+| A8 [60min] cloud_mean | 63.9472 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `cloud_mean [60min]` |
+| A8 [60min] cloud_min | 63.2101 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `cloud_min [60min]` |
+| A8 [60min] cloud_max | 64.5769 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `cloud_max [60min]` |
+| A8 [60min] uncertainty_25pct_mean | 65.8836 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `uncertainty_25pct_mean [60min]` |
+| A8 [60min] uncertainty_25pct_min | 65.2837 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `uncertainty_25pct_min [60min]` |
+| A8 [60min] uncertainty_25pct_max | 66.9379 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `uncertainty_25pct_max [60min]` |
+| A8 [60min] learned_25pct_mean | 65.8573 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `learned_25pct_mean [60min]` |
+| A8 [60min] learned_25pct_min | 65.2581 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `learned_25pct_min [60min]` |
+| A8 [60min] learned_25pct_max | 66.4841 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `learned_25pct_max [60min]` |
+| A8 [90min] smart_persistence_mean | 88.2236 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `smart_persistence_mean [90min]` |
+| A8 [90min] edge_fp32_mean | 76.9248 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `edge_fp32_mean [90min]` |
+| A8 [90min] edge_fp32_min | 75.6580 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `edge_fp32_min [90min]` |
+| A8 [90min] edge_fp32_max | 80.2158 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `edge_fp32_max [90min]` |
+| A8 [90min] cloud_mean | 71.8124 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `cloud_mean [90min]` |
+| A8 [90min] cloud_min | 70.7989 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `cloud_min [90min]` |
+| A8 [90min] cloud_max | 72.4720 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `cloud_max [90min]` |
+| A8 [90min] uncertainty_25pct_mean | 73.4835 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `uncertainty_25pct_mean [90min]` |
+| A8 [90min] uncertainty_25pct_min | 72.7330 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `uncertainty_25pct_min [90min]` |
+| A8 [90min] uncertainty_25pct_max | 75.0462 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `uncertainty_25pct_max [90min]` |
+| A8 [90min] learned_25pct_mean | 73.6215 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `learned_25pct_mean [90min]` |
+| A8 [90min] learned_25pct_min | 73.1365 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `learned_25pct_min [90min]` |
+| A8 [90min] learned_25pct_max | 74.4345 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `learned_25pct_max [90min]` |
+| A8 [120min] smart_persistence_mean | 97.1746 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `smart_persistence_mean [120min]` |
+| A8 [120min] edge_fp32_mean | 81.9512 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `edge_fp32_mean [120min]` |
+| A8 [120min] edge_fp32_min | 80.5193 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `edge_fp32_min [120min]` |
+| A8 [120min] edge_fp32_max | 85.4774 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `edge_fp32_max [120min]` |
+| A8 [120min] cloud_mean | 75.8180 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `cloud_mean [120min]` |
+| A8 [120min] cloud_min | 75.4103 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `cloud_min [120min]` |
+| A8 [120min] cloud_max | 76.2516 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `cloud_max [120min]` |
+| A8 [120min] uncertainty_25pct_mean | 77.8957 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `uncertainty_25pct_mean [120min]` |
+| A8 [120min] uncertainty_25pct_min | 76.8738 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `uncertainty_25pct_min [120min]` |
+| A8 [120min] uncertainty_25pct_max | 80.0781 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `uncertainty_25pct_max [120min]` |
+| A8 [120min] learned_25pct_mean | 78.0909 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `learned_25pct_mean [120min]` |
+| A8 [120min] learned_25pct_min | 76.9733 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `learned_25pct_min [120min]` |
+| A8 [120min] learned_25pct_max | 79.7338 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `learned_25pct_max [120min]` |
+| A8 [150min] smart_persistence_mean | 104.7329 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `smart_persistence_mean [150min]` |
+| A8 [150min] edge_fp32_mean | 86.0559 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `edge_fp32_mean [150min]` |
+| A8 [150min] edge_fp32_min | 84.7066 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `edge_fp32_min [150min]` |
+| A8 [150min] edge_fp32_max | 89.3047 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `edge_fp32_max [150min]` |
+| A8 [150min] cloud_mean | 79.2507 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `cloud_mean [150min]` |
+| A8 [150min] cloud_min | 78.9629 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `cloud_min [150min]` |
+| A8 [150min] cloud_max | 79.7530 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `cloud_max [150min]` |
+| A8 [150min] uncertainty_25pct_mean | 81.0400 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `uncertainty_25pct_mean [150min]` |
+| A8 [150min] uncertainty_25pct_min | 80.1345 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `uncertainty_25pct_min [150min]` |
+| A8 [150min] uncertainty_25pct_max | 82.1347 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `uncertainty_25pct_max [150min]` |
+| A8 [150min] learned_25pct_mean | 81.3885 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `learned_25pct_mean [150min]` |
+| A8 [150min] learned_25pct_min | 80.4631 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `learned_25pct_min [150min]` |
+| A8 [150min] learned_25pct_max | 82.1698 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `learned_25pct_max [150min]` |
+| A8 [180min] smart_persistence_mean | 112.4527 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `smart_persistence_mean [180min]` |
+| A8 [180min] edge_fp32_mean | 89.5037 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `edge_fp32_mean [180min]` |
+| A8 [180min] edge_fp32_min | 88.6631 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `edge_fp32_min [180min]` |
+| A8 [180min] edge_fp32_max | 92.0373 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `edge_fp32_max [180min]` |
+| A8 [180min] cloud_mean | 82.6067 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `cloud_mean [180min]` |
+| A8 [180min] cloud_min | 82.2521 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `cloud_min [180min]` |
+| A8 [180min] cloud_max | 82.8914 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `cloud_max [180min]` |
+| A8 [180min] uncertainty_25pct_mean | 84.3268 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `uncertainty_25pct_mean [180min]` |
+| A8 [180min] uncertainty_25pct_min | 83.7756 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `uncertainty_25pct_min [180min]` |
+| A8 [180min] uncertainty_25pct_max | 85.1724 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `uncertainty_25pct_max [180min]` |
+| A8 [180min] learned_25pct_mean | 85.1374 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `learned_25pct_mean [180min]` |
+| A8 [180min] learned_25pct_min | 84.4596 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `learned_25pct_min [180min]` |
+| A8 [180min] learned_25pct_max | 85.6939 | `results/analyses/posthoc/a8_per_horizon_rmse.csv` | `learned_25pct_max [180min]` |
+| A9 [0.0-0.2] issue_times | 367 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `issue_times [0.0-0.2]` |
+| A9 [0.0-0.2] cells | 1,912 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cells [0.0-0.2]` |
+| A9 [0.0-0.2] share_escalated_mean | 0.5613 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_escalated_mean [0.0-0.2]` |
+| A9 [0.0-0.2] share_escalated_min | 0.4877 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_escalated_min [0.0-0.2]` |
+| A9 [0.0-0.2] share_escalated_max | 0.6403 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_escalated_max [0.0-0.2]` |
+| A9 [0.0-0.2] share_of_escalations_mean | 0.1199 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_of_escalations_mean [0.0-0.2]` |
+| A9 [0.0-0.2] share_of_escalations_min | 0.1054 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_of_escalations_min [0.0-0.2]` |
+| A9 [0.0-0.2] share_of_escalations_max | 0.1356 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_of_escalations_max [0.0-0.2]` |
+| A9 [0.0-0.2] rmse_edge_mean | 84.4402 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_edge_mean [0.0-0.2]` |
+| A9 [0.0-0.2] rmse_edge_min | 82.2095 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_edge_min [0.0-0.2]` |
+| A9 [0.0-0.2] rmse_edge_max | 87.1223 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_edge_max [0.0-0.2]` |
+| A9 [0.0-0.2] rmse_cloud_mean | 80.1243 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_cloud_mean [0.0-0.2]` |
+| A9 [0.0-0.2] rmse_cloud_min | 78.6711 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_cloud_min [0.0-0.2]` |
+| A9 [0.0-0.2] rmse_cloud_max | 82.0910 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_cloud_max [0.0-0.2]` |
+| A9 [0.0-0.2] cloud_minus_edge_mean | -4.3159 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cloud_minus_edge_mean [0.0-0.2]` |
+| A9 [0.0-0.2] cloud_minus_edge_min | -6.9260 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cloud_minus_edge_min [0.0-0.2]` |
+| A9 [0.0-0.2] cloud_minus_edge_max | -2.5100 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cloud_minus_edge_max [0.0-0.2]` |
+| A9 [0.2-0.4] issue_times | 447 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `issue_times [0.2-0.4]` |
+| A9 [0.2-0.4] cells | 2,319 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cells [0.2-0.4]` |
+| A9 [0.2-0.4] share_escalated_mean | 0.6649 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_escalated_mean [0.2-0.4]` |
+| A9 [0.2-0.4] share_escalated_min | 0.6376 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_escalated_min [0.2-0.4]` |
+| A9 [0.2-0.4] share_escalated_max | 0.6890 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_escalated_max [0.2-0.4]` |
+| A9 [0.2-0.4] share_of_escalations_mean | 0.1731 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_of_escalations_mean [0.2-0.4]` |
+| A9 [0.2-0.4] share_of_escalations_min | 0.1653 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_of_escalations_min [0.2-0.4]` |
+| A9 [0.2-0.4] share_of_escalations_max | 0.1788 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_of_escalations_max [0.2-0.4]` |
+| A9 [0.2-0.4] rmse_edge_mean | 129.3447 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_edge_mean [0.2-0.4]` |
+| A9 [0.2-0.4] rmse_edge_min | 128.1956 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_edge_min [0.2-0.4]` |
+| A9 [0.2-0.4] rmse_edge_max | 131.5828 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_edge_max [0.2-0.4]` |
+| A9 [0.2-0.4] rmse_cloud_mean | 118.1268 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_cloud_mean [0.2-0.4]` |
+| A9 [0.2-0.4] rmse_cloud_min | 117.6813 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_cloud_min [0.2-0.4]` |
+| A9 [0.2-0.4] rmse_cloud_max | 118.4674 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_cloud_max [0.2-0.4]` |
+| A9 [0.2-0.4] cloud_minus_edge_mean | -11.2179 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cloud_minus_edge_mean [0.2-0.4]` |
+| A9 [0.2-0.4] cloud_minus_edge_min | -13.1488 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cloud_minus_edge_min [0.2-0.4]` |
+| A9 [0.2-0.4] cloud_minus_edge_max | -9.7282 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cloud_minus_edge_max [0.2-0.4]` |
+| A9 [0.4-0.6] issue_times | 537 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `issue_times [0.4-0.6]` |
+| A9 [0.4-0.6] cells | 2,748 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cells [0.4-0.6]` |
+| A9 [0.4-0.6] share_escalated_mean | 0.6898 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_escalated_mean [0.4-0.6]` |
+| A9 [0.4-0.6] share_escalated_min | 0.6350 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_escalated_min [0.4-0.6]` |
+| A9 [0.4-0.6] share_escalated_max | 0.7095 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_escalated_max [0.4-0.6]` |
+| A9 [0.4-0.6] share_of_escalations_mean | 0.2157 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_of_escalations_mean [0.4-0.6]` |
+| A9 [0.4-0.6] share_of_escalations_min | 0.1978 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_of_escalations_min [0.4-0.6]` |
+| A9 [0.4-0.6] share_of_escalations_max | 0.2216 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_of_escalations_max [0.4-0.6]` |
+| A9 [0.4-0.6] rmse_edge_mean | 125.7208 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_edge_mean [0.4-0.6]` |
+| A9 [0.4-0.6] rmse_edge_min | 124.0880 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_edge_min [0.4-0.6]` |
+| A9 [0.4-0.6] rmse_edge_max | 128.6358 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_edge_max [0.4-0.6]` |
+| A9 [0.4-0.6] rmse_cloud_mean | 116.1533 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_cloud_mean [0.4-0.6]` |
+| A9 [0.4-0.6] rmse_cloud_min | 114.9952 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_cloud_min [0.4-0.6]` |
+| A9 [0.4-0.6] rmse_cloud_max | 116.8530 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_cloud_max [0.4-0.6]` |
+| A9 [0.4-0.6] cloud_minus_edge_mean | -9.5676 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cloud_minus_edge_mean [0.4-0.6]` |
+| A9 [0.4-0.6] cloud_minus_edge_min | -11.9931 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cloud_minus_edge_min [0.4-0.6]` |
+| A9 [0.4-0.6] cloud_minus_edge_max | -7.4063 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cloud_minus_edge_max [0.4-0.6]` |
+| A9 [0.6-0.8] issue_times | 447 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `issue_times [0.6-0.8]` |
+| A9 [0.6-0.8] cells | 2,275 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cells [0.6-0.8]` |
+| A9 [0.6-0.8] share_escalated_mean | 0.6004 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_escalated_mean [0.6-0.8]` |
+| A9 [0.6-0.8] share_escalated_min | 0.5772 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_escalated_min [0.6-0.8]` |
+| A9 [0.6-0.8] share_escalated_max | 0.6174 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_escalated_max [0.6-0.8]` |
+| A9 [0.6-0.8] share_of_escalations_mean | 0.1563 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_of_escalations_mean [0.6-0.8]` |
+| A9 [0.6-0.8] share_of_escalations_min | 0.1497 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_of_escalations_min [0.6-0.8]` |
+| A9 [0.6-0.8] share_of_escalations_max | 0.1600 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_of_escalations_max [0.6-0.8]` |
+| A9 [0.6-0.8] rmse_edge_mean | 118.5825 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_edge_mean [0.6-0.8]` |
+| A9 [0.6-0.8] rmse_edge_min | 116.6052 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_edge_min [0.6-0.8]` |
+| A9 [0.6-0.8] rmse_edge_max | 123.3019 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_edge_max [0.6-0.8]` |
+| A9 [0.6-0.8] rmse_cloud_mean | 107.1441 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_cloud_mean [0.6-0.8]` |
+| A9 [0.6-0.8] rmse_cloud_min | 106.7090 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_cloud_min [0.6-0.8]` |
+| A9 [0.6-0.8] rmse_cloud_max | 107.5975 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_cloud_max [0.6-0.8]` |
+| A9 [0.6-0.8] cloud_minus_edge_mean | -11.4384 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cloud_minus_edge_mean [0.6-0.8]` |
+| A9 [0.6-0.8] cloud_minus_edge_min | -16.5929 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cloud_minus_edge_min [0.6-0.8]` |
+| A9 [0.6-0.8] cloud_minus_edge_max | -9.0486 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cloud_minus_edge_max [0.6-0.8]` |
+| A9 [0.8-1.0] issue_times | 2,747 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `issue_times [0.8-1.0]` |
+| A9 [0.8-1.0] cells | 15,564 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cells [0.8-1.0]` |
+| A9 [0.8-1.0] share_escalated_mean | 0.1094 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_escalated_mean [0.8-1.0]` |
+| A9 [0.8-1.0] share_escalated_min | 0.1045 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_escalated_min [0.8-1.0]` |
+| A9 [0.8-1.0] share_escalated_max | 0.1249 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_escalated_max [0.8-1.0]` |
+| A9 [0.8-1.0] share_of_escalations_mean | 0.1749 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_of_escalations_mean [0.8-1.0]` |
+| A9 [0.8-1.0] share_of_escalations_min | 0.1664 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_of_escalations_min [0.8-1.0]` |
+| A9 [0.8-1.0] share_of_escalations_max | 0.1990 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_of_escalations_max [0.8-1.0]` |
+| A9 [0.8-1.0] rmse_edge_mean | 55.6378 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_edge_mean [0.8-1.0]` |
+| A9 [0.8-1.0] rmse_edge_min | 53.7652 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_edge_min [0.8-1.0]` |
+| A9 [0.8-1.0] rmse_edge_max | 61.2438 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_edge_max [0.8-1.0]` |
+| A9 [0.8-1.0] rmse_cloud_mean | 51.3295 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_cloud_mean [0.8-1.0]` |
+| A9 [0.8-1.0] rmse_cloud_min | 50.7551 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_cloud_min [0.8-1.0]` |
+| A9 [0.8-1.0] rmse_cloud_max | 51.8859 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_cloud_max [0.8-1.0]` |
+| A9 [0.8-1.0] cloud_minus_edge_mean | -4.3083 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cloud_minus_edge_mean [0.8-1.0]` |
+| A9 [0.8-1.0] cloud_minus_edge_min | -9.7936 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cloud_minus_edge_min [0.8-1.0]` |
+| A9 [0.8-1.0] cloud_minus_edge_max | -1.8793 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cloud_minus_edge_max [0.8-1.0]` |
+| A9 [>1.0] issue_times | 2,912 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `issue_times [>1.0]` |
+| A9 [>1.0] cells | 14,837 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cells [>1.0]` |
+| A9 [>1.0] share_escalated_mean | 0.0944 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_escalated_mean [>1.0]` |
+| A9 [>1.0] share_escalated_min | 0.0862 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_escalated_min [>1.0]` |
+| A9 [>1.0] share_escalated_max | 0.1016 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_escalated_max [>1.0]` |
+| A9 [>1.0] share_of_escalations_mean | 0.1601 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_of_escalations_mean [>1.0]` |
+| A9 [>1.0] share_of_escalations_min | 0.1448 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_of_escalations_min [>1.0]` |
+| A9 [>1.0] share_of_escalations_max | 0.1743 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `share_of_escalations_max [>1.0]` |
+| A9 [>1.0] rmse_edge_mean | 62.3757 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_edge_mean [>1.0]` |
+| A9 [>1.0] rmse_edge_min | 61.4494 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_edge_min [>1.0]` |
+| A9 [>1.0] rmse_edge_max | 63.4267 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_edge_max [>1.0]` |
+| A9 [>1.0] rmse_cloud_mean | 57.7519 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_cloud_mean [>1.0]` |
+| A9 [>1.0] rmse_cloud_min | 57.5209 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_cloud_min [>1.0]` |
+| A9 [>1.0] rmse_cloud_max | 57.9538 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `rmse_cloud_max [>1.0]` |
+| A9 [>1.0] cloud_minus_edge_mean | -4.6238 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cloud_minus_edge_mean [>1.0]` |
+| A9 [>1.0] cloud_minus_edge_min | -5.6548 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cloud_minus_edge_min [>1.0]` |
+| A9 [>1.0] cloud_minus_edge_max | -3.5035 | `results/analyses/posthoc/a9_escalation_by_kt.csv` | `cloud_minus_edge_max [>1.0]` |
+| A10 [fixed_interval, 0.10] realised_rate_mean | 0.0774 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_mean [fixed_interval, 0.10]` |
+| A10 [fixed_interval, 0.10] realised_rate_min | 0.0774 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_min [fixed_interval, 0.10]` |
+| A10 [fixed_interval, 0.10] realised_rate_max | 0.0774 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_max [fixed_interval, 0.10]` |
+| A10 [fixed_interval, 0.10] realised_minus_target_mean | -0.0226 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_minus_target_mean [fixed_interval, 0.10]` |
+| A10 [learned, 0.10] realised_rate_mean | 0.1053 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_mean [learned, 0.10]` |
+| A10 [learned, 0.10] realised_rate_min | 0.0999 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_min [learned, 0.10]` |
+| A10 [learned, 0.10] realised_rate_max | 0.1084 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_max [learned, 0.10]` |
+| A10 [learned, 0.10] realised_minus_target_mean | 0.0053 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_minus_target_mean [learned, 0.10]` |
+| A10 [oracle, 0.10] realised_rate_mean | 0.1000 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_mean [oracle, 0.10]` |
+| A10 [oracle, 0.10] realised_rate_min | 0.1000 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_min [oracle, 0.10]` |
+| A10 [oracle, 0.10] realised_rate_max | 0.1000 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_max [oracle, 0.10]` |
+| A10 [oracle, 0.10] realised_minus_target_mean | 0.0000 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_minus_target_mean [oracle, 0.10]` |
+| A10 [random, 0.10] realised_rate_mean | 0.1000 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_mean [random, 0.10]` |
+| A10 [random, 0.10] realised_rate_min | 0.1000 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_min [random, 0.10]` |
+| A10 [random, 0.10] realised_rate_max | 0.1000 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_max [random, 0.10]` |
+| A10 [random, 0.10] realised_minus_target_mean | 0.0000 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_minus_target_mean [random, 0.10]` |
+| A10 [uncertainty, 0.10] realised_rate_mean | 0.0994 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_mean [uncertainty, 0.10]` |
+| A10 [uncertainty, 0.10] realised_rate_min | 0.0960 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_min [uncertainty, 0.10]` |
+| A10 [uncertainty, 0.10] realised_rate_max | 0.1029 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_max [uncertainty, 0.10]` |
+| A10 [uncertainty, 0.10] realised_minus_target_mean | -0.0006 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_minus_target_mean [uncertainty, 0.10]` |
+| A10 [variability, 0.10] realised_rate_mean | 0.1055 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_mean [variability, 0.10]` |
+| A10 [variability, 0.10] realised_rate_min | 0.1055 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_min [variability, 0.10]` |
+| A10 [variability, 0.10] realised_rate_max | 0.1055 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_max [variability, 0.10]` |
+| A10 [variability, 0.10] realised_minus_target_mean | 0.0055 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_minus_target_mean [variability, 0.10]` |
+| A10 [fixed_interval, 0.25] realised_rate_mean | 0.2316 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_mean [fixed_interval, 0.25]` |
+| A10 [fixed_interval, 0.25] realised_rate_min | 0.2316 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_min [fixed_interval, 0.25]` |
+| A10 [fixed_interval, 0.25] realised_rate_max | 0.2316 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_max [fixed_interval, 0.25]` |
+| A10 [fixed_interval, 0.25] realised_minus_target_mean | -0.0184 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_minus_target_mean [fixed_interval, 0.25]` |
+| A10 [learned, 0.25] realised_rate_mean | 0.2476 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_mean [learned, 0.25]` |
+| A10 [learned, 0.25] realised_rate_min | 0.2396 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_min [learned, 0.25]` |
+| A10 [learned, 0.25] realised_rate_max | 0.2602 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_max [learned, 0.25]` |
+| A10 [learned, 0.25] realised_minus_target_mean | -0.0024 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_minus_target_mean [learned, 0.25]` |
+| A10 [oracle, 0.25] realised_rate_mean | 0.2500 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_mean [oracle, 0.25]` |
+| A10 [oracle, 0.25] realised_rate_min | 0.2500 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_min [oracle, 0.25]` |
+| A10 [oracle, 0.25] realised_rate_max | 0.2500 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_max [oracle, 0.25]` |
+| A10 [oracle, 0.25] realised_minus_target_mean | 0.0000 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_minus_target_mean [oracle, 0.25]` |
+| A10 [random, 0.25] realised_rate_mean | 0.2500 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_mean [random, 0.25]` |
+| A10 [random, 0.25] realised_rate_min | 0.2500 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_min [random, 0.25]` |
+| A10 [random, 0.25] realised_rate_max | 0.2500 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_max [random, 0.25]` |
+| A10 [random, 0.25] realised_minus_target_mean | 0.0000 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_minus_target_mean [random, 0.25]` |
+| A10 [uncertainty, 0.25] realised_rate_mean | 0.2303 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_mean [uncertainty, 0.25]` |
+| A10 [uncertainty, 0.25] realised_rate_min | 0.2277 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_min [uncertainty, 0.25]` |
+| A10 [uncertainty, 0.25] realised_rate_max | 0.2324 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_max [uncertainty, 0.25]` |
+| A10 [uncertainty, 0.25] realised_minus_target_mean | -0.0197 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_minus_target_mean [uncertainty, 0.25]` |
+| A10 [variability, 0.25] realised_rate_mean | 0.2362 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_mean [variability, 0.25]` |
+| A10 [variability, 0.25] realised_rate_min | 0.2362 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_min [variability, 0.25]` |
+| A10 [variability, 0.25] realised_rate_max | 0.2362 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_max [variability, 0.25]` |
+| A10 [variability, 0.25] realised_minus_target_mean | -0.0138 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_minus_target_mean [variability, 0.25]` |
+| A10 [fixed_interval, 0.50] realised_rate_mean | 0.4875 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_mean [fixed_interval, 0.50]` |
+| A10 [fixed_interval, 0.50] realised_rate_min | 0.4875 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_min [fixed_interval, 0.50]` |
+| A10 [fixed_interval, 0.50] realised_rate_max | 0.4875 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_max [fixed_interval, 0.50]` |
+| A10 [fixed_interval, 0.50] realised_minus_target_mean | -0.0125 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_minus_target_mean [fixed_interval, 0.50]` |
+| A10 [learned, 0.50] realised_rate_mean | 0.4939 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_mean [learned, 0.50]` |
+| A10 [learned, 0.50] realised_rate_min | 0.4718 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_min [learned, 0.50]` |
+| A10 [learned, 0.50] realised_rate_max | 0.5356 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_max [learned, 0.50]` |
+| A10 [learned, 0.50] realised_minus_target_mean | -0.0061 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_minus_target_mean [learned, 0.50]` |
+| A10 [oracle, 0.50] realised_rate_mean | 0.4999 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_mean [oracle, 0.50]` |
+| A10 [oracle, 0.50] realised_rate_min | 0.4999 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_min [oracle, 0.50]` |
+| A10 [oracle, 0.50] realised_rate_max | 0.4999 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_max [oracle, 0.50]` |
+| A10 [oracle, 0.50] realised_minus_target_mean | -0.0001 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_minus_target_mean [oracle, 0.50]` |
+| A10 [random, 0.50] realised_rate_mean | 0.5000 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_mean [random, 0.50]` |
+| A10 [random, 0.50] realised_rate_min | 0.5000 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_min [random, 0.50]` |
+| A10 [random, 0.50] realised_rate_max | 0.5000 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_max [random, 0.50]` |
+| A10 [random, 0.50] realised_minus_target_mean | 0.0000 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_minus_target_mean [random, 0.50]` |
+| A10 [uncertainty, 0.50] realised_rate_mean | 0.4770 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_mean [uncertainty, 0.50]` |
+| A10 [uncertainty, 0.50] realised_rate_min | 0.4690 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_min [uncertainty, 0.50]` |
+| A10 [uncertainty, 0.50] realised_rate_max | 0.4880 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_max [uncertainty, 0.50]` |
+| A10 [uncertainty, 0.50] realised_minus_target_mean | -0.0230 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_minus_target_mean [uncertainty, 0.50]` |
+| A10 [variability, 0.50] realised_rate_mean | 0.4986 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_mean [variability, 0.50]` |
+| A10 [variability, 0.50] realised_rate_min | 0.4986 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_min [variability, 0.50]` |
+| A10 [variability, 0.50] realised_rate_max | 0.4986 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_rate_max [variability, 0.50]` |
+| A10 [variability, 0.50] realised_minus_target_mean | -0.0014 | `results/analyses/posthoc/a10_target_vs_realised_rate.csv` | `realised_minus_target_mean [variability, 0.50]` |
+| A9 recomputed decisions reproduce sweep_test.csv | True | `results/analyses/posthoc/posthoc_summary.json` | `decision_check.reproduces_sweep` |
+| A11 int8 vs fp32 gate agreement @25% | not available | `results/analyses/posthoc/posthoc_summary.json` | `a11` |
+
 ## EXPLORATORY: half-year split (chosen after seeing test results)
 
 | quantity | value | file | field |

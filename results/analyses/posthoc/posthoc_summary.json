@@ -1,0 +1,18 @@
+{
+  "header": "post hoc, not pre-specified",
+  "decision_check": {
+    "checked": 300,
+    "max_abs_diff_4dp": 0.0,
+    "reproduces_sweep": true
+  },
+  "a11": "not available: no int8 gate scores for 2016 are stored. The int8 gate ONNX files in checkpoints/footprint/ were exported from the validation-time gates (checkpoints/gates/), not from the 2015-refit gates used on 2016 (checkpoints/gates_test/), and were never run on 2016.",
+  "files": [
+    "a10_target_vs_realised_rate.csv",
+    "a10_target_vs_realised_rate.md",
+    "a11_int8_gate_agreement.md",
+    "a8_per_horizon_rmse.csv",
+    "a8_per_horizon_rmse.md",
+    "a9_escalation_by_kt.csv",
+    "a9_escalation_by_kt.md"
+  ]
+}
